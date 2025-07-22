@@ -24,10 +24,10 @@ public class StageTransition2 : MonoBehaviour
         }
     }
 
-    public float glitchDuration = 0.3f;
+    public float glitchDuration = 0.7f;
     public float maxChroma = 2f;
-    public float maxLens = 10f;
-    public float maxGrain = 1f;
+    public float maxLens = 0.5f;
+    public float maxGrain = 2f;
 
     ChromaticAberration _chroma;
     LensDistortion _lens;
