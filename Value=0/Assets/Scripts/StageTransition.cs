@@ -5,51 +5,61 @@ using UnityEngine.Rendering.Universal;
 
 public class StageTransition : MonoBehaviour
 {
-    [Header("Post-Process Volume (Lens Distortion)")]
+    #region ==========Fields==========
+    public static StageTransition Instance { get; private set; }
+
     public Volume globalVolume;
 
-    [Header("전환할 스테이지")]
-    public GameObject stage1;
-    public GameObject stage2;
+    public GameObject[] stages;
+    int _currentStage = 0;
+    public int CurrentStage
+    {
+        get => _currentStage;
+        set
+        {
+            if (_currentStage == value) return;
+            if (_isTransitioning) return;
+            _currentStage = value;
+            StartCoroutine(StageChange());
+        }
+    }
 
-    [Header("핀치 설정 (속도↑)")]
+ 
     public float pinchDuration = 0.7f;  
     public float holdDuration = 0.4f;  
     public float unpinchDuration = 0.7f;  
-    [Tooltip("축소할 때 목표 Scale 값")]
-    public float pinchScale = 4f;
-    [Tooltip("왜곡 강도 (음수일수록 중앙으로 더 땡겨짐)")]
-    public float pinchIntensity = -0.5f;
-    [Tooltip("페이드 아웃")]
-    public float fadeoutColorAdj = -4f;
-  
 
+    public float pinchScale = 4f;
+    public float pinchIntensity = -0.5f;
+
+    public float fadeoutColorAdj = -10f;
+  
     LensDistortion _lens;
     ColorAdjustments _ColorAdj;
     bool _isTransitioning = false;
-    bool _isStage1Active = true;
+    #endregion
 
+    #region ==========Unity Methods==========
     void Awake()
     {
-        var profile = globalVolume.profile;
+        Instance = this;
+        if (Instance != null && Instance != this) {
+            Destroy(gameObject);
+            return;
+        }
+
+        VolumeProfile profile = globalVolume.profile;
         profile.TryGet<LensDistortion>(out _lens);
         profile.TryGet<ColorAdjustments>(out _ColorAdj);
 
         _lens.scale.value = 1f;
         _lens.intensity.value = 0f;
         _ColorAdj.postExposure.value = 0f;
-
-        stage1.SetActive(true);
-        stage2.SetActive(false);
     }
+    #endregion
 
-    void Update()
-    {
-        if (!_isTransitioning && Input.GetKeyDown(KeyCode.Space))
-            StartCoroutine(DoWarpTransition());
-    }
-
-    IEnumerator DoWarpTransition()
+    #region ==========Methods==========
+    IEnumerator StageChange()
     {
         _isTransitioning = true;
 
@@ -57,7 +67,7 @@ public class StageTransition : MonoBehaviour
         float startLensIntensity = _lens.intensity.value;
         float elapsed = 0f;
 
-        // 1) 빠른 축소
+        
         while (elapsed < pinchDuration)
         {
             elapsed += Time.deltaTime;
@@ -71,15 +81,12 @@ public class StageTransition : MonoBehaviour
         _lens.intensity.value = pinchIntensity;
  
 
-        // 2) 짧은 홀드
+       //대기했다가 스테이지활성화
         yield return new WaitForSeconds(holdDuration);
+        for(int i = 0; i < stages.Length; i++)
+            stages[i].SetActive(i == _currentStage);
 
-        // 3) 스테이지 전환
-        _isStage1Active = !_isStage1Active;
-        stage1.SetActive(_isStage1Active);
-        stage2.SetActive(!_isStage1Active);
-
-        // 4) 빠른 확대
+       
         elapsed = 0f;
         while (elapsed < unpinchDuration)
         {
@@ -97,5 +104,6 @@ public class StageTransition : MonoBehaviour
 
         _isTransitioning = false;
     }
+    #endregion
 }
 

@@ -162,19 +162,20 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 54776760}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 01acca3810347bb45808b7145d7780ae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   globalVolume: {fileID: 1970762581}
-  stage1: {fileID: 323331996}
-  stage2: {fileID: 909300777}
+  stages:
+  - {fileID: 323331996}
+  - {fileID: 909300777}
   pinchDuration: 0.7
   holdDuration: 0.4
   unpinchDuration: 0.7
-  pinchScale: 2
-  pinchIntensity: 2
+  pinchScale: 4
+  pinchIntensity: -0.5
   fadeoutColorAdj: -10
 --- !u!1 &62335866
 GameObject:
@@ -188,6 +189,7 @@ GameObject:
   - component: {fileID: 62335869}
   - component: {fileID: 62335868}
   - component: {fileID: 62335867}
+  - component: {fileID: 62335871}
   m_Layer: 0
   m_Name: Cube
   m_TagString: Untagged
@@ -284,6 +286,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &62335871
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 62335866}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c3f7d9b6d216e947914a3051230bec4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &323331996
 GameObject:
   m_ObjectHideFlags: 0
@@ -845,14 +859,15 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1032868305}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1d487db25af2e2343af47deccba6e061, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   globalVolume: {fileID: 1970762581}
-  stage1: {fileID: 323331996}
-  stage2: {fileID: 909300777}
+  stages:
+  - {fileID: 323331996}
+  - {fileID: 909300777}
   glitchDuration: 0.7
   maxChroma: 2
   maxLens: 0.5

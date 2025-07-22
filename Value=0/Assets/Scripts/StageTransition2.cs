@@ -5,14 +5,25 @@ using UnityEngine.Rendering.Universal;
 
 public class StageTransition2 : MonoBehaviour
 {
-    [Header("Post-Processing Volume")]
+    #region ==========Fields==========
+    public static StageTransition2 Instance { get; private set; }
+
     public Volume globalVolume;
+    public GameObject[] stages;
 
-    [Header("전환할 스테이지")]
-    public GameObject stage1;
-    public GameObject stage2;
+    int _currentStage = 0;
+    public int CurrentStage
+    {
+        get => _currentStage;
+        set
+        {
+            if (_currentStage == value) return;
+            if (_isTransitioning) return;
+            _currentStage = value;
+            StartCoroutine(ChangeStage());
+        }
+    }
 
-    [Header("Glitch 설정")]
     public float glitchDuration = 0.3f;
     public float maxChroma = 2f;
     public float maxLens = 10f;
@@ -22,38 +33,37 @@ public class StageTransition2 : MonoBehaviour
     LensDistortion _lens;
     FilmGrain _grain;
     bool _isTransitioning = false;
-    bool _isStage1Active = true;
+    #endregion
 
+    #region ==========Unity Methods==========
     void Awake()
     {
-        // Volume Profile에서 효과 인스턴스 꺼내기
-        var profile = globalVolume.profile;
+        Instance = this;
+
+        if (Instance != null && Instance != this) {
+            Destroy(gameObject);
+            return;
+        }
+
+        VolumeProfile profile = globalVolume.profile;
         profile.TryGet<ChromaticAberration>(out _chroma);
         profile.TryGet<LensDistortion>(out _lens);
         profile.TryGet<FilmGrain>(out _grain);
 
-        // 초기 상태 보장
         _chroma.intensity.value = 0f;
         _lens.intensity.value = 0f;
         _grain.intensity.value = 0f;
 
-        // Stage1만 켜고 시작
-        stage1.SetActive(true);
-        stage2.SetActive(false);
     }
+    #endregion
 
-    void Update()
-    {
-        if (!_isTransitioning && Input.GetKeyDown(KeyCode.Space))
-            StartCoroutine(DoGlitchSwap());
-    }
-
-    IEnumerator DoGlitchSwap()
+    #region ==========Methods==========
+    IEnumerator ChangeStage()
     {
         _isTransitioning = true;
         float elapsed = 0f;
 
-        // 1) Glitch 인텐시티 ↑ (0 → max)
+ 
         while (elapsed < glitchDuration)
         {
             elapsed += Time.deltaTime;
@@ -65,17 +75,15 @@ public class StageTransition2 : MonoBehaviour
 
             yield return null;
         }
-        // 최대치 고정
+
         _chroma.intensity.value = maxChroma;
         _lens.intensity.value = maxLens;
         _grain.intensity.value = maxGrain;
 
-        // 2) 스테이지 전환
-        _isStage1Active = !_isStage1Active;
-        stage1.SetActive(_isStage1Active);
-        stage2.SetActive(!_isStage1Active);
+        //스테이지 활성화
+        for (int i = 0; i < stages.Length; i++)
+            stages[i].SetActive(i == _currentStage);
 
-        // 3) Glitch 해제 ↓ (max → 0)
         elapsed = 0f;
         while (elapsed < glitchDuration)
         {
@@ -89,11 +97,11 @@ public class StageTransition2 : MonoBehaviour
 
             yield return null;
         }
-        // 초기화
         _chroma.intensity.value = 0f;
         _lens.intensity.value = 0f;
         _grain.intensity.value = 0f;
 
         _isTransitioning = false;
     }
+    #endregion
 }
