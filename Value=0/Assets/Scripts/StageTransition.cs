@@ -13,25 +13,31 @@ public class StageTransition : MonoBehaviour
     public GameObject stage2;
 
     [Header("핀치 설정 (속도↑)")]
-    public float pinchDuration = 0.15f;  
-    public float holdDuration = 0.03f;  
-    public float unpinchDuration = 0.15f;  
+    public float pinchDuration = 0.7f;  
+    public float holdDuration = 0.4f;  
+    public float unpinchDuration = 0.7f;  
     [Tooltip("축소할 때 목표 Scale 값")]
-    public float pinchScale = 0.1f;
+    public float pinchScale = 4f;
     [Tooltip("왜곡 강도 (음수일수록 중앙으로 더 땡겨짐)")]
-    public float pinchIntensity = -3f;
+    public float pinchIntensity = -0.5f;
+    [Tooltip("페이드 아웃")]
+    public float fadeoutColorAdj = -4f;
+  
 
     LensDistortion _lens;
+    ColorAdjustments _ColorAdj;
     bool _isTransitioning = false;
     bool _isStage1Active = true;
 
     void Awake()
     {
-        if (!globalVolume.profile.TryGet<LensDistortion>(out _lens))
-            Debug.LogError("Lens Distortion Override가 없습니다!");
+        var profile = globalVolume.profile;
+        profile.TryGet<LensDistortion>(out _lens);
+        profile.TryGet<ColorAdjustments>(out _ColorAdj);
 
         _lens.scale.value = 1f;
         _lens.intensity.value = 0f;
+        _ColorAdj.postExposure.value = 0f;
 
         stage1.SetActive(true);
         stage2.SetActive(false);
@@ -48,7 +54,7 @@ public class StageTransition : MonoBehaviour
         _isTransitioning = true;
 
         float startScale = _lens.scale.value;
-        float startIntensity = _lens.intensity.value;
+        float startLensIntensity = _lens.intensity.value;
         float elapsed = 0f;
 
         // 1) 빠른 축소
@@ -57,11 +63,13 @@ public class StageTransition : MonoBehaviour
             elapsed += Time.deltaTime;
             float t = Mathf.Clamp01(elapsed / pinchDuration);
             _lens.scale.value = Mathf.Lerp(startScale, pinchScale, t);
-            _lens.intensity.value = Mathf.Lerp(startIntensity, pinchIntensity, t);
+            _lens.intensity.value = Mathf.Lerp(startLensIntensity, pinchIntensity, t);
+            _ColorAdj.postExposure.value = Mathf.Lerp(0f, fadeoutColorAdj, t);
             yield return null;
         }
         _lens.scale.value = pinchScale;
         _lens.intensity.value = pinchIntensity;
+ 
 
         // 2) 짧은 홀드
         yield return new WaitForSeconds(holdDuration);
@@ -78,11 +86,14 @@ public class StageTransition : MonoBehaviour
             elapsed += Time.deltaTime;
             float t = Mathf.Clamp01(elapsed / unpinchDuration);
             _lens.scale.value = Mathf.Lerp(pinchScale, startScale, t);
-            _lens.intensity.value = Mathf.Lerp(pinchIntensity, startIntensity, t);
+            _lens.intensity.value = Mathf.Lerp(pinchIntensity, startLensIntensity, t);
+            _ColorAdj.postExposure.value = Mathf.Lerp(fadeoutColorAdj, 0, t);
+
             yield return null;
         }
         _lens.scale.value = startScale;
-        _lens.intensity.value = startIntensity;
+        _lens.intensity.value = startLensIntensity;
+        
 
         _isTransitioning = false;
     }
