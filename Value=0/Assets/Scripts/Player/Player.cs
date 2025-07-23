@@ -4,8 +4,8 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     #region ==========Properties==========
-    public int StartNumber => startNumber;
-    public int Moves => moves;
+    public int StartNumber { get => startNumber; set => startNumber = value; }
+    public int Moves { get => moves; set => moves = value; }
     #endregion
 
     #region ==========Fields==========
@@ -33,13 +33,28 @@ public class Player : MonoBehaviour
         {
             Move(dir);
         }
+
+        //Restart
+        if (Input.GetKeyDown(KeyCode.R)) Restart();
     }
 
     private void Move(Vector3Int dir)
     {
+        if (moves <= 0)
+        {
+            Die();
+            return;
+        }
+        if (CheckWall(dir)) return;
+
         this.transform.position += dir;
 
         CheckTile();
+    }
+
+    private bool CheckWall(Vector3Int dir)
+    {
+        return Physics.Raycast(this.transform.position + dir + Vector3.up, Vector3.down, 10f, LayerMask.GetMask("Wall"));
     }
 
     private void CheckTile()
@@ -47,14 +62,29 @@ public class Player : MonoBehaviour
         if (Physics.Raycast(this.transform.position, Vector3.down, out RaycastHit hit, 10f, LayerMask.GetMask("Tile")))
         {
             LogicTile tile = hit.collider.GetComponent<LogicTile>();
-            startNumber = tile.Operator switch
+            if (tile.Operator == Operator.Portal)
             {
-                Operator.Add => startNumber + tile.Value,
-                Operator.Sub => startNumber - tile.Value,
-                Operator.Mul => startNumber * tile.Value,
-                Operator.Div => startNumber / tile.Value,
-                _ => throw new ArgumentException($"Unknown operator: {tile.Operator}"),
-            };
+                if (startNumber == 0)
+                {
+                    GameManager.Instance.Stage++;
+                }
+                else
+                {
+                    Die();
+                }
+            }
+            else
+            {
+                startNumber = tile.Operator switch
+                {
+                    Operator.Add => startNumber + tile.Value,
+                    Operator.Sub => startNumber - tile.Value,
+                    Operator.Mul => startNumber * tile.Value,
+                    Operator.Div => startNumber / tile.Value,
+                    //_ => throw new ArgumentException($"Unknown operator: {tile.Operator}"),
+                    _ => startNumber,
+                };
+            }
             moves--;
         }
         else
@@ -62,5 +92,13 @@ public class Player : MonoBehaviour
             Debug.Log("Can't find any tile");
         }
     }
+
+    public void Die()
+    {
+        //TODO: Implement Die logic
+        Restart();
+    }
+
+    private void Restart() => GameManager.Instance.Restart();
     #endregion
 }
