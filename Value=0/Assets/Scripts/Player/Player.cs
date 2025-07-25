@@ -18,6 +18,14 @@ public class Player : MonoBehaviour
     {
         InputHandler();
     }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Scanner"))
+        {
+            Die();
+        }
+    }
     #endregion
 
     #region ==========Methods==========

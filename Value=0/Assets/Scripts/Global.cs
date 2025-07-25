@@ -6,5 +6,5 @@ public enum Operator
 public enum ObjectID
 {
     None,
-    Tile, Wall
+    Tile, TimeTile, Wall,
 }

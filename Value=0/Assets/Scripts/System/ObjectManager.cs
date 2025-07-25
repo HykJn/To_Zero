@@ -12,10 +12,12 @@ public class ObjectManager : MonoBehaviour
 
     //Prefabs
     [SerializeField] private GameObject prefab_tile;
+    [SerializeField] private GameObject prefab_timeTile;
     [SerializeField] private GameObject prefab_wall;
 
     //Pool
     private GameObject[] obj_tiles;
+    private GameObject[] obj_timeTiles;
     private GameObject[] obj_walls;
     #endregion
 
@@ -27,6 +29,7 @@ public class ObjectManager : MonoBehaviour
 
         //Init Pools
         obj_tiles = new GameObject[64];
+        obj_timeTiles = new GameObject[64];
         obj_walls = new GameObject[64];
 
         //Instantiate
@@ -35,7 +38,12 @@ public class ObjectManager : MonoBehaviour
             obj_tiles[i] = Instantiate(prefab_tile, this.transform);
             obj_tiles[i].SetActive(false);
         }
-        for(int i = 0; i < obj_walls.Length; i++)
+        for (int i = 0; i < obj_timeTiles.Length; i++)
+        {
+            obj_timeTiles[i] = Instantiate(prefab_timeTile, this.transform);
+            obj_timeTiles[i].SetActive(false);
+        }
+        for (int i = 0; i < obj_walls.Length; i++)
         {
             obj_walls[i] = Instantiate(prefab_wall, this.transform);
             obj_walls[i].SetActive(false);
@@ -49,6 +57,7 @@ public class ObjectManager : MonoBehaviour
         GameObject[] pool = objID switch
         {
             ObjectID.Tile => obj_tiles,
+            ObjectID.TimeTile => obj_timeTiles,
             ObjectID.Wall => obj_walls,
             _ => throw new ArgumentException()
         };
@@ -63,13 +72,5 @@ public class ObjectManager : MonoBehaviour
         }
         throw new Exception();
     }
-
-    //public void ReturnObject(GameObject obj)
-    //{
-    //    if (obj == null) throw new ArgumentNullException(nameof(obj));
-
-    //    obj.SetActive(false);
-    //    obj.transform.SetParent(this.transform);
-    //}
     #endregion
-    }
+}

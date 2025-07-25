@@ -4,7 +4,7 @@ using System;
 public class Stage : MonoBehaviour
 {
     #region ==========Properties==========
-
+    
     #endregion
 
     #region ==========Fields==========
@@ -44,6 +44,7 @@ public class Stage : MonoBehaviour
         GameObject.FindWithTag("Player").GetComponent<Player>().StartNumber = startNumber;
         GameObject.FindWithTag("Player").GetComponent<Player>().Moves = moves;
         objs = new GameObject[64];
+
         string[] lines = stageMap.Split('\n');
         for (int i = 0; i < lines.Length; i++)
         {
@@ -55,20 +56,28 @@ public class Stage : MonoBehaviour
 
                 GameObject obj;
 
-                if (line[j].Equals("W") || line[j].Equals("w"))
-                {
-                    obj = ObjectManager.Instance.GetObject(ObjectID.Wall);
-                    obj.transform.position = new Vector3(x, 0.5f, z);
-                }
+                if (line[j].Equals("W") || line[j].Equals("w")) obj = ObjectManager.Instance.GetObject(ObjectID.Wall);
+                else if (line[j][0] == 'T' || line[j][0] == 't') obj = ObjectManager.Instance.GetObject(ObjectID.TimeTile);
                 else obj = ObjectManager.Instance.GetObject(ObjectID.Tile);
 
                 objs[i * line.Length + j] = obj;
-
+                obj.transform.position = new Vector3(x, 0, z);
                 if (!obj.TryGetComponent<LogicTile>(out LogicTile tile)) continue;
 
-                tile.Text.text = "";
-                tile.transform.position = new Vector3(x, 0, z);
-                if (line[j].Equals("N") || line[j].Equals("n") || line[j].Equals("0"))
+                if (tile is TimeTile timeTile)
+                {
+                    timeTile.Operator = line[j][1] switch
+                    {
+                        '+' => Operator.Add,
+                        '-' => Operator.Sub,
+                        '*' => Operator.Mul,
+                        '/' => Operator.Div,
+                        _ => throw new ArgumentException()
+                    };
+                    timeTile.Value = int.Parse(line[j][2..]);
+                    timeTile.Init();
+                }
+                else if (line[j].Equals("N") || line[j].Equals("n") || line[j].Equals("0"))
                 {
                     tile.Operator = Operator.None;
                     tile.Value = 0;
@@ -94,16 +103,7 @@ public class Stage : MonoBehaviour
                         '/' => Operator.Div,
                         _ => throw new ArgumentException()
                     };
-                    tile.Value = int.Parse(line[j].Substring(1));
-                    tile.Text.text = tile.Operator switch
-                    {
-                        Operator.Add => "+",
-                        Operator.Sub => "-",
-                        Operator.Mul => "¡¿",
-                        Operator.Div => "¡À",
-                        _ => throw new ArgumentException()
-                    };
-                    tile.Text.text += tile.Value.ToString();
+                    tile.Value = int.Parse(line[j][1..]);
                 }
             }
         }
