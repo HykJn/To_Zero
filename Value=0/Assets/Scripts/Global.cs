@@ -13,3 +13,7 @@ public enum EventID
 {
     PlayerMove, PlayerDie, NextStage,
 }
+
+public enum BGMID { }
+public enum SFXID { }
+public enum UISFXID { }
