@@ -37,6 +37,8 @@ public class GameManager : MonoBehaviour
     #endregion
 
     #region ==========Methods==========
+    public void Transition(EventID id) => this.GetComponent<PPTransition>().Transition(id);
+
     public void Restart() => stages[curStage - 1].GetComponent<Stage>().Restart();
     #endregion
 }

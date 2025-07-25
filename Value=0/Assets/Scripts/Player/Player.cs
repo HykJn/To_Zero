@@ -6,6 +6,7 @@ public class Player : MonoBehaviour
     #region ==========Properties==========
     public int StartNumber { get => startNumber; set => startNumber = value; }
     public int Moves { get => moves; set => moves = value; }
+    public bool IsMovable { get; set; } = true;
     #endregion
 
     #region ==========Fields==========
@@ -48,6 +49,7 @@ public class Player : MonoBehaviour
 
     private void Move(Vector3Int dir)
     {
+        if (!IsMovable) return;
         if (moves <= 0)
         {
             Die();
@@ -74,7 +76,8 @@ public class Player : MonoBehaviour
             {
                 if (startNumber == 0)
                 {
-                    GameManager.Instance.Stage++;
+                    //GameManager.Instance.Stage++;
+                    GameManager.Instance.Transition(EventID.NextStage);
                 }
                 else
                 {
@@ -104,9 +107,14 @@ public class Player : MonoBehaviour
     public void Die()
     {
         //TODO: Implement Die logic
-        Restart();
+        //Restart();
+        GameManager.Instance.Transition(EventID.PlayerDie);
     }
 
-    private void Restart() => GameManager.Instance.Restart();
+    private void Restart()
+    {
+        if (!IsMovable) return;
+        GameManager.Instance.Restart();
+    }
     #endregion
 }

@@ -8,3 +8,8 @@ public enum ObjectID
     None,
     Tile, TimeTile, Wall,
 }
+
+public enum EventID
+{
+    PlayerMove, PlayerDie, NextStage,
+}
