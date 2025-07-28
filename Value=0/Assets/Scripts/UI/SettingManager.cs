@@ -1,12 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI; // Required for Slider
+using UnityEngine.UI;
 using TMPro;
 
 public class SettingManager : MonoBehaviour
 {
     public static SettingManager instance;
+
+    [SerializeField] private GameObject SettingPanel;
 
     public TextMeshProUGUI fullScreenText;
     public TextMeshProUGUI resolutionText; // 해상도 표시 텍스트
@@ -50,6 +52,11 @@ public class SettingManager : MonoBehaviour
             sfxSlider.onValueChanged.AddListener(OnSFXVolumeChanged);
         if (uiSlider != null)
             uiSlider.onValueChanged.AddListener(OnUIVolumeChanged);
+    }
+
+    public void SetActiveSettingPanel(bool isActive)
+    {
+        SettingPanel.SetActive(isActive);
     }
 
     // 전체 화면/창 모드 전환 (좌우 화살표)
