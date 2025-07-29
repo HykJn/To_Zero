@@ -34,10 +34,17 @@ public class GameManager : MonoBehaviour
         if (instance == null) instance = this;
         else Destroy(this.gameObject);
     }
+
+    private void Start()
+    {
+        Stage = 1;
+    }
     #endregion
 
     #region ==========Methods==========
     public void Transition(EventID id) => this.GetComponent<PPTransition>().Transition(id);
+
+    public void SwapTiles() => stages[curStage - 1].GetComponent<Stage>().SwapTiles();
 
     public void Restart() => stages[curStage - 1].GetComponent<Stage>().Restart();
     #endregion

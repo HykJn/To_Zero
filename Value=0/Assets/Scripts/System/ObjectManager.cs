@@ -1,5 +1,5 @@
-using UnityEngine;
 using System;
+using UnityEngine;
 
 public class ObjectManager : MonoBehaviour
 {
@@ -10,67 +10,89 @@ public class ObjectManager : MonoBehaviour
     #region ==========Fields==========
     private static ObjectManager instance = null;
 
-    //Prefabs
-    [SerializeField] private GameObject prefab_tile;
-    [SerializeField] private GameObject prefab_timeTile;
+    [Header("Prefabs")]
+    [SerializeField] private GameObject prefab_operationTile;
+    [SerializeField] private GameObject prefab_swapTile;
     [SerializeField] private GameObject prefab_wall;
 
-    //Pool
-    private GameObject[] obj_tiles;
-    private GameObject[] obj_timeTiles;
-    private GameObject[] obj_walls;
+    //pools
+    GameObject[] obj_operationTiles;
+    GameObject[] obj_swapTiles;
+    GameObject[] obj_walls;
     #endregion
 
     #region ==========Unity Methods==========
     private void Awake()
     {
-        if (instance == null) instance = this;
-        else Destroy(this.gameObject);
-
-        //Init Pools
-        obj_tiles = new GameObject[64];
-        obj_timeTiles = new GameObject[64];
-        obj_walls = new GameObject[64];
-
-        //Instantiate
-        for (int i = 0; i < obj_tiles.Length; i++)
+        if (instance == null)
         {
-            obj_tiles[i] = Instantiate(prefab_tile, this.transform);
-            obj_tiles[i].SetActive(false);
+            instance = this;
         }
-        for (int i = 0; i < obj_timeTiles.Length; i++)
+        else
         {
-            obj_timeTiles[i] = Instantiate(prefab_timeTile, this.transform);
-            obj_timeTiles[i].SetActive(false);
+            Destroy(this.gameObject);
+            return;
         }
+
+        InitPool();
+    }
+    #endregion
+
+    #region ==========Methods==========
+    private void InitPool()
+    {
+        obj_operationTiles = new GameObject[128];
+        obj_swapTiles = new GameObject[128];
+        obj_walls = new GameObject[128];
+
+        //Operation Tiles
+        for (int i = 0; i < obj_operationTiles.Length; i++)
+        {
+            obj_operationTiles[i] = Instantiate(prefab_operationTile, this.transform);
+            obj_operationTiles[i].SetActive(false);
+        }
+
+        //Swap Tiles
+        for (int i = 0; i < obj_swapTiles.Length; i++)
+        {
+            obj_swapTiles[i] = Instantiate(prefab_swapTile, this.transform);
+            obj_swapTiles[i].SetActive(false);
+        }
+
+        //Walls
         for (int i = 0; i < obj_walls.Length; i++)
         {
             obj_walls[i] = Instantiate(prefab_wall, this.transform);
             obj_walls[i].SetActive(false);
         }
     }
-    #endregion
 
-    #region ==========Methods==========
-    public GameObject GetObject(ObjectID objID)
+    public GameObject GetObject(ObjectID id)
     {
-        GameObject[] pool = objID switch
+        GameObject[] pool = id switch
         {
-            ObjectID.Tile => obj_tiles,
-            ObjectID.TimeTile => obj_timeTiles,
+            ObjectID.OperationTile => obj_operationTiles,
+            ObjectID.SwapTile => obj_swapTiles,
             ObjectID.Wall => obj_walls,
-            _ => throw new ArgumentException()
+            _ => throw new ArgumentException("Invalid ObjectID", nameof(id))
         };
 
-        foreach (GameObject obj in pool)
+        for (int i = 0; i < pool.Length; i++)
         {
-            if (!obj.activeSelf)
+            if (!pool[i].activeSelf)
             {
-                obj.SetActive(true);
-                return obj;
+                pool[i].SetActive(true);
+                return pool[i];
             }
         }
-        throw new Exception();
+        throw new InvalidOperationException("No available objects in the pool for " + id);
+    }
+
+    public GameObject GetObject(ObjectID id, Vector2 position)
+    {
+        GameObject obj = GetObject(id);
+        obj.transform.position = position;
+        return obj;
     }
     #endregion
 }

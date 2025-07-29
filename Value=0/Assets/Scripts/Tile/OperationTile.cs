@@ -2,7 +2,7 @@ using System;
 using TMPro;
 using UnityEngine;
 
-public class LogicTile : MonoBehaviour
+public class OperationTile : MonoBehaviour
 {
     #region ==========Properties==========
     public Operator Operator { get => oper; set => oper = value; }
@@ -18,8 +18,11 @@ public class LogicTile : MonoBehaviour
                 Operator.Sub => $"-{value}",
                 Operator.Mul => $"¡¿{value}",
                 Operator.Div => $"¡À{value}",
+                Operator.Equal => $"={value}",
+                Operator.Not => $"¡Á{value}",
+                Operator.Greater => $">{value}",
+                Operator.Less => $"<{value}",
                 Operator.Portal => "P",
-                Operator.Start => "S",
                 _ => ""
             };
         }

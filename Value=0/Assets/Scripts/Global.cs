@@ -1,12 +1,17 @@
 public enum Operator
 {
-    None, Add, Sub, Mul, Div, Portal, Start
+    None,
+    // Basic arithmetic operations
+    Add, Sub, Mul, Div,
+    // Conditional operation
+    Equal, Not, Greater, Less,
+    Portal
 }
 
 public enum ObjectID
 {
     None,
-    Tile, TimeTile, Wall,
+    OperationTile, SwapTile, Wall,
 }
 
 public enum EventID
