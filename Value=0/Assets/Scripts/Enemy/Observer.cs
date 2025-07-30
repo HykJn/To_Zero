@@ -7,11 +7,10 @@ public class Observer : MonoBehaviour
     #endregion
 
     #region ==========Fields==========
-    [SerializeField] private Vector3 pointA, pointB;
+    [SerializeField] private Vector2 pointA, pointB;
     [SerializeField] private float speed = 3f;
-    [Header("Scanner")]
-    [SerializeField] private float width;
     private bool switching = false;
+    private GameObject scanner;
     #endregion
 
     #region ==========Unity Methods==========
@@ -29,70 +28,43 @@ public class Observer : MonoBehaviour
     #region ==========Methods==========
     public void Init()
     {
-        DrawMesh();
-        this.transform.position = pointA;
-        this.transform.LookAt(pointB);
+        scanner = this.transform.GetChild(0).gameObject;
+        this.transform.SetPositionAndRotation(pointA, Quaternion.FromToRotation(Vector3.up, pointB - pointA));
     }
 
-    void Patrol()
+    private void Patrol()
     {
-        if (switching)
-        {
-            this.transform.position = Vector3.MoveTowards(this.transform.position, pointA, speed * Time.deltaTime);
-        }
-        else
-        {
-            this.transform.position = Vector3.MoveTowards(this.transform.position, pointB, speed * Time.deltaTime);
-        }
-
-        if (Vector3.Distance(this.transform.position, pointA) < 0.1f)
-        {
-            switching = false;
-        }
-        else if (Vector3.Distance(this.transform.position, pointB) < 0.1f)
-        {
-            switching = true;
-        }
+        if (GoTo(switching ? pointA : pointB))
+            if (Turn(switching ? pointB : pointA))
+                switching = !switching;
     }
 
-    void DrawMesh()
+    private bool GoTo(Vector2 des)
     {
-        MeshFilter filter = this.transform.GetChild(0).GetComponent<MeshFilter>();
-        MeshRenderer renderer = this.transform.GetChild(0).GetComponent<MeshRenderer>();
-        MeshCollider col = this.transform.GetChild(0).GetComponent<MeshCollider>();
+        scanner.SetActive(true);
 
-        Mesh mesh = new Mesh();
-        mesh.Clear();
-
-        float x = this.transform.position.x;
-        float y = pointA.y;
-        float z = this.transform.position.z;
-        Vector3[] vertices =
+        if (Vector2.Distance(this.transform.position, des) < 0.1f)
         {
-            this.transform.position,
-            new(x + width/2, 0.5f - y, z + 0.5f),
-            new(x + width/2, 0.5f - y, z - 0.5f),
-            new(x - width/2, 0.5f - y, z - 0.5f),
-            new(x - width/2, 0.5f - y, z + 0.5f),
-        };
+            this.transform.position = des;
+            return true;
+        }
+        this.transform.position = Vector2.MoveTowards(this.transform.position, des, speed * Time.deltaTime);
+        return false;
+    }
 
-        int[] indices =
+    private bool Turn(Vector2 dir)
+    {
+        scanner.SetActive(false);
+
+        if (Vector2.Angle(this.transform.up, dir - (Vector2)this.transform.position) < 5f)
         {
-            0, 1, 2,
-            0, 2, 3,
-            0, 3, 4,
-            0, 4, 1,
-            1, 4, 3,
-            1, 3, 2,
-        };
+            this.transform.rotation = Quaternion.FromToRotation(Vector3.up, dir - (Vector2)this.transform.position);
+            return true;
+        }
 
-        mesh.vertices = vertices;
-        mesh.triangles = indices;
-        mesh.RecalculateBounds();
-        mesh.RecalculateNormals();
+        this.transform.Rotate(0, 0, 180 / (3f / speed) * Time.deltaTime);
 
-        filter.mesh = mesh;
-        col.sharedMesh = mesh;
+        return false;
     }
     #endregion
 }
