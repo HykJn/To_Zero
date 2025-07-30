@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TimeTile : LogicTile
+public class TimeTile : OperationTile
 {
     #region ==========Properties==========
     #endregion

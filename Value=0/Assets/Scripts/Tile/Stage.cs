@@ -1,119 +1,133 @@
 using UnityEngine;
 using System;
+using System.Collections.Generic;
+using UnityEngine.Tilemaps;
 
 public class Stage : MonoBehaviour
 {
     #region ==========Properties==========
-    
+
     #endregion
 
     #region ==========Fields==========
     [SerializeField, TextArea(6, 6)] private string stageMap;
     [SerializeField] private int startNumber, moves;
-    [SerializeField] private Vector3Int startPos;
-    [SerializeField] private GameObject[] objs;
+    [SerializeField] private Vector2 startPos;
+    private List<GameObject> objs;
+    private List<SwapTile> swapTiles;
     #endregion
 
     #region ==========Unity Methods==========
-    private void Start()
-    {
-        Init();
-        OnEnable();
-    }
-
     private void OnEnable()
     {
+        Init();
         Restart();
     }
 
     private void OnDisable()
     {
-        foreach (GameObject obj in objs)
-        {
-            if (obj != null)
-            {
-                obj.SetActive(false);
-            }
-        }
+        UnloadStage();
     }
     #endregion
 
     #region ==========Methods==========
     private void Init()
     {
-        GameObject.FindWithTag("Player").GetComponent<Player>().StartNumber = startNumber;
-        GameObject.FindWithTag("Player").GetComponent<Player>().Moves = moves;
-        objs = new GameObject[64];
+        objs = new();
+        swapTiles = new();
+        LoadStage();
+    }
 
-        string[] lines = stageMap.Split('\n');
-        for (int i = 0; i < lines.Length; i++)
+    private void LoadStage()
+    {
+        string[] lines = stageMap.Split("\n");
+        int height = lines.Length, width = lines[0].Split(' ').Length;
+
+        if (height % 2 != 0) this.transform.position += Vector3.down * 0.5f;
+        if (width % 2 != 0) this.transform.position += Vector3.left * 0.5f;
+
+        int left = -width / 2, top = height % 2 == 0 ? (height / 2) - 1 : height / 2;
+
+        for (int y = 0; y < height; y++)
         {
-            string[] line = lines[i].Split(' ');
-            for (int j = 0; j < line.Length; j++)
+            string[] tiles = lines[y].Split(' ');
+            for (int x = 0; x < width; x++)
             {
-                int z = (lines.Length / 2) - i;
-                int x = j - (line.Length / 2);
-
-                GameObject obj;
-
-                if (line[j].Equals("W") || line[j].Equals("w")) obj = ObjectManager.Instance.GetObject(ObjectID.Wall);
-                else if (line[j][0] == 'T' || line[j][0] == 't') obj = ObjectManager.Instance.GetObject(ObjectID.TimeTile);
-                else obj = ObjectManager.Instance.GetObject(ObjectID.Tile);
-
-                objs[i * line.Length + j] = obj;
-                obj.transform.position = new Vector3(x, 0, z);
-                if (!obj.TryGetComponent<LogicTile>(out LogicTile tile)) continue;
-
-                if (tile is TimeTile timeTile)
+                if (tiles[x] == "Start")
                 {
-                    timeTile.Operator = line[j][1] switch
-                    {
-                        '+' => Operator.Add,
-                        '-' => Operator.Sub,
-                        '*' => Operator.Mul,
-                        '/' => Operator.Div,
-                        _ => throw new ArgumentException()
-                    };
-                    timeTile.Value = int.Parse(line[j][2..]);
-                    timeTile.Init();
-                }
-                else if (line[j].Equals("N") || line[j].Equals("n") || line[j].Equals("0"))
-                {
+                    startPos = new Vector2(left + x, top - y);
+                    OperationTile tile = ObjectManager.Instance.GetObject(ObjectID.OperationTile, startPos).GetComponent<OperationTile>();
                     tile.Operator = Operator.None;
                     tile.Value = 0;
+                    objs.Add(tile.gameObject);
                 }
-                else if (line[j].Equals("P") || line[j].Equals("p"))
+                else if (tiles[x][0] == 'S' || tiles[x][0] == 's')
                 {
-                    tile.Operator = Operator.Portal;
-                    tile.Value = 0;
+                    SwapTile swapTile = ObjectManager.Instance.GetObject(ObjectID.SwapTile, new Vector2(left + x, top - y)).GetComponent<SwapTile>();
+                    swapTile.SetTile(tiles[x][1..]);
+                    swapTiles.Add(swapTile);
+                    objs.Add(swapTile.gameObject);
                 }
-                else if (line[j].Equals("S") || line[j].Equals("s"))
+                else if (tiles[x] == "W" || tiles[x] == "w")
                 {
-                    tile.Operator = Operator.Start;
-                    tile.Value = 0;
-                    startPos = new Vector3Int(x, 1, z);
+                    objs.Add(ObjectManager.Instance.GetObject(ObjectID.Wall, new Vector2(left + x, top - y)));
                 }
                 else
                 {
-                    tile.Operator = line[j][0] switch
+                    OperationTile tile = ObjectManager.Instance.GetObject(ObjectID.OperationTile, new Vector2(left + x, top - y)).GetComponent<OperationTile>();
+
+                    if (tiles[x] == "P" || tiles[x] == "p")
                     {
-                        '+' => Operator.Add,
-                        '-' => Operator.Sub,
-                        '*' => Operator.Mul,
-                        '/' => Operator.Div,
-                        _ => throw new ArgumentException()
-                    };
-                    tile.Value = int.Parse(line[j][1..]);
+                        tile.Operator = Operator.Portal;
+                        tile.Value = 0;
+                    }
+                    else
+                    {
+                        tile.Operator = tiles[x][0] switch
+                        {
+                            '+' => Operator.Add,
+                            '-' => Operator.Sub,
+                            '*' => Operator.Mul,
+                            '/' => Operator.Div,
+                            '=' => Operator.Equal,
+                            '!' => Operator.Not,
+                            '>' => Operator.Greater,
+                            '<' => Operator.Less,
+                            _ => throw new InvalidOperationException("Invalid operator in stage map.")
+                        };
+                        tile.Value = int.Parse(tiles[x][1..]);
+                    }
+
+                    objs.Add(tile.gameObject);
                 }
             }
         }
     }
 
+    private void UnloadStage()
+    {
+        foreach (GameObject obj in objs)
+        {
+            obj.SetActive(false);
+        }
+        objs.Clear();
+    }
+
     public void Restart()
     {
-        GameObject.FindWithTag("Player").transform.position = startPos;
-        GameObject.FindWithTag("Player").GetComponent<Player>().StartNumber = startNumber;
-        GameObject.FindWithTag("Player").GetComponent<Player>().Moves = moves;
+        Player player = GameObject.FindWithTag("Player").GetComponent<Player>();
+        player.transform.position = startPos;
+        player.StartNumber = startNumber;
+        player.Moves = moves;
+    }
+
+    public void SwapTiles()
+    {
+        if (swapTiles.Count == 0) return;
+        foreach (SwapTile tile in swapTiles)
+        {
+            tile.Swap();
+        }
     }
     #endregion
 }

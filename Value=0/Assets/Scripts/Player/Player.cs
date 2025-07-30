@@ -4,8 +4,8 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     #region ==========Properties==========
-    public int StartNumber { get => startNumber; set => startNumber = value; }
-    public int Moves { get => moves; set => moves = value; }
+    public int StartNumber { get; set; }
+    public int Moves { get; set; }
     public bool IsMovable { get; set; } = true;
     #endregion
 
@@ -20,7 +20,7 @@ public class Player : MonoBehaviour
         InputHandler();
     }
 
-    private void OnTriggerEnter(Collider other)
+    private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.CompareTag("Scanner"))
         {
@@ -33,11 +33,11 @@ public class Player : MonoBehaviour
     private void InputHandler()
     {
         //Moves
-        Vector3Int dir = Vector3Int.zero;
-        if (Input.GetKeyDown(KeyCode.W)) dir = Vector3Int.forward;
-        else if (Input.GetKeyDown(KeyCode.A)) dir = Vector3Int.left;
-        else if (Input.GetKeyDown(KeyCode.S)) dir = Vector3Int.back;
-        else if (Input.GetKeyDown(KeyCode.D)) dir = Vector3Int.right;
+        Vector3 dir = Vector3.zero;
+        if (Input.GetKeyDown(KeyCode.W)) dir = Vector3.up;
+        else if (Input.GetKeyDown(KeyCode.A)) dir = Vector3.left;
+        else if (Input.GetKeyDown(KeyCode.S)) dir = Vector3.down;
+        else if (Input.GetKeyDown(KeyCode.D)) dir = Vector3.right;
         if (dir != Vector3Int.zero)
         {
             Move(dir);
@@ -47,10 +47,10 @@ public class Player : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.R)) Restart();
     }
 
-    private void Move(Vector3Int dir)
+    private void Move(Vector3 dir)
     {
         if (!IsMovable) return;
-        if (moves <= 0)
+        if (Moves <= 0)
         {
             Die();
             return;
@@ -58,56 +58,61 @@ public class Player : MonoBehaviour
         if (CheckWall(dir)) return;
 
         this.transform.position += dir;
+        GameManager.Instance.SwapTiles();
 
         CheckTile();
     }
 
-    private bool CheckWall(Vector3Int dir)
+    private bool CheckWall(Vector3 dir)
     {
-        return Physics.Raycast(this.transform.position + dir + Vector3.up, Vector3.down, 10f, LayerMask.GetMask("Wall"));
+        return Physics2D.Raycast(this.transform.position + dir, Vector3.forward, 5f, LayerMask.GetMask("Wall"));
     }
 
     private void CheckTile()
     {
-        if (Physics.Raycast(this.transform.position, Vector3.down, out RaycastHit hit, 10f, LayerMask.GetMask("Tile")))
+        RaycastHit2D hit = Physics2D.Raycast(this.transform.position, Vector3.forward, 5f, LayerMask.GetMask("Tile"));
+        if (hit)
         {
-            LogicTile tile = hit.collider.GetComponent<LogicTile>();
-            if (tile.Operator == Operator.Portal)
+            OperationTile tile = hit.transform.parent.GetComponent<OperationTile>();
+            switch (tile.Operator)
             {
-                if (startNumber == 0)
-                {
-                    //GameManager.Instance.Stage++;
-                    GameManager.Instance.Transition(EventID.NextStage);
-                }
-                else
-                {
-                    Die();
-                }
+                case Operator.Portal:
+                    if (StartNumber == 0) GameManager.Instance.Transition(EventID.NextStage);
+                    else Die();
+                    break;
+                case Operator.Add:
+                    StartNumber += tile.Value;
+                    break;
+                case Operator.Sub:
+                    StartNumber -= tile.Value;
+                    break;
+                case Operator.Mul:
+                    StartNumber *= tile.Value;
+                    break;
+                case Operator.Div:
+                    StartNumber /= tile.Value;
+                    break;
+                case Operator.Equal:
+                    if (StartNumber != tile.Value) Die();
+                    break;
+                case Operator.Not:
+                    if (StartNumber == tile.Value) Die();
+                    break;
+                case Operator.Greater:
+                    if (StartNumber <= tile.Value) Die();
+                    break;
+                case Operator.Less:
+                    if (StartNumber >= tile.Value) Die();
+                    break;
             }
-            else
-            {
-                startNumber = tile.Operator switch
-                {
-                    Operator.Add => startNumber + tile.Value,
-                    Operator.Sub => startNumber - tile.Value,
-                    Operator.Mul => startNumber * tile.Value,
-                    Operator.Div => startNumber / tile.Value,
-                    //_ => throw new ArgumentException($"Unknown operator: {tile.Operator}"),
-                    _ => startNumber,
-                };
-            }
-            moves--;
-        }
-        else
-        {
-            Debug.Log("Can't find any tile");
+            Moves--;
+            moves = Moves;
+            startNumber = StartNumber;
         }
     }
 
     public void Die()
     {
-        //TODO: Implement Die logic
-        //Restart();
         GameManager.Instance.Transition(EventID.PlayerDie);
     }
 
