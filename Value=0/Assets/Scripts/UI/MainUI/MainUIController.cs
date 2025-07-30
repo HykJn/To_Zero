@@ -34,6 +34,12 @@ public class MainUIController : MonoBehaviour
 
         StagePanel.SetActive(true);
     }
+    public void OnClick_StagePanelExit()
+    {
+        StagePanel.SetActive(false);
+
+        MenuPanel.SetActive(true);
+    }
     public void OnClick_CreativeMode()
     {
         Debug.Log("창작마당");
@@ -42,7 +48,7 @@ public class MainUIController : MonoBehaviour
     {
         SettingManager.instance.SetActiveSettingPanel(true);
     }
-    public void Onclick_Exit()
+    public void Onclick_Quit()
     {
         Debug.Log("게임 종료");
         Application.Quit();
