@@ -16,14 +16,16 @@ public class Stage : MonoBehaviour
     [SerializeField] private Vector3 startPos;
     private List<GameObject> objs;
     private List<SwapTile> swapTiles;
-    private List<Box> boxes;
     #endregion
 
     #region ==========Unity Methods==========
     private void OnEnable()
     {
         Init();
-        Restart();
+        Player player = GameObject.FindWithTag("Player").GetComponent<Player>();
+        player.transform.position = startPos;
+        player.StartNumber = startNumber;
+        player.Moves = moves;
     }
 
     private void OnDisable()
@@ -37,8 +39,8 @@ public class Stage : MonoBehaviour
     {
         objs = new();
         swapTiles = new();
-        boxes = new();
         LoadStage();
+
     }
 
     private void LoadStage()
@@ -92,11 +94,11 @@ public class Stage : MonoBehaviour
                     }
                     else
                     {
+                        GameObject obj = null;
                         if (tiles[x][0] == 'B' || tiles[x][0] == 'b')
                         {
-                            GameObject obj = ObjectManager.Instance.GetObject(ObjectID.Box, pos);
+                            obj = ObjectManager.Instance.GetObject(ObjectID.Box, pos);
                             objs.Add(obj);
-                            boxes.Add(obj.GetComponent<Box>());
                             tiles[x] = tiles[x][1..];
                         }
 
@@ -113,15 +115,17 @@ public class Stage : MonoBehaviour
                             _ => throw new InvalidOperationException("Invalid operator in stage map.")
                         };
                         tile.Value = int.Parse(tiles[x][1..]);
+
+                        if (obj != null)
+                        {
+                            obj.GetComponentInChildren<TMP_Text>().text =
+                                tile.GetComponentInChildren<TMP_Text>().text;
+                        }
                     }
 
                     objs.Add(tile.gameObject);
                 }
             }
-        }
-        foreach (Box box in boxes)
-        {
-            box.UpdateValue();
         }
     }
 
@@ -136,6 +140,8 @@ public class Stage : MonoBehaviour
 
     public void Restart()
     {
+        UnloadStage();
+        LoadStage();
         Player player = GameObject.FindWithTag("Player").GetComponent<Player>();
         player.transform.position = startPos;
         player.StartNumber = startNumber;

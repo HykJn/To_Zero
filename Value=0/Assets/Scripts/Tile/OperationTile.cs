@@ -16,10 +16,10 @@ public class OperationTile : MonoBehaviour
             {
                 Operator.Add => $"+{value}",
                 Operator.Sub => $"-{value}",
-                Operator.Mul => $"¡¿{value}",
-                Operator.Div => $"¡À{value}",
+                Operator.Mul => $"Ã—{value}",
+                Operator.Div => $"Ã·{value}",
                 Operator.Equal => $"={value}",
-                Operator.Not => $"¡Á{value}",
+                Operator.Not => $"â‰ {value}",
                 Operator.Greater => $">{value}",
                 Operator.Less => $"<{value}",
                 Operator.Portal => "P",
