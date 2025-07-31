@@ -125,14 +125,14 @@ public class SettingManager : MonoBehaviour
         //SoundManager.Instance.BGMVolume = value;
         Debug.Log("BGM Volume: " + value);
     }
-    
+
     public void OnSFXVolumeChanged(float value)
     {
         // SoundManager의 SFXVolume 프로퍼티에 슬라이더 값을 전달
         //SoundManager.Instance.SFXVolume = value;
         Debug.Log("SFX Volume: " + value);
     }
-    
+
     public void OnUIVolumeChanged(float value)
     {
         // SoundManager의 UIVolume 프로퍼티에 슬라이더 값을 전달
