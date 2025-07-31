@@ -12,6 +12,7 @@ public class Player : MonoBehaviour
     #region ==========Fields==========
     [SerializeField] private int startNumber;
     [SerializeField] private int moves;
+    [SerializeField] private GameObject box;
     #endregion
 
     #region ==========Unity==========
@@ -32,6 +33,12 @@ public class Player : MonoBehaviour
     #region ==========Methods==========
     private void InputHandler()
     {
+        //Mouse
+        if (Input.GetKeyDown(KeyCode.Mouse0))
+        {
+            //TODO; Do something
+        }
+
         //Moves
         Vector3 dir = Vector3.zero;
         if (Input.GetKeyDown(KeyCode.W)) dir = Vector3.up;
@@ -41,6 +48,16 @@ public class Player : MonoBehaviour
         if (dir != Vector3Int.zero)
         {
             Move(dir);
+        }
+
+        //Move Box
+        if (Input.GetKey(KeyCode.Space))
+        {
+            MoveBox();
+        }
+        else if (Input.GetKeyUp(KeyCode.Space))
+        {
+            IsMovable = true;
         }
 
         //Restart
@@ -55,17 +72,38 @@ public class Player : MonoBehaviour
             Die();
             return;
         }
-        if (CheckWall(dir)) return;
+        if (CheckBox(this.transform.position + dir) || !CheckMovable(this.transform.position + dir)) return;
 
         this.transform.position += dir;
         GameManager.Instance.SwapTiles();
 
         CheckTile();
+        CheckBox(this.transform.position + dir);
     }
 
-    private bool CheckWall(Vector3 dir)
+    private void MoveBox()
     {
-        return Physics2D.Raycast(this.transform.position + dir, Vector3.forward, 5f, LayerMask.GetMask("Wall"));
+        IsMovable = false;
+
+        if (box == null) return;
+
+        Vector3 dir = Vector3.zero;
+        if (Input.GetKeyDown(KeyCode.W)) dir = Vector3.up;
+        else if (Input.GetKeyDown(KeyCode.A)) dir = Vector3.left;
+        else if (Input.GetKeyDown(KeyCode.S)) dir = Vector3.down;
+        else if (Input.GetKeyDown(KeyCode.D)) dir = Vector3.right;
+
+        if (dir == Vector3.zero || !CheckMovable(box.transform.position + dir)) return;
+        box.transform.position += dir;
+        box.GetComponent<Box>().UpdateValue();
+        box = null;
+    }
+
+    private bool CheckMovable(Vector3 pos)
+    {
+        RaycastHit2D hit = Physics2D.Raycast(pos, Vector3.forward);
+        if (hit) return hit.collider.gameObject.layer == 10;
+        return false;
     }
 
     private void CheckTile()
@@ -109,6 +147,18 @@ public class Player : MonoBehaviour
             moves = Moves;
             startNumber = StartNumber;
         }
+    }
+
+    private bool CheckBox(Vector3 pos)
+    {
+        RaycastHit2D hit = Physics2D.Raycast(pos, Vector3.forward, 5f, LayerMask.GetMask("Box"));
+        if (hit)
+        {
+            box = hit.collider.transform.parent.gameObject;
+            return true;
+        }
+        box = null;
+        return false;
     }
 
     public void Die()

@@ -1,6 +1,9 @@
+using System.Collections;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using System;
 
 public class MainUIController : MonoBehaviour
 {
@@ -51,7 +54,12 @@ public class MainUIController : MonoBehaviour
     public void Onclick_Quit()
     {
         Debug.Log("게임 종료");
+        //Application.Quit();
+#if UNITY_EDITOR
+        EditorApplication.ExitPlaymode();
+#else
         Application.Quit();
+#endif
     }
 
     public void ScrollRight()
@@ -88,5 +96,18 @@ public class MainUIController : MonoBehaviour
         //SceneManager.LoadScene($"Stage{stageNum}");
     }
 
+    #endregion
+
+    //Added section by hykjn
+    #region ==========Scene Management==========
+    public void ToPlayScene(int stage)
+    {
+        throw new NotImplementedException();
+    }
+
+    private IEnumerator LoadPlayScene()
+    {
+        throw new NotImplementedException();
+    }
     #endregion
 }

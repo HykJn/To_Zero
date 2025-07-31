@@ -14,11 +14,13 @@ public class ObjectManager : MonoBehaviour
     [SerializeField] private GameObject prefab_operationTile;
     [SerializeField] private GameObject prefab_swapTile;
     [SerializeField] private GameObject prefab_wall;
+    [SerializeField] private GameObject prefab_box;
 
     //pools
     GameObject[] obj_operationTiles;
     GameObject[] obj_swapTiles;
     GameObject[] obj_walls;
+    GameObject[] obj_boxes;
     #endregion
 
     #region ==========Unity Methods==========
@@ -44,6 +46,7 @@ public class ObjectManager : MonoBehaviour
         obj_operationTiles = new GameObject[128];
         obj_swapTiles = new GameObject[128];
         obj_walls = new GameObject[128];
+        obj_boxes = new GameObject[128];
 
         //Operation Tiles
         for (int i = 0; i < obj_operationTiles.Length; i++)
@@ -65,6 +68,13 @@ public class ObjectManager : MonoBehaviour
             obj_walls[i] = Instantiate(prefab_wall, this.transform);
             obj_walls[i].SetActive(false);
         }
+
+        //Boxes
+        for (int i = 0; i < obj_boxes.Length; i++)
+        {
+            obj_boxes[i] = Instantiate(prefab_box, this.transform);
+            obj_boxes[i].SetActive(false);
+        }
     }
 
     public GameObject GetObject(ObjectID id)
@@ -74,6 +84,7 @@ public class ObjectManager : MonoBehaviour
             ObjectID.OperationTile => obj_operationTiles,
             ObjectID.SwapTile => obj_swapTiles,
             ObjectID.Wall => obj_walls,
+            ObjectID.Box => obj_boxes,
             _ => throw new ArgumentException("Invalid ObjectID", nameof(id))
         };
 
@@ -88,7 +99,7 @@ public class ObjectManager : MonoBehaviour
         throw new InvalidOperationException("No available objects in the pool for " + id);
     }
 
-    public GameObject GetObject(ObjectID id, Vector2 position)
+    public GameObject GetObject(ObjectID id, Vector3 position)
     {
         GameObject obj = GetObject(id);
         obj.transform.position = position;
