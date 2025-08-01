@@ -1,41 +1,60 @@
+using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
+[System.Serializable]
+public struct Speaker
+{
+    public string characterName;
+    public Image characterImage; 
+   
+}
+
+[System.Serializable]
+public struct DialogueData
+{
+    public int speakerIndex; // speaker 배열 순번
+    public string name; // 캐릭터 이름
+    [TextArea(3, 5)]
+    public string dialogue; // 대사
+}
 public class DialogueSystem : MonoBehaviour
 {
-    [Header("대화 UI (공통)")]
+    #region ==========Fields==========
     [SerializeField]
     private Image imageDialog; // 공통 대화창 이미지
     [SerializeField]
     private TextMeshProUGUI textName; // 공통 캐릭터 이름
     [SerializeField]
     private TextMeshProUGUI textDialogue; // 공통 대사 출력 text
-    [SerializeField]
-    private GameObject objectArrow; // 공통 화살표 오브젝트
 
-    [Header("캐릭터 설정")]
     [SerializeField]
     private Speaker[] speakers; // 캐릭터 정보 배열
     [SerializeField]
     private DialogueData[] dialogs; // 현재 분기의 대사 목록
     [SerializeField]
     private bool isAutoStart = true; // 자동시작여부
-    
+
     private bool isFirst = true; // 최초 1회만 호출
     private int currentDialogIndex = -1; // 현재 대사순번
     private int currentSpeakerIndex = 0; // 화자의 배열순번
+    private float typingSpeed = 0.1f;
+    private bool isTypingEffect = false;
+    #endregion
 
+    #region ==========Unity Methods==========
     private void Awake()
     {
         Setup();
     }
+    #endregion
 
+    #region ==========Methods==========
     private void Setup()
     {
         // 대화 UI 초기 비활성화
         SetDialogueUIActive(false);
-        
 
         for (int i = 0; i < speakers.Length; i++)
         {
@@ -54,16 +73,22 @@ public class DialogueSystem : MonoBehaviour
             if (isAutoStart) SetNextDialog();
             isFirst = false;
         }
-        
+
         if (Input.GetMouseButtonDown(0))
         {
-            if (dialogs.Length > currentDialogIndex + 1)
+            if (isTypingEffect == true)
+            {
+                //타이핑 효과 중지하고, 현재 대사 전체 출력
+                isTypingEffect = false;
+                StopCoroutine("OnTypingText");
+                textDialogue.text = dialogs[currentDialogIndex].dialogue;
+            }
+            else if (dialogs.Length > currentDialogIndex + 1)
             {
                 SetNextDialog();
             }
             else
             {
-                // 대화 종료
                 EndDialogue();
             }
         }
@@ -85,7 +110,7 @@ public class DialogueSystem : MonoBehaviour
         // 현재 화자 활성화
         string speakerName = dialogs[currentDialogIndex].name;
         currentSpeakerIndex = FindSpeakerByName(speakerName);
-        
+
         if (currentSpeakerIndex != -1)
         {
             // 현재 화자 활성화 (선명하게)
@@ -93,8 +118,8 @@ public class DialogueSystem : MonoBehaviour
         }
         // 공통 UI에 텍스트 설정
         textName.text = dialogs[currentDialogIndex].name;
-        textDialogue.text = dialogs[currentDialogIndex].dialogue;
-
+        //textDialogue.text = dialogs[currentDialogIndex].dialogue;
+        StartCoroutine("OnTypingText");
         // 대화 UI 활성화
         SetDialogueUIActive(true);
     }
@@ -108,8 +133,6 @@ public class DialogueSystem : MonoBehaviour
                 return i;
             }
         }
-        
-        Debug.LogWarning($"'{name}' 이름의 캐릭터를 찾을 수 없습니다!");
         return -1; // 찾지 못한 경우
     }
 
@@ -127,35 +150,32 @@ public class DialogueSystem : MonoBehaviour
         imageDialog.gameObject.SetActive(isActive);
         textName.gameObject.SetActive(isActive);
         textDialogue.gameObject.SetActive(isActive);
-        objectArrow.SetActive(false); // 화살표는 필요시 별도 로직으로 활성화
     }
 
     private void EndDialogue()
     {
         // 대화 UI 비활성화
         SetDialogueUIActive(false);
-        
+
         // 모든 캐릭터 스프라이트 비활성화
         for (int i = 0; i < speakers.Length; i++)
         {
             speakers[i].characterImage.gameObject.SetActive(false);
         }
     }
+    private IEnumerator OnTypingText()
+    {
+        int index = 0;
+        isTypingEffect = true;
+
+        while (index < dialogs[currentDialogIndex].dialogue.Length)
+        {
+            textDialogue.text = dialogs[currentDialogIndex].dialogue.Substring(0, index);
+            index++;
+            yield return new WaitForSeconds(typingSpeed);
+        }
+        isTypingEffect = false;
+    }
+    #endregion
 }
 
-[System.Serializable]
-public struct Speaker
-{
-    public string characterName;
-    public Image characterImage; 
-   
-}
-
-[System.Serializable]
-public struct DialogueData
-{
-    public int speakerIndex; // speaker 배열 순번
-    public string name; // 캐릭터 이름
-    [TextArea(3, 5)]
-    public string dialogue; // 대사
-}
