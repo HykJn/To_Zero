@@ -42,7 +42,7 @@ public class GameManager : MonoBehaviour
     #endregion
 
     #region ==========Methods==========
-    public void Transition(EventID id) => this.GetComponent<PPTransition>().Transition(id);
+    public void Transition(EventID id) => Camera.main.GetComponent<PPTransition>().Transition(id);
 
     public void SwapTiles() => stages[curStage - 1].GetComponent<Stage>().SwapTiles();
 

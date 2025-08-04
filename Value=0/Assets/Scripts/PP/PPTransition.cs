@@ -5,10 +5,12 @@ using UnityEngine.Rendering.Universal;
 
 public class PPTransition : MonoBehaviour
 {
+    public Vector3 Portal { get; set; }
+
     #region ==========Fields==========
     [SerializeField] private Volume globalVolume;
 
-    [Header("Transition 1")]
+    [Header("Next Stage")]
     public float pinchDuration = 0.7f;
     public float holdDuration = 0.4f;
     public float unpinchDuration = 0.7f;
@@ -22,7 +24,7 @@ public class PPTransition : MonoBehaviour
     ColorAdjustments _ColorAdj;
     bool _isTransitioning = false;
 
-    [Header("Transition 2")]
+    [Header("Die")]
     public float glitchDuration = 0.7f;
     public float maxChroma = 2f;
     public float maxLens = 0.5f;
@@ -76,13 +78,15 @@ public class PPTransition : MonoBehaviour
             _lens.scale.value = Mathf.Lerp(startScale, pinchScale, t);
             _lens.intensity.value = Mathf.Lerp(startLensIntensity, pinchIntensity, t);
             _ColorAdj.postExposure.value = Mathf.Lerp(0f, fadeoutColorAdj, t);
+            //this.transform.position += (Portal - this.transform.position).normalized * elapsed;
             yield return null;
         }
+        //this.transform.position = Portal;
         _lens.scale.value = pinchScale;
         _lens.intensity.value = pinchIntensity;
 
 
-        //´ë±âÇß´Ù°¡ ½ºÅ×ÀÌÁöÈ°¼ºÈ­
+        //ï¿½ï¿½ï¿½ï¿½ß´Ù°ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È°ï¿½ï¿½È­
         yield return new WaitForSeconds(holdDuration);
         GameManager.Instance.Stage++;
 
@@ -95,6 +99,7 @@ public class PPTransition : MonoBehaviour
             _lens.scale.value = Mathf.Lerp(pinchScale, startScale, t);
             _lens.intensity.value = Mathf.Lerp(pinchIntensity, startLensIntensity, t);
             _ColorAdj.postExposure.value = Mathf.Lerp(fadeoutColorAdj, 0, t);
+            //this.transform.position += (Vector3.zero - this.transform.position).normalized * elapsed;
 
             yield return null;
         }
@@ -104,6 +109,7 @@ public class PPTransition : MonoBehaviour
 
         _isTransitioning = false;
         GameObject.FindWithTag("Player").GetComponent<Player>().IsMovable = true;
+        //this.transform.position = Vector3.back;
     }
 
     IEnumerator Restart()
@@ -132,7 +138,7 @@ public class PPTransition : MonoBehaviour
         _lens.intensity.value = maxLens;
         _grain.intensity.value = maxGrain;
 
-        //½ºÅ×ÀÌÁö È°¼ºÈ­
+        //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ È°ï¿½ï¿½È­
         GameManager.Instance.Restart();
 
         elapsed = 0f;
