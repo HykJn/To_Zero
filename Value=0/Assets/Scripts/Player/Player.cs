@@ -10,9 +10,9 @@ public class Player : MonoBehaviour
     #endregion
 
     #region ==========Fields==========
-    [SerializeField] private int startNumber;
-    [SerializeField] private int moves;
-    [SerializeField] private GameObject box;
+    private int startNumber;
+    private int moves;
+    private GameObject box;
     #endregion
 
     #region ==========Unity==========
@@ -42,9 +42,17 @@ public class Player : MonoBehaviour
         //Moves
         Vector3 dir = Vector3.zero;
         if (Input.GetKeyDown(KeyCode.W)) dir = Vector3.up;
-        else if (Input.GetKeyDown(KeyCode.A)) dir = Vector3.left;
+        else if (Input.GetKeyDown(KeyCode.A))
+        {
+            this.GetComponentInChildren<SpriteRenderer>().flipX = true;
+            dir = Vector3.left;
+        }
         else if (Input.GetKeyDown(KeyCode.S)) dir = Vector3.down;
-        else if (Input.GetKeyDown(KeyCode.D)) dir = Vector3.right;
+        else if (Input.GetKeyDown(KeyCode.D))
+        {
+            this.GetComponentInChildren<SpriteRenderer>().flipX = false;
+            dir = Vector3.right;
+        }
         if (dir != Vector3Int.zero)
         {
             Move(dir);
@@ -155,8 +163,10 @@ public class Player : MonoBehaviour
         if (hit)
         {
             box = hit.collider.transform.parent.gameObject;
+            box.GetComponent<Box>().Selected = true;
             return true;
         }
+        if (box != null) box.GetComponent<Box>().Selected = false;
         box = null;
         return false;
     }

@@ -4,11 +4,20 @@ using UnityEngine;
 public class Box : MonoBehaviour
 {
     #region ==========Properties==========
-
+    public bool Selected
+    {
+        get => isSelected;
+        set
+        {
+            isSelected = value;
+            this.GetComponentInChildren<Renderer>().material = value ? selectedMaterial : defaultMaterial;
+        }
+    }
     #endregion
 
     #region ==========Fields==========
-
+    [SerializeField] private Material defaultMaterial, selectedMaterial;
+    private bool isSelected = false;
     #endregion
 
     #region ==========Unity Methods==========
