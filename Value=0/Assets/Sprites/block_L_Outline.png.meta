@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 45c5f09a959c2eb439fb854585688963
+guid: 0d888aa735f343e4ba87c371128f0497
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 7347897897703187298
-    second: block_L_Outline_0
+      213: 7149891433825486853
+    second: block_L_Outline_2_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -100,23 +100,23 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: block_L_Outline_0
+      name: block_L_Outline
       rect:
         serializedVersion: 2
-        x: 9
-        y: 8
-        width: 31
-        height: 36
+        x: 8
+        y: 7
+        width: 33
+        height: 38
       alignment: 9
-      pivot: {x: 0.5, y: 0.43055555}
+      pivot: {x: 0.5, y: 0.43421054}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 2632076053af8f560800000000000000
-      internalID: 7347897897703187298
+      spriteID: 508c6c79064893360800000000000000
+      internalID: 7149891433825486853
       vertices: []
       indices: 
       edges: []
@@ -125,7 +125,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 5e97eb03825dee720800000000000000
+    spriteID: 7da8ce6ca0381d84482b9a2d7b4e2e65
     internalID: 0
     vertices: []
     indices: 
@@ -135,7 +135,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      block_L_Outline_0: 7347897897703187298
+      block_L_Outline: 7149891433825486853
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

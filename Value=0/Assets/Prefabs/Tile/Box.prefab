@@ -336,7 +336,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 6042429971222902559}
   - {fileID: 5741883001929958844}
@@ -356,7 +356,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _default: {fileID: -5932775322478234029, guid: a1e784f31aedc9d47b0c376fa10f49f4, type: 3}
-  outline: {fileID: 7347897897703187298, guid: 45c5f09a959c2eb439fb854585688963, type: 3}
+  outline: {fileID: 7149891433825486853, guid: 0d888aa735f343e4ba87c371128f0497, type: 3}
   preview: {fileID: 5741883001929958844}
 --- !u!1 &4257131512987652906
 GameObject:
@@ -703,8 +703,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0.1967}
-  m_SizeDelta: {x: 0.75, y: 0.5}
+  m_AnchoredPosition: {x: -0.01316, y: -0.17109}
+  m_SizeDelta: {x: 0.42133, y: 0.42142}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!223 &5861845388658917667
 Canvas:
@@ -727,7 +727,7 @@ Canvas:
   m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 4
+  m_SortingOrder: 10
   m_TargetDisplay: 0
 --- !u!114 &8400747684869100879
 MonoBehaviour:

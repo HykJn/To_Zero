@@ -66,6 +66,7 @@ public class Stage : MonoBehaviour
                     OperationTile tile = ObjectManager.Instance.GetObject(ObjectID.OperationTile, pos).GetComponent<OperationTile>();
                     tile.Operator = Operator.None;
                     tile.Value = 0;
+                    tile.OnPlayer = true;
                     objs.Add(tile.gameObject);
                 }
                 else if (tiles[x] == "W" || tiles[x] == "w")
@@ -73,6 +74,7 @@ public class Stage : MonoBehaviour
                     OperationTile tile = ObjectManager.Instance.GetObject(ObjectID.OperationTile, pos).GetComponent<OperationTile>();
                     tile.Operator = Operator.None;
                     tile.Value = 0;
+                    tile.GetComponent<Animator>().enabled = false;
                     objs.Add(tile.gameObject);
                     objs.Add(ObjectManager.Instance.GetObject(ObjectID.Wall, pos));
                 }
@@ -99,6 +101,7 @@ public class Stage : MonoBehaviour
                         GameObject obj = null;
                         if (tiles[x][0] == 'B' || tiles[x][0] == 'b')
                         {
+                            tile.GetComponent<Animator>().enabled = false;
                             obj = ObjectManager.Instance.GetObject(ObjectID.Box, pos);
                             objs.Add(obj);
                             tiles[x] = tiles[x][1..];

@@ -100,7 +100,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: block_L_0
+      name: block_L
       rect:
         serializedVersion: 2
         x: 10
@@ -135,7 +135,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      block_L_0: -5932775322478234029
+      block_L: -5932775322478234029
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
