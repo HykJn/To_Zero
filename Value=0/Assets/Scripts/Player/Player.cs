@@ -13,6 +13,7 @@ public class Player : MonoBehaviour
     private int startNumber;
     private int moves;
     private GameObject box;
+    private bool onHold;
     #endregion
 
     #region ==========Unity==========
@@ -59,13 +60,14 @@ public class Player : MonoBehaviour
         }
 
         //Move Box
-        if (Input.GetKey(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            if (onHold) UnHoldBox();
+            else HoldBox();
+        }
+        if (onHold)
         {
             MoveBox();
-        }
-        else if (Input.GetKeyUp(KeyCode.Space))
-        {
-            IsMovable = true;
         }
 
         //Restart
@@ -83,17 +85,39 @@ public class Player : MonoBehaviour
         if (CheckBox(this.transform.position + dir) || !CheckMovable(this.transform.position + dir)) return;
 
         this.transform.position += dir;
+        this.GetComponentInChildren<Animator>().SetTrigger("Move");
         GameManager.Instance.SwapTiles();
 
         CheckTile();
         CheckBox(this.transform.position + dir);
     }
 
-    private void MoveBox()
+    private void HoldBox()
     {
+        if (box == null) return;
         IsMovable = false;
 
-        if (box == null) return;
+        Vector3[] wasd = { Vector3.up, Vector3.left, Vector3.down, Vector3.right };
+        foreach (Vector3 dir in wasd)
+        {
+            if (CheckMovable(box.transform.position + dir))
+                box.GetComponent<Box>().SetPreview(dir);
+        }
+
+        onHold = true;
+        //TODO: Implement UI interaction
+    }
+
+    private void UnHoldBox()
+    {
+        IsMovable = true;
+        onHold = false;
+        if (box != null) box.GetComponent<Box>().ClearPreview();
+    }
+
+    private void MoveBox()
+    {
+        if (!onHold) return;
 
         Vector3 dir = Vector3.zero;
         if (Input.GetKeyDown(KeyCode.W)) dir = Vector3.up;
@@ -103,8 +127,16 @@ public class Player : MonoBehaviour
 
         if (dir == Vector3.zero || !CheckMovable(box.transform.position + dir)) return;
         box.transform.position += dir;
+        Moves--;
         box.GetComponent<Box>().UpdateValue();
+        box.GetComponent<Box>().Selected = false;
+        box.GetComponent<Box>().ClearPreview();
         box = null;
+        onHold = false;
+        IsMovable = true;
+
+
+        //TODO: Implement UI interaction
     }
 
     private bool CheckMovable(Vector3 pos)
@@ -162,6 +194,7 @@ public class Player : MonoBehaviour
         RaycastHit2D hit = Physics2D.Raycast(pos, Vector3.forward, 5f, LayerMask.GetMask("Box"));
         if (hit)
         {
+            if (box != null) box.GetComponent<Box>().Selected = false;
             box = hit.collider.transform.parent.gameObject;
             box.GetComponent<Box>().Selected = true;
             return true;

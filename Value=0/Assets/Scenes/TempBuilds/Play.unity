@@ -305,7 +305,7 @@ MonoBehaviour:
 
     p b-2 +2 +1 b-3 b-1 -2'
   startNumber: 4
-  moves: 18
+  moves: 19
   startPos: {x: 0, y: 0, z: 0}
 --- !u!156049354 &438444097
 Grid:
@@ -458,9 +458,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b3db7dbe36bf50f49805cc92b38a29d1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  startNumber: 0
-  moves: 0
-  box: {fileID: 0}
 --- !u!1 &1010240876
 GameObject:
   m_ObjectHideFlags: 0
@@ -1008,7 +1005,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 5
+  m_SortingOrder: 10
   m_Sprite: {fileID: -8188198914606492527, guid: a393639945e9ca84d863ede97cf6470a, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
