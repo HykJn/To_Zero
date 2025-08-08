@@ -90,7 +90,7 @@ public class Stage : MonoBehaviour
                     if (tiles[x] == "P" || tiles[x] == "p")
                     {
                         //TODO: Fix later
-                        Camera.main.GetComponent<PPTransition1>().Portal = (Vector3)pos + Vector3.back;
+                        Camera.main.GetComponent<PPTransition>().Portal = (Vector3)pos + Vector3.back;
                         tile.Operator = Operator.Portal;
                         tile.Value = 0;
                     }
