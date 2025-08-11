@@ -93,6 +93,9 @@ public class Stage : MonoBehaviour
                     {
                         //TODO: Fix later
                         Camera.main.GetComponent<PPTransition>().Portal = (Vector3)pos + Vector3.back;
+                        GameObject portal = ObjectManager.Instance.GetObject(ObjectID.Portal, pos);
+                        portal.GetComponent<SpriteRenderer>().flipX = pos.x > startPos.x;
+                        objs.Add(portal);
                         tile.Operator = Operator.Portal;
                         tile.Value = 0;
                     }

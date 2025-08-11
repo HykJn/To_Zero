@@ -113,15 +113,14 @@ public class PPTransition : MonoBehaviour
         float startScale = _lens.scale.value;
         float startLensIntensity = _lens.intensity.value;
         float elapsed = 0f;
-
         while (elapsed < pinchDuration)
         {
             elapsed += Time.deltaTime;
             float t = Mathf.Clamp01(elapsed / pinchDuration);
 
             // 렌즈 중심점을 Portal로 이동
-            Vector2 lensCenter = GetLensCenterWithTransition(t);
-            _lens.center.value = lensCenter;
+            //Vector2 lensCenter = GetLensCenterWithTransition(t);
+            //_lens.center.value = lensCenter;
 
             mainCamera.orthographicSize = Mathf.Lerp(_originalCameraSize, CameraSize, t);
             _lens.scale.value = Mathf.Lerp(startScale, pinchScale, t);

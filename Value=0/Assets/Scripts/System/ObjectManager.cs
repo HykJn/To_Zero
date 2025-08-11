@@ -15,12 +15,14 @@ public class ObjectManager : MonoBehaviour
     [SerializeField] private GameObject prefab_swapTile;
     [SerializeField] private GameObject prefab_wall;
     [SerializeField] private GameObject prefab_box;
+    [SerializeField] private GameObject prefab_portal;
 
     //pools
     GameObject[] obj_operationTiles;
     GameObject[] obj_swapTiles;
     GameObject[] obj_walls;
     GameObject[] obj_boxes;
+    GameObject[] obj_portals;
     #endregion
 
     #region ==========Unity Methods==========
@@ -47,6 +49,7 @@ public class ObjectManager : MonoBehaviour
         obj_swapTiles = new GameObject[128];
         obj_walls = new GameObject[128];
         obj_boxes = new GameObject[128];
+        obj_portals = new GameObject[4];
 
         //Operation Tiles
         for (int i = 0; i < obj_operationTiles.Length; i++)
@@ -75,6 +78,13 @@ public class ObjectManager : MonoBehaviour
             obj_boxes[i] = Instantiate(prefab_box, this.transform);
             obj_boxes[i].SetActive(false);
         }
+
+        //Portals
+        for (int i = 0; i < obj_portals.Length; i++)
+        {
+            obj_portals[i] = Instantiate(prefab_portal, this.transform);
+            obj_portals[i].SetActive(false);
+        }
     }
 
     public GameObject GetObject(ObjectID id)
@@ -85,6 +95,7 @@ public class ObjectManager : MonoBehaviour
             ObjectID.SwapTile => obj_swapTiles,
             ObjectID.Wall => obj_walls,
             ObjectID.Box => obj_boxes,
+            ObjectID.Portal => obj_portals,
             _ => throw new ArgumentException("Invalid ObjectID", nameof(id))
         };
 
