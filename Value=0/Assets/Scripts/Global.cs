@@ -12,6 +12,8 @@ public enum ObjectID
 {
     None,
     OperationTile, SwapTile, Wall,
+    Box,
+    Portal,
 }
 
 public enum EventID

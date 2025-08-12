@@ -1,12 +1,16 @@
+using System.Collections;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using System;
 
 public class MainUIController : MonoBehaviour
 {
     [Header("Panels")]
     [SerializeField] private GameObject MenuPanel;
     [SerializeField] private GameObject StagePanel;
+    [SerializeField] private LoadingPanel loadingPanel;
 
     [Header("Stage")]
     [Tooltip("제어할 Scroll Rect를 여기에 연결하세요.")]
@@ -20,6 +24,7 @@ public class MainUIController : MonoBehaviour
     void Start()
     {
         SettingManager.instance.SetActiveSettingPanel(false);
+
         StagePanel.SetActive(false);
 
         MenuPanel.SetActive(true);
@@ -51,7 +56,12 @@ public class MainUIController : MonoBehaviour
     public void Onclick_Quit()
     {
         Debug.Log("게임 종료");
+        //Application.Quit();
+#if UNITY_EDITOR
+        EditorApplication.ExitPlaymode();
+#else
         Application.Quit();
+#endif
     }
 
     public void ScrollRight()
@@ -85,8 +95,7 @@ public class MainUIController : MonoBehaviour
     public void OnClick_Stage(int stageNum)
     {
         Debug.Log($"Stage{stageNum}로 이동");
-        //SceneManager.LoadScene($"Stage{stageNum}");
+        loadingPanel.Loading(stageNum);
     }
-
     #endregion
 }
