@@ -643,81 +643,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   globalVolume: {fileID: 1482853956}
-  mainCamera: {fileID: 0}
-  pinchDuration: 0.7
-  holdDuration: 0.4
-  unpinchDuration: 0.7
-  pinchScale: 0.5
-  pinchIntensity: -1.5
-  fadeoutColorAdj: -10
-  fadeStartDelay: 0.3
-  CameraSize: 2
-  scaleCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: -1.6410018
-      outSlope: -1.6410018
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0.090505615
-    - serializedVersion: 3
-      time: 0.50539005
-      value: 0.52130854
-      inSlope: 2.1583843
-      outSlope: 2.1583843
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.13088661
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 1
-      value: 1
-      inSlope: -0.97592926
-      outSlope: -0.97592926
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.17690703
-      outWeight: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  intensityCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: -0.37480196
-      outSlope: -0.37480196
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0.2182169
-    - serializedVersion: 3
-      time: 0.7217666
-      value: 0.36549926
-      inSlope: 2.1021054
-      outSlope: 2.1021054
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.06761878
-      outWeight: 0.19318752
-    - serializedVersion: 3
-      time: 1
-      value: 1
-      inSlope: -2.0238085
-      outSlope: -2.0238085
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.4303001
-      outWeight: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
+  mainCamera: {fileID: 1013962899}
+  effectDuration: 1
+  pinchScale: -1
+  pinchIntensity: -2
+  pinchChorma: 3
+  pinchVignette: 0.8
   glitchDuration: 0.7
   maxChroma: 2
   maxLens: 0.5
