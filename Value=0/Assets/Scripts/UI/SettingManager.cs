@@ -8,6 +8,10 @@ public class SettingManager : MonoBehaviour
 {
     public static SettingManager instance;
 
+    public Slider BGMSlider => bgmSlider;
+    public Slider SFXSlider => sfxSlider;
+    public Slider UISlider => uiSlider;
+
     [SerializeField] private GameObject SettingPanel;
 
     public TextMeshProUGUI fullScreenText;
@@ -15,9 +19,9 @@ public class SettingManager : MonoBehaviour
 
     // --- Sound Sliders ---
     // Inspector에서 슬라이더를 연결해주세요.
-    public Slider bgmSlider;
-    public Slider sfxSlider;
-    public Slider uiSlider;
+    [SerializeField] private Slider bgmSlider;
+    [SerializeField] private Slider sfxSlider;
+    [SerializeField] private Slider uiSlider;
 
 
     private int resolutionIndex = 0;

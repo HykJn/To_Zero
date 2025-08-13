@@ -10,6 +10,7 @@ public class MainUIController : MonoBehaviour
     [Header("Panels")]
     [SerializeField] private GameObject MenuPanel;
     [SerializeField] private GameObject StagePanel;
+    [SerializeField] private LoadingPanel loadingPanel;
 
     [Header("Stage")]
     [Tooltip("제어할 Scroll Rect를 여기에 연결하세요.")]
@@ -23,6 +24,7 @@ public class MainUIController : MonoBehaviour
     void Start()
     {
         SettingManager.instance.SetActiveSettingPanel(false);
+
         StagePanel.SetActive(false);
 
         MenuPanel.SetActive(true);
@@ -93,21 +95,7 @@ public class MainUIController : MonoBehaviour
     public void OnClick_Stage(int stageNum)
     {
         Debug.Log($"Stage{stageNum}로 이동");
-        //SceneManager.LoadScene($"Stage{stageNum}");
-    }
-
-    #endregion
-
-    //Added section by hykjn
-    #region ==========Scene Management==========
-    public void ToPlayScene(int stage)
-    {
-        throw new NotImplementedException();
-    }
-
-    private IEnumerator LoadPlayScene()
-    {
-        throw new NotImplementedException();
+        loadingPanel.Loading(stageNum);
     }
     #endregion
 }
