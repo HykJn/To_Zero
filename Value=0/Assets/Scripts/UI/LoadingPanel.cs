@@ -11,13 +11,18 @@ public class LoadingPanel : MonoBehaviour
     #endregion
 
     #region ==========Fields==========
-
+    public static LoadingPanel instance = null;
     #endregion
 
     #region ==========Unity Methods==========
     private void Awake()
     {
-        DontDestroyOnLoad(this.gameObject);
+        if (instance == null)
+        {
+            instance = this;
+            DontDestroyOnLoad(this.gameObject);
+        }
+        else Destroy(this.gameObject);
     }
     #endregion
 

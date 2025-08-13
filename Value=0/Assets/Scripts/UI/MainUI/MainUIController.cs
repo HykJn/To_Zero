@@ -10,7 +10,6 @@ public class MainUIController : MonoBehaviour
     [Header("Panels")]
     [SerializeField] private GameObject MenuPanel;
     [SerializeField] private GameObject StagePanel;
-    [SerializeField] private LoadingPanel loadingPanel;
 
     [Header("Stage")]
     [Tooltip("제어할 Scroll Rect를 여기에 연결하세요.")]
@@ -95,7 +94,7 @@ public class MainUIController : MonoBehaviour
     public void OnClick_Stage(int stageNum)
     {
         Debug.Log($"Stage{stageNum}로 이동");
-        loadingPanel.Loading(stageNum);
+        LoadingPanel.instance.Loading(stageNum);
     }
     #endregion
 }

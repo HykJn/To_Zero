@@ -14,6 +14,8 @@ public class Stage : MonoBehaviour
     [SerializeField, TextArea(6, 6)] private string stageMap;
     [SerializeField] private int startNumber, moves;
     [SerializeField] private Vector3 startPos;
+    [SerializeField] private DroneInfo[] droneInfo;
+    private List<Drone> drones;
     private List<GameObject> objs;
     private List<SwapTile> swapTiles;
     #endregion
@@ -24,7 +26,7 @@ public class Stage : MonoBehaviour
         Init();
         Player player = GameObject.FindWithTag("Player").GetComponent<Player>();
         player.transform.position = startPos;
-        player.StartNumber = startNumber;
+        player.Value = startNumber;
         player.Moves = moves;
     }
 
@@ -39,12 +41,13 @@ public class Stage : MonoBehaviour
     {
         objs = new();
         swapTiles = new();
+        drones = new();
         LoadStage();
-
     }
 
     private void LoadStage()
     {
+        //Load Tiles
         string[] lines = stageMap.Split("\n");
         int height = lines.Length, width = lines[0].Split(' ').Length;
 
@@ -76,7 +79,7 @@ public class Stage : MonoBehaviour
                     tile.Value = 0;
                     tile.GetComponent<Animator>().enabled = false;
                     objs.Add(tile.gameObject);
-                    objs.Add(ObjectManager.Instance.GetObject(ObjectID.Wall, pos));
+                    objs.Add(ObjectManager.Instance.GetObject(ObjectID.Wall, (Vector3)pos + Vector3.back));
                 }
                 else if (tiles[x][0] == 'S' || tiles[x][0] == 's')
                 {
@@ -105,7 +108,7 @@ public class Stage : MonoBehaviour
                         if (tiles[x][0] == 'B' || tiles[x][0] == 'b')
                         {
                             tile.GetComponent<Animator>().enabled = false;
-                            obj = ObjectManager.Instance.GetObject(ObjectID.Box, pos);
+                            obj = ObjectManager.Instance.GetObject(ObjectID.Box, (Vector3)pos + Vector3.back);
                             objs.Add(obj);
                             tiles[x] = tiles[x][1..];
                         }
@@ -135,15 +138,32 @@ public class Stage : MonoBehaviour
                 }
             }
         }
+
+        //Load Drone
+        if (droneInfo.Length > 0)
+        {
+            foreach (DroneInfo info in droneInfo)
+            {
+                Drone drone = ObjectManager.Instance.GetObject(ObjectID.Drone, info.start).GetComponent<Drone>();
+                drone.Init(info.start, info.direction, info.steps);
+                drones.Add(drone);
+            }
+        }
     }
 
     private void UnloadStage()
     {
         foreach (GameObject obj in objs)
         {
-            obj.SetActive(false);
+            if (obj != null) obj.SetActive(false);
         }
         objs.Clear();
+
+        foreach (Drone drone in drones)
+        {
+            if (drone != null) drone.gameObject.SetActive(false);
+        }
+        drones.Clear();
     }
 
     public void Restart()
@@ -152,8 +172,13 @@ public class Stage : MonoBehaviour
         LoadStage();
         Player player = GameObject.FindWithTag("Player").GetComponent<Player>();
         player.transform.position = startPos;
-        player.StartNumber = startNumber;
+        player.Value = startNumber;
         player.Moves = moves;
+
+        foreach (Drone drone in drones)
+        {
+            drone.Init();
+        }
     }
 
     public void SwapTiles()
@@ -164,5 +189,20 @@ public class Stage : MonoBehaviour
             tile.Swap();
         }
     }
+
+    public void MoveDrone()
+    {
+        if (drones.Count == 0) return;
+        foreach (Drone drone in drones)
+            drone.Move();
+    }
     #endregion
+
+    [Serializable]
+    private struct DroneInfo
+    {
+        public Vector2 start;
+        public Drone.Direction direction;
+        public int steps;
+    }
 }

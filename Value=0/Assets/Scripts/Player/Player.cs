@@ -5,16 +5,15 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     #region ==========Properties==========
-    public int StartNumber { get; set; }
+    public int Value { get; set; }
     public int Moves { get; set; }
     public bool IsMovable { get; set; } = true;
+    public bool Controllable { get; set; } = true;
     #endregion
 
     #region ==========Fields==========
     [SerializeField] private AnimationCurve easeOutCurve;
 
-    private int startNumber;
-    private int moves;
     private GameObject box;
     private bool onHold;
     #endregion
@@ -37,6 +36,7 @@ public class Player : MonoBehaviour
     #region ==========Methods==========
     private void InputHandler()
     {
+        if (!Controllable) return;
         //Mouse
         if (Input.GetKeyDown(KeyCode.Mouse0))
         {
@@ -100,6 +100,7 @@ public class Player : MonoBehaviour
         StartCoroutine(Crtn_Move(this.transform.position, this.transform.position + dir));
         this.GetComponentInChildren<Animator>().SetTrigger("Move");
         GameManager.Instance.SwapTiles();
+        GameManager.Instance.MoveDrone();
 
         //CheckTile();
         //CheckBox(this.transform.position + dir);
@@ -127,7 +128,15 @@ public class Player : MonoBehaviour
         if (box == null) return;
         IsMovable = false;
 
-        box.GetComponent<Box>().SetPreview();
+        Vector3[] wasd = { Vector3.up, Vector3.left, Vector3.down, Vector3.right };
+        foreach (Vector3 dir in wasd)
+        {
+            if (!CheckMovable(box.transform.position + dir)) continue;
+
+            OperationTile tile = box.GetComponent<Box>().GetTileBelow(dir);
+            if (tile == null || tile.Operator == Operator.Portal) continue;
+            box.GetComponent<Box>().SetPreview(dir);
+        }
 
         onHold = true;
         box.transform.localScale = new(1.1f, 1.1f, 1f);
@@ -153,6 +162,8 @@ public class Player : MonoBehaviour
         else if (Input.GetKeyDown(KeyCode.D)) dir = Vector3.right;
 
         if (dir == Vector3.zero || !CheckMovable(box.transform.position + dir)) return;
+        OperationTile tile = box.GetComponent<Box>().GetTileBelow(dir);
+        if (tile == null || tile.Operator == Operator.Portal) return;
 
         box.GetComponent<Box>().GetTileBelow().GetComponent<Animator>().enabled = true;
         box.transform.position += dir;
@@ -164,64 +175,62 @@ public class Player : MonoBehaviour
         box = null;
 
         Moves--;
-
+        GameManager.Instance.MoveDrone();
         //TODO: Implement UI interaction
     }
 
     private bool CheckMovable(Vector3 pos)
     {
-        RaycastHit2D hit = Physics2D.Raycast(pos, Vector3.forward);
+        RaycastHit2D hit = Physics2D.Raycast(pos + Vector3.back, Vector3.forward);
         if (hit) return hit.collider.gameObject.layer == 10;
         return false;
     }
 
     private void CheckTile()
     {
-        RaycastHit2D hit = Physics2D.Raycast(this.transform.position, Vector3.forward, 5f, LayerMask.GetMask("Tile"));
+        RaycastHit2D hit = Physics2D.Raycast(this.transform.position + Vector3.back, Vector3.forward, 5f, LayerMask.GetMask("Tile"));
         if (hit)
         {
             OperationTile tile = hit.transform.parent.GetComponent<OperationTile>();
             switch (tile.Operator)
             {
                 case Operator.Portal:
-                    if (StartNumber == 0) GameManager.Instance.Transition(EventID.NextStage);
+                    if (Value == 0) GameManager.Instance.Transition(EventID.NextStage);
                     else Die();
                     break;
                 case Operator.Add:
-                    StartNumber += tile.Value;
+                    Value += tile.Value;
                     break;
                 case Operator.Sub:
-                    StartNumber -= tile.Value;
+                    Value -= tile.Value;
                     break;
                 case Operator.Mul:
-                    StartNumber *= tile.Value;
+                    Value *= tile.Value;
                     break;
                 case Operator.Div:
-                    StartNumber /= tile.Value;
+                    Value /= tile.Value;
                     break;
                 case Operator.Equal:
-                    if (StartNumber != tile.Value) Die();
+                    if (Value != tile.Value) Die();
                     break;
                 case Operator.Not:
-                    if (StartNumber == tile.Value) Die();
+                    if (Value == tile.Value) Die();
                     break;
                 case Operator.Greater:
-                    if (StartNumber <= tile.Value) Die();
+                    if (Value <= tile.Value) Die();
                     break;
                 case Operator.Less:
-                    if (StartNumber >= tile.Value) Die();
+                    if (Value >= tile.Value) Die();
                     break;
             }
             Moves--;
-            moves = Moves;
-            startNumber = StartNumber;
             tile.OnPlayer = true;
         }
     }
 
     private bool CheckBox(Vector3 pos)
     {
-        RaycastHit2D hit = Physics2D.Raycast(pos, Vector3.forward, 5f, LayerMask.GetMask("Box"));
+        RaycastHit2D hit = Physics2D.Raycast(pos + Vector3.back, Vector3.forward, 5f, LayerMask.GetMask("Box"));
         if (hit)
         {
             if (box != null) box.GetComponent<Box>().Selected = false;
