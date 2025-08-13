@@ -55,7 +55,7 @@ public class PPTransition : MonoBehaviour
         switch (id)
         {
             case EventID.NextStage: StartCoroutine(NextStage()); break;
-            case EventID.PlayerDie: StartCoroutine(NextStage()); break;
+            case EventID.PlayerDie: StartCoroutine(Restart()); break;
         }
     }
 
@@ -80,14 +80,14 @@ public class PPTransition : MonoBehaviour
             _chroma.intensity.Override(Mathf.Lerp(0f, pinchChorma, smoothT));
             _lens.intensity.Override(Mathf.Lerp(0f, pinchIntensity, smoothT));
             _lens.scale.Override(Mathf.Lerp(1f, pinchScale, smoothT));
-            _Vignette.intensity.Override(Mathf.Lerp(0f,pinchVignette, Mathf.InverseLerp(0.3f, 1f, t)));
+            _Vignette.intensity.Override(Mathf.Lerp(0f, pinchVignette, Mathf.InverseLerp(0.3f, 1f, t)));
 
             yield return null;
         }
 
         _chroma.intensity.Override(pinchChorma);
         _lens.scale.Override(pinchScale); _lens.intensity.Override(pinchIntensity);
-       _Vignette.intensity.Override(pinchVignette);
+        _Vignette.intensity.Override(pinchVignette);
 
 
         yield return null;
