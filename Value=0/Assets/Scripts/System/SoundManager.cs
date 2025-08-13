@@ -44,6 +44,15 @@ public class SoundManager : MonoBehaviour
             uiChannel.volume = value * masterVolume;
         }
     }
+    public bool TraverseBGM
+    {
+        get => traverseBgm;
+        set
+        {
+            traverseBgm = value;
+            bgmChannel.loop = !value;
+        }
+    }
     #endregion
 
     #region ==========Fields==========
@@ -64,6 +73,9 @@ public class SoundManager : MonoBehaviour
     [SerializeField, Range(0, 1)] private float bgmVolume;
     [SerializeField, Range(0, 1)] private float sfxVolume;
     [SerializeField, Range(0, 1)] private float uiVolume;
+
+    private bool traverseBgm = true;
+    private int bgmIdx = 0;
     #endregion
 
     #region ==========Unity Methods==========
@@ -72,18 +84,23 @@ public class SoundManager : MonoBehaviour
         if (instance == null)
         {
             instance = this;
-            DontDestroyOnLoad(this.gameObject);
         }
         else
         {
             Destroy(this.gameObject);
         }
     }
+
+    private void Update()
+    {
+        U_TraverseBGM();
+    }
     #endregion
 
     #region ==========Methods==========
     public void Play_BGM(BGMID id, bool isLoop = false)
     {
+        bgmIdx = (int)id;
         bgmChannel.clip = bgmClips[(int)id];
         bgmChannel.loop = isLoop;
         bgmChannel.Play();
@@ -92,8 +109,6 @@ public class SoundManager : MonoBehaviour
     public void Stop_BGM()
     {
         bgmChannel.Stop();
-
-        StopCoroutine(Coroutine_BGM());
     }
 
     public void Play_SFX(SFXID id)
@@ -128,15 +143,28 @@ public class SoundManager : MonoBehaviour
         uiChannel.Stop();
     }
 
-    public void TraverseBGM(BGMID startID = 0)
+    private void U_TraverseBGM()
     {
-        bgmChannel.Stop();
-        bgmChannel.clip = bgmClips[(int)startID];
-    }
+        if (!TraverseBGM) return;
 
-    IEnumerator Coroutine_BGM()
-    {
-        throw new NotImplementedException("Coroutine_BGM is not implemented yet.");
+        float t = bgmChannel.clip.length - bgmChannel.time;
+
+        //Fade-in/out
+        if (t <= 3f)
+        {
+            bgmChannel.volume = masterVolume * bgmVolume * Mathf.Clamp01(t / 3f);
+        }
+        else if (bgmChannel.time <= 3f)
+        {
+            bgmChannel.volume = masterVolume * bgmVolume * Mathf.Clamp01(bgmChannel.time / 3f);
+        }
+
+        //Next track
+        if (!bgmChannel.isPlaying)
+        {
+            bgmIdx = (bgmIdx + 1) % bgmClips.Length;
+            bgmChannel.clip = bgmClips[bgmIdx];
+        }
     }
     #endregion
 }

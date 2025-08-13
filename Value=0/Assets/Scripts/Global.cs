@@ -11,9 +11,8 @@ public enum Operator
 public enum ObjectID
 {
     None,
-    OperationTile, SwapTile, Wall,
-    Box,
-    Portal,
+    OperationTile, SwapTile, Wall, Box, Portal,
+    Drone
 }
 
 public enum EventID

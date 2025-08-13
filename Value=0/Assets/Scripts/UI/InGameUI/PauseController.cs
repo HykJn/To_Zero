@@ -5,6 +5,22 @@ public class PauseController : MonoBehaviour
 {
     [SerializeField] private InGameUIController inGameUIController;
 
+    private void OnEnable()
+    {
+        Time.timeScale = 0f;
+        GameObject player = GameObject.FindWithTag("Player");
+        if (player == null) return;
+        player.GetComponent<Player>().Controllable = false;
+    }
+
+    private void OnDisable()
+    {
+        Time.timeScale = 1f;
+        GameObject player = GameObject.FindWithTag("Player");
+        if (player == null) return;
+        player.GetComponent<Player>().Controllable = true;
+    }
+
     #region ========== ButtonEvent ==========
 
     public void OnClick_Resume()
@@ -24,6 +40,6 @@ public class PauseController : MonoBehaviour
         Debug.Log("게임 종료 ");
         Application.Quit();
     }
-        
+
     #endregion
 }

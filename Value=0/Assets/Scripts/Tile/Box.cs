@@ -64,22 +64,17 @@ public class Box : MonoBehaviour
     }
 
 
-    public void SetPreview()
+    public void SetPreview(Vector3 position)
     {
-        Vector3[] wasd = { Vector3.up, Vector3.left, Vector3.down, Vector3.right };
-        for (int i = 0; i < 4; i++)
-        {
-            OperationTile tile = GetTileBelow(wasd[i]);
-            preview.GetChild(i).gameObject.SetActive(tile != null && !tile.OnPlayer);
-        }
-        //if (position == Vector3.up) idx = 0;
-        //else if (position == Vector3.left) idx = 1;
-        //else if (position == Vector3.down) idx = 2;
-        //else if (position == Vector3.right) idx = 3;
+        int idx = -1;
+        if (position == Vector3.up) idx = 0;
+        else if (position == Vector3.left) idx = 1;
+        else if (position == Vector3.down) idx = 2;
+        else if (position == Vector3.right) idx = 3;
 
-        //if (idx == -1) return;
+        if (idx == -1) return;
 
-        //preview.GetChild(idx).gameObject.SetActive(true);
+        preview.GetChild(idx).gameObject.SetActive(true);
     }
 
     public void ClearPreview()

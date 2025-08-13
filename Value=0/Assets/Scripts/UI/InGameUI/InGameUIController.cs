@@ -10,6 +10,7 @@ public class InGameUIController : MonoBehaviour
     [SerializeField] private TMP_Text moveCount_T;
 
     private Player player;
+
     void Awake()
     {
         player = GameObject.FindWithTag("Player").GetComponent<Player>();
@@ -22,8 +23,13 @@ public class InGameUIController : MonoBehaviour
 
     void Update()
     {
-        Update_CurrentMove();
+        Update_StageNum();
+        Update_Value();
         Update_MoveCount();
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            SetActive_PausePanel(!pausePanel.activeSelf);
+        }
     }
 
     public void SetActive_PausePanel(bool isActive)
@@ -34,7 +40,7 @@ public class InGameUIController : MonoBehaviour
     private void InitializeTexts()
     {
         Update_StageNum();
-        Update_CurrentMove();
+        Update_Value();
         Update_MoveCount();
     }
 
@@ -43,9 +49,9 @@ public class InGameUIController : MonoBehaviour
         stageNum_T.text = "Stage " + GameManager.Instance.Stage.ToString();
     }
 
-    public void Update_CurrentMove()
+    public void Update_Value()
     {
-        currentMove_T.text = player.StartNumber.ToString();
+        currentMove_T.text = player.Value.ToString();
     }
 
     public void Update_MoveCount()

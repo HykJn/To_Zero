@@ -9,8 +9,10 @@ public class GameManager : MonoBehaviour
         get => curStage;
         set
         {
-            if (value < 1 || value > stages.Length)
+            if (value < 1 || value > stages.Length + 1)
                 throw new IndexOutOfRangeException();
+            else if (value == stages.Length + 1)
+                demoCanvas.SetActive(true);
 
             curStage = value;
             for (int i = 0; i < stages.Length; i++)
@@ -26,6 +28,7 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] private GameObject[] stages;
     [SerializeField] private int curStage;
+    [SerializeField] private GameObject demoCanvas;
     #endregion
 
     #region ==========Unity Methods==========
@@ -47,5 +50,7 @@ public class GameManager : MonoBehaviour
     public void SwapTiles() => stages[curStage - 1].GetComponent<Stage>().SwapTiles();
 
     public void Restart() => stages[curStage - 1].GetComponent<Stage>().Restart();
+
+    public void MoveDrone() => stages[curStage - 1].GetComponent<Stage>().MoveDrone();
     #endregion
 }
