@@ -29,6 +29,15 @@ public class MainUIController : MonoBehaviour
         MenuPanel.SetActive(true);
     }
 
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            if (!StagePanel.activeSelf) return;
+            OnClick_StagePanelExit();
+        }
+    }
+
 
     #region  =====ButtonEvent=====
 
