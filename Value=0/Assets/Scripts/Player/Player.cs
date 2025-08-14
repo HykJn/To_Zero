@@ -28,7 +28,7 @@ public class Player : MonoBehaviour
     {
         if (other.CompareTag("Scanner"))
         {
-            Die();
+            Die(EventID.PlayerDieByDrone);
         }
     }
     #endregion
@@ -36,7 +36,7 @@ public class Player : MonoBehaviour
     #region ==========Methods==========
     private void InputHandler()
     {
-        if (!Controllable) return;
+        if (UIManager.Instance.AnyPanelActivated || !Controllable) return;
         //Mouse
         if (Input.GetKeyDown(KeyCode.Mouse0))
         {
@@ -82,7 +82,7 @@ public class Player : MonoBehaviour
         if (!IsMovable) return;
         if (Moves <= 0)
         {
-            Die();
+            Die(EventID.PlayerDieByMoves);
             return;
         }
         if (CheckBox(this.transform.position + dir) || !CheckMovable(this.transform.position + dir)) return;
@@ -96,6 +96,8 @@ public class Player : MonoBehaviour
 
         //if (dir == Vector3.left) this.GetComponent<SpriteRenderer>().flipX = true;
         //else if (dir == Vector3.right) this.GetComponent<SpriteRenderer>().flipX = false;
+
+        SoundManager.Instance.PlayOneShot_SFX(SFXID.PlayerMove);
 
         this.GetComponent<Collider2D>().enabled = false;
         StartCoroutine(Crtn_Move(this.transform.position, this.transform.position + dir));
@@ -129,6 +131,7 @@ public class Player : MonoBehaviour
     private void HoldBox()
     {
         if (box == null) return;
+        SoundManager.Instance.Play_SFX(SFXID.PlayerHoldBox);
         IsMovable = false;
 
         Vector3[] wasd = { Vector3.up, Vector3.left, Vector3.down, Vector3.right };
@@ -149,6 +152,7 @@ public class Player : MonoBehaviour
 
     private void UnHoldBox()
     {
+        SoundManager.Instance.Play_SFX(SFXID.PlayerUnholdBox);
         onHold = false;
         box.transform.localScale = Vector3.one;
         if (box != null) box.GetComponent<Box>().ClearPreview();
@@ -205,7 +209,7 @@ public class Player : MonoBehaviour
             {
                 case Operator.Portal:
                     if (Value == 0) GameManager.Instance.Transition(EventID.NextStage);
-                    else Die();
+                    else Die(EventID.PlayerDieByMoves);
                     break;
                 case Operator.Add:
                     Value += tile.Value;
@@ -220,16 +224,16 @@ public class Player : MonoBehaviour
                     Value /= tile.Value;
                     break;
                 case Operator.Equal:
-                    if (Value != tile.Value) Die();
+                    if (Value != tile.Value) Die(EventID.PlayerDieByMoves);
                     break;
                 case Operator.Not:
-                    if (Value == tile.Value) Die();
+                    if (Value == tile.Value) Die(EventID.PlayerDieByMoves);
                     break;
                 case Operator.Greater:
-                    if (Value <= tile.Value) Die();
+                    if (Value <= tile.Value) Die(EventID.PlayerDieByMoves);
                     break;
                 case Operator.Less:
-                    if (Value >= tile.Value) Die();
+                    if (Value >= tile.Value) Die(EventID.PlayerDieByMoves);
                     break;
             }
             Moves--;
@@ -252,9 +256,9 @@ public class Player : MonoBehaviour
         return false;
     }
 
-    public void Die()
+    public void Die(EventID diedBy)
     {
-        GameManager.Instance.Transition(EventID.PlayerDie);
+        GameManager.Instance.Transition(diedBy);
     }
 
     private void Restart()

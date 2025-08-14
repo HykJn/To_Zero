@@ -74,7 +74,7 @@ public class SoundManager : MonoBehaviour
     [SerializeField, Range(0, 1)] private float sfxVolume;
     [SerializeField, Range(0, 1)] private float uiVolume;
 
-    private bool traverseBgm = true;
+    private bool traverseBgm = false;
     private int bgmIdx = 0;
     #endregion
 
@@ -89,6 +89,11 @@ public class SoundManager : MonoBehaviour
         {
             Destroy(this.gameObject);
         }
+    }
+
+    private void Start()
+    {
+        Play_BGM(BGMID.Title, true);
     }
 
     private void Update()

@@ -7,6 +7,7 @@ using System;
 
 public class MainUIController : MonoBehaviour
 {
+
     [Header("Panels")]
     [SerializeField] private GameObject MenuPanel;
     [SerializeField] private GameObject StagePanel;
@@ -22,23 +23,10 @@ public class MainUIController : MonoBehaviour
 
     void Start()
     {
-        SettingManager.instance.SetActiveSettingPanel(false);
-
         StagePanel.SetActive(false);
 
         MenuPanel.SetActive(true);
     }
-
-    void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            if (!StagePanel.activeSelf) return;
-            OnClick_StagePanelExit();
-        }
-    }
-
-
     #region  =====ButtonEvent=====
 
     public void OnClick_Start()
@@ -47,24 +35,40 @@ public class MainUIController : MonoBehaviour
 
         //StagePanel.SetActive(true);
 
-        LoadingPanel.instance.Loading(1);
+        SoundManager.Instance.Play_UI_SFX(UISFXID.StartButtonClick);
+
+        UIManager.Instance.ToPlay(1);
     }
+
     public void OnClick_StagePanelExit()
     {
+        SoundManager.Instance.Play_UI_SFX(UISFXID.ButtonClick);
+
         StagePanel.SetActive(false);
 
         MenuPanel.SetActive(true);
     }
+
     public void OnClick_CreativeMode()
     {
+        SoundManager.Instance.Play_UI_SFX(UISFXID.ButtonClick);
+
         Debug.Log("창작마당");
+
+        //TODO: Implement custom map
     }
+
     public void OnClick_Setting()
     {
-        SettingManager.instance.SetActiveSettingPanel(true);
+        SoundManager.Instance.Play_UI_SFX(UISFXID.ButtonClick);
+
+        UIManager.Instance.Setting.SetActiveSettingPanel(true);
     }
+
     public void Onclick_Quit()
     {
+        SoundManager.Instance.Play_UI_SFX(UISFXID.ButtonClick);
+
         Debug.Log("게임 종료");
         //Application.Quit();
 #if UNITY_EDITOR
@@ -76,6 +80,8 @@ public class MainUIController : MonoBehaviour
 
     public void ScrollRight()
     {
+        SoundManager.Instance.Play_UI_SFX(UISFXID.ButtonClick);
+
         if (targetScrollRect == null)
         {
             Debug.LogError("제어할 Scroll Rect가 지정되지 않았습니다!");
@@ -90,6 +96,8 @@ public class MainUIController : MonoBehaviour
 
     public void ScrollLeft()
     {
+        SoundManager.Instance.Play_UI_SFX(UISFXID.ButtonClick);
+
         if (targetScrollRect == null)
         {
             Debug.LogError("제어할 Scroll Rect가 지정되지 않았습니다!");
@@ -101,11 +109,12 @@ public class MainUIController : MonoBehaviour
         targetScrollRect.horizontalNormalizedPosition = Mathf.Clamp01(newPosition);
     }
 
-
     public void OnClick_Stage(int stageNum)
     {
+        SoundManager.Instance.Play_UI_SFX(UISFXID.ButtonClick);
+
         Debug.Log($"Stage{stageNum}로 이동");
-        LoadingPanel.instance.Loading(stageNum);
+        UIManager.Instance.ToPlay(stageNum);
     }
     #endregion
 }

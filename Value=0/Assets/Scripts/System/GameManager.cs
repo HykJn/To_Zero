@@ -29,6 +29,8 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject[] stages;
     [SerializeField] private int curStage;
     [SerializeField] private GameObject demoCanvas;
+
+    [SerializeField] private DialogueSystem dialog;
     #endregion
 
     #region ==========Unity Methods==========
@@ -52,5 +54,11 @@ public class GameManager : MonoBehaviour
     public void Restart() => stages[curStage - 1].GetComponent<Stage>().Restart();
 
     public void MoveDrone() => stages[curStage - 1].GetComponent<Stage>().MoveDrone();
+
+    public void SetDialog()
+    {
+        DialogueData[] dialog = stages[Stage - 1].GetComponent<Stage>().Dialogs;
+        if (dialog.Length > 0) UIManager.Instance.InGameUI.DialogPanel.SetDialog(dialog);
+    }
     #endregion
 }

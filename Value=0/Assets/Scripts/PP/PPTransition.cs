@@ -55,14 +55,17 @@ public class PPTransition : MonoBehaviour
         switch (id)
         {
             case EventID.NextStage: StartCoroutine(NextStage()); break;
-            case EventID.PlayerDie: StartCoroutine(Restart()); break;
+            case EventID.PlayerDieByDrone:
+            case EventID.PlayerDieByMoves:
+            case EventID.PlayerDieBySystem:
+                StartCoroutine(Restart(id)); break;
         }
     }
 
     IEnumerator NextStage()
     {
         _isTransitioning = true;
-        GameObject.FindWithTag("Player").GetComponent<Player>().IsMovable = false;
+        GameObject.FindWithTag("Player").GetComponent<Player>().Controllable = false;
 
         _lens.scale.value = 1f;
         _lens.intensity.value = 0f;
@@ -71,6 +74,7 @@ public class PPTransition : MonoBehaviour
         float startLensIntensity = _lens.intensity.value;
         float elapsed = 0f;
 
+        SoundManager.Instance.Play_SFX(SFXID.PortalIn);
         while (elapsed < effectDuration)
         {
             elapsed += Time.deltaTime;
@@ -94,6 +98,8 @@ public class PPTransition : MonoBehaviour
         GameManager.Instance.Stage++;
 
         elapsed = 0f;
+
+        SoundManager.Instance.Play_SFX(SFXID.PortalOut);
         while (elapsed < effectDuration)
         {
             elapsed += Time.deltaTime;
@@ -114,13 +120,28 @@ public class PPTransition : MonoBehaviour
         _Vignette.intensity.Override(0f);
 
         _isTransitioning = false;
-        GameObject.FindWithTag("Player").GetComponent<Player>().IsMovable = true;
+        GameObject.FindWithTag("Player").GetComponent<Player>().Controllable = true;
+
+        GameManager.Instance.SetDialog();
     }
 
-    IEnumerator Restart()
+    IEnumerator Restart(EventID diedBy)
     {
+        switch (diedBy)
+        {
+            case EventID.PlayerDieByDrone:
+                SoundManager.Instance.Play_SFX(SFXID.DroneDetect);
+                break;
+            case EventID.PlayerDieByMoves:
+                SoundManager.Instance.Play_SFX(SFXID.PlayerRespawn);
+                break;
+            case EventID.PlayerDieBySystem:
+                //TODO: Implement later
+                break;
+        }
+
         _isTransitioning = true;
-        GameObject.FindWithTag("Player").GetComponent<Player>().IsMovable = false;
+        GameObject.FindWithTag("Player").GetComponent<Player>().Controllable = false;
         float elapsed = 0f;
 
         _chroma.intensity.value = 0f;
@@ -165,7 +186,7 @@ public class PPTransition : MonoBehaviour
         _grain.intensity.value = 0f;
 
         _isTransitioning = false;
-        GameObject.FindWithTag("Player").GetComponent<Player>().IsMovable = true;
+        GameObject.FindWithTag("Player").GetComponent<Player>().Controllable = true;
     }
     #endregion
 }

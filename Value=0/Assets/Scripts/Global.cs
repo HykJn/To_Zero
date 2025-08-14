@@ -1,3 +1,8 @@
+public enum Character
+{
+    Value, System, Unknown
+}
+
 public enum Operator
 {
     None,
@@ -17,7 +22,10 @@ public enum ObjectID
 
 public enum EventID
 {
-    PlayerMove, PlayerDie, NextStage,
+    PlayerMove, NextStage,
+    PlayerDieByDrone,
+    PlayerDieByMoves,
+    PlayerDieBySystem,
 }
 
 public enum BGMID
@@ -26,15 +34,20 @@ public enum BGMID
 }
 public enum SFXID
 {
-    PlayerMove, PlayerDie, PlayerRespawn, PlayerRestart, PlayerHoldBox, PlayerUnholdBox,
-    DroneMove, DroneDetect,
+    PlayerMove, PlayerRespawn, PlayerHoldBox, PlayerUnholdBox,
+    DroneDetect,
     SystemAttack, SystemDie,
-    StageTransition
+    PortalIn, PortalOut
 }
 public enum UISFXID
 {
     StartButtonClick,
-    ButtonClick, ButtonHover,
+    ButtonClick,
     PanelOpen, PanelClose,
     NextDialog,
+}
+
+public enum SceneID
+{
+    Title, InGame,
 }

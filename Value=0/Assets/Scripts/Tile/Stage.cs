@@ -7,7 +7,7 @@ using TMPro;
 public class Stage : MonoBehaviour
 {
     #region ==========Properties==========
-
+    public DialogueData[] Dialogs => dialogs;
     #endregion
 
     #region ==========Fields==========
@@ -18,6 +18,7 @@ public class Stage : MonoBehaviour
     private List<Drone> drones;
     private List<GameObject> objs;
     [SerializeField] private List<SwapTile> swapTiles;
+    [SerializeField] private DialogueData[] dialogs;
     #endregion
 
     #region ==========Unity Methods==========
