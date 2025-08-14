@@ -8,7 +8,7 @@ public class SwapTile : OperationTile
     #endregion
 
     #region ==========Fields==========
-    private bool swap;
+    private bool swap = false;
     private int[] values = new int[2];
     private Operator[] opers = new Operator[2];
     #endregion
@@ -20,6 +20,7 @@ public class SwapTile : OperationTile
     #region ==========Methods==========
     public void SetTile(string values)
     {
+        swap = false;
         string[] parts = values.Split(",");
         for(int i = 0; i < 2; i++)
         {

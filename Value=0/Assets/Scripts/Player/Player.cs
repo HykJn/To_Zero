@@ -49,13 +49,13 @@ public class Player : MonoBehaviour
         else if (Input.GetKeyDown(KeyCode.A))
         {
             dir = Vector3.left;
-            if (!onHold) this.GetComponentInChildren<SpriteRenderer>().flipX = true;
+            if (!onHold) this.GetComponent<SpriteRenderer>().flipX = true;
         }
         else if (Input.GetKeyDown(KeyCode.S)) dir = Vector3.down;
         else if (Input.GetKeyDown(KeyCode.D))
         {
             dir = Vector3.right;
-            if (!onHold) this.GetComponentInChildren<SpriteRenderer>().flipX = false;
+            if (!onHold) this.GetComponent<SpriteRenderer>().flipX = false;
         }
         if (dir != Vector3Int.zero)
         {
@@ -94,13 +94,12 @@ public class Player : MonoBehaviour
             hit.transform.parent.GetComponent<OperationTile>().OnPlayer = false;
         }
 
-        //if (dir == Vector3.left) this.GetComponentInChildren<SpriteRenderer>().flipX = true;
-        //else if (dir == Vector3.right) this.GetComponentInChildren<SpriteRenderer>().flipX = false;
+        //if (dir == Vector3.left) this.GetComponent<SpriteRenderer>().flipX = true;
+        //else if (dir == Vector3.right) this.GetComponent<SpriteRenderer>().flipX = false;
 
+        this.GetComponent<Collider2D>().enabled = false;
         StartCoroutine(Crtn_Move(this.transform.position, this.transform.position + dir));
-        this.GetComponentInChildren<Animator>().SetTrigger("Move");
-        GameManager.Instance.SwapTiles();
-        GameManager.Instance.MoveDrone();
+        this.GetComponent<Animator>().SetTrigger("Move");
 
         //CheckTile();
         //CheckBox(this.transform.position + dir);
@@ -119,8 +118,12 @@ public class Player : MonoBehaviour
         this.transform.position = to;
         IsMovable = true;
 
+        GameManager.Instance.SwapTiles();
+        GameManager.Instance.MoveDrone();
+
         CheckTile();
         CheckBox(to + (to - from).normalized);
+        this.GetComponent<Collider2D>().enabled = true;
     }
 
     private void HoldBox()
@@ -140,15 +143,17 @@ public class Player : MonoBehaviour
 
         onHold = true;
         box.transform.localScale = new(1.1f, 1.1f, 1f);
-        //TODO: Implement UI interaction
+
+        this.GetComponent<Animator>().SetBool("HoldBox", true);
     }
 
     private void UnHoldBox()
     {
-        IsMovable = true;
         onHold = false;
         box.transform.localScale = Vector3.one;
         if (box != null) box.GetComponent<Box>().ClearPreview();
+
+        this.GetComponent<Animator>().SetBool("HoldBox", false);
     }
 
     private void MoveBox()
@@ -175,8 +180,12 @@ public class Player : MonoBehaviour
         box = null;
 
         Moves--;
+        GameManager.Instance.SwapTiles();
         GameManager.Instance.MoveDrone();
-        //TODO: Implement UI interaction
+
+
+        this.GetComponent<Animator>().SetTrigger("MoveBox");
+        this.GetComponent<Animator>().SetBool("HoldBox", false);
     }
 
     private bool CheckMovable(Vector3 pos)
@@ -253,7 +262,14 @@ public class Player : MonoBehaviour
         if (!IsMovable) return;
         GameManager.Instance.Restart();
         //TODO: Modify later
-        this.GetComponentInChildren<SpriteRenderer>().flipX = false;
+        this.GetComponent<SpriteRenderer>().flipX = false;
+    }
+    #endregion
+
+    #region ==========For Animation Event==========
+    public void AnimationMoveLock()
+    {
+        IsMovable = !IsMovable;
     }
     #endregion
 }

@@ -43,9 +43,11 @@ public class MainUIController : MonoBehaviour
 
     public void OnClick_Start()
     {
-        MenuPanel.SetActive(false);
+        //MenuPanel.SetActive(false);
 
-        StagePanel.SetActive(true);
+        //StagePanel.SetActive(true);
+
+        LoadingPanel.instance.Loading(1);
     }
     public void OnClick_StagePanelExit()
     {

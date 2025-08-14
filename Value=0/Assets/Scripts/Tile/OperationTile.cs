@@ -5,7 +5,15 @@ using UnityEngine;
 public class OperationTile : MonoBehaviour
 {
     #region ==========Properties==========
-    public Operator Operator { get => oper; set => oper = value; }
+    public Operator Operator
+    {
+        get => oper;
+        set
+        {
+            oper = value;
+            portal.SetActive(value == Operator.Portal);
+        }
+    }
     public int Value
     {
         get => value;
@@ -22,7 +30,6 @@ public class OperationTile : MonoBehaviour
                 Operator.Not => $"≠{value}",
                 Operator.Greater => $">{value}",
                 Operator.Less => $"<{value}",
-                Operator.Portal => "P",
                 _ => ""
             };
         }
@@ -45,6 +52,7 @@ public class OperationTile : MonoBehaviour
     [SerializeField] protected int value;
     [SerializeField] protected TMP_Text text;
     [SerializeField] protected Sprite _default, onPlayer;
+    [SerializeField] private GameObject portal;
     private bool _onPlayer;
     #endregion
 

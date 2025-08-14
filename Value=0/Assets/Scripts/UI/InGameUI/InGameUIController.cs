@@ -59,17 +59,9 @@ public class InGameUIController : MonoBehaviour
 
     public void Update_Value()
     {
-        string sign;
-        if (player.Value < 0)
-        {
-            currentMove_T.color = Color.red;
-            sign = "-";
-        }
-        else if (player.Value == 0)
-        {
-            currentMove_T.color = Color.white;
-            sign = "";
-        }
+        string sign = string.Empty;
+        if (player.Value < 0) currentMove_T.color = Color.red;
+        else if (player.Value == 0) currentMove_T.color = Color.white;
         else
         {
             currentMove_T.color = Color.blue;

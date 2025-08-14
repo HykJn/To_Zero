@@ -15,7 +15,6 @@ public class ObjectManager : MonoBehaviour
     [SerializeField] private GameObject prefab_swapTile;
     [SerializeField] private GameObject prefab_wall;
     [SerializeField] private GameObject prefab_box;
-    [SerializeField] private GameObject prefab_portal;
     [SerializeField] private GameObject prefab_drone;
 
     //pools
@@ -23,7 +22,6 @@ public class ObjectManager : MonoBehaviour
     GameObject[] obj_swapTiles;
     GameObject[] obj_walls;
     GameObject[] obj_boxes;
-    GameObject[] obj_portals;
     GameObject[] obj_drones;
     #endregion
 
@@ -51,7 +49,6 @@ public class ObjectManager : MonoBehaviour
         obj_swapTiles = new GameObject[128];
         obj_walls = new GameObject[128];
         obj_boxes = new GameObject[128];
-        obj_portals = new GameObject[4];
         obj_drones = new GameObject[16];
 
         //Operation Tiles
@@ -82,13 +79,6 @@ public class ObjectManager : MonoBehaviour
             obj_boxes[i].SetActive(false);
         }
 
-        //Portals
-        for (int i = 0; i < obj_portals.Length; i++)
-        {
-            obj_portals[i] = Instantiate(prefab_portal, this.transform);
-            obj_portals[i].SetActive(false);
-        }
-
         //Drones
         for (int i = 0; i < obj_drones.Length; i++)
         {
@@ -105,7 +95,7 @@ public class ObjectManager : MonoBehaviour
             ObjectID.SwapTile => obj_swapTiles,
             ObjectID.Wall => obj_walls,
             ObjectID.Box => obj_boxes,
-            ObjectID.Portal => obj_portals,
+            //ObjectID.Portal => obj_portals,
             ObjectID.Drone => obj_drones,
             _ => throw new ArgumentException("Invalid ObjectID", nameof(id))
         };

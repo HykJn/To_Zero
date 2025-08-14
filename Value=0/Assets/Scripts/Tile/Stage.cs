@@ -17,7 +17,7 @@ public class Stage : MonoBehaviour
     [SerializeField] private DroneInfo[] droneInfo;
     private List<Drone> drones;
     private List<GameObject> objs;
-    private List<SwapTile> swapTiles;
+    [SerializeField] private List<SwapTile> swapTiles;
     #endregion
 
     #region ==========Unity Methods==========
@@ -86,7 +86,6 @@ public class Stage : MonoBehaviour
                     SwapTile swapTile = ObjectManager.Instance.GetObject(ObjectID.SwapTile, pos).GetComponent<SwapTile>();
                     swapTile.SetTile(tiles[x][1..]);
                     swapTiles.Add(swapTile);
-                    objs.Add(swapTile.gameObject);
                 }
                 else
                 {
@@ -96,9 +95,8 @@ public class Stage : MonoBehaviour
                     {
                         //TODO: Fix later
                         Camera.main.GetComponent<PPTransition>().Portal = (Vector3)pos + Vector3.back;
-                        GameObject portal = ObjectManager.Instance.GetObject(ObjectID.Portal, pos);
-                        portal.GetComponent<SpriteRenderer>().flipX = pos.x > startPos.x;
-                        objs.Add(portal);
+                        //GameObject portal = ObjectManager.Instance.GetObject(ObjectID.Portal, pos);
+                        //objs.Add(portal);
                         tile.Operator = Operator.Portal;
                         tile.Value = 0;
                     }
@@ -158,6 +156,12 @@ public class Stage : MonoBehaviour
             if (obj != null) obj.SetActive(false);
         }
         objs.Clear();
+
+        foreach (SwapTile tile in swapTiles)
+        {
+            if (tile != null) tile.gameObject.SetActive(false);
+        }
+        swapTiles.Clear();
 
         foreach (Drone drone in drones)
         {
