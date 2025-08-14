@@ -3,11 +3,15 @@ using UnityEngine;
 
 public class InGameUIController : MonoBehaviour
 {
+    [Header("Panels")]
     [SerializeField] private GameObject pausePanel;
+    [SerializeField] private GameObject descriptionPanel;
 
     [SerializeField] private TMP_Text stageNum_T;
     [SerializeField] private TMP_Text currentMove_T;
     [SerializeField] private TMP_Text moveCount_T;
+
+
 
     private Player player;
 
@@ -36,6 +40,10 @@ public class InGameUIController : MonoBehaviour
     {
         pausePanel.SetActive(isActive);
     }
+    public void SetActive_DescriptionPanel(bool isActive)
+    {
+        descriptionPanel.SetActive(isActive);
+    }
 
     private void InitializeTexts()
     {
@@ -51,7 +59,23 @@ public class InGameUIController : MonoBehaviour
 
     public void Update_Value()
     {
-        currentMove_T.text = player.Value.ToString();
+        string sign;
+        if (player.Value < 0)
+        {
+            currentMove_T.color = Color.red;
+            sign = "-";
+        }
+        else if (player.Value == 0)
+        {
+            currentMove_T.color = Color.white;
+            sign = "";
+        }
+        else
+        {
+            currentMove_T.color = Color.blue;
+            sign = "+";
+        }
+        currentMove_T.text = sign + player.Value.ToString();
     }
 
     public void Update_MoveCount()
