@@ -268,11 +268,13 @@ public class Player : MonoBehaviour
             onHold = false;
             box.transform.localScale = Vector3.one;
             if (box != null) box.GetComponent<Box>().ClearPreview();
+            box = null;
+            this.GetComponent<Animator>().SetBool("HoldBox", false);
         }
         else if (!IsMovable) return;
         GameManager.Instance.Restart();
         //TODO: Modify later
-        this.GetComponent<SpriteRenderer>().flipX = false;
+        //this.GetComponent<SpriteRenderer>().flipX = false;
     }
     #endregion
 

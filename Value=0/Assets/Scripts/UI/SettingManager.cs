@@ -37,6 +37,11 @@ public class SettingManager : MonoBehaviour
         UpdateResolutionText();
     }
 
+    private void Update()
+    {
+        UpdateScreenModeText();
+        UpdateResolutionText();
+    }
     public void SetActiveSettingPanel(bool isActive)
     {
         SoundManager.Instance.Play_UI_SFX(isActive ? UISFXID.PanelOpen : UISFXID.PanelClose);
@@ -109,18 +114,25 @@ public class SettingManager : MonoBehaviour
     {
         if (Screen.fullScreen)
         {
-            fullScreenText.text = "Full Screen";
+            fullScreenText.text = "전체화면";
         }
         else
         {
-            fullScreenText.text = "Window mode";
+            fullScreenText.text = "창 모드";
         }
     }
 
     private void UpdateResolutionText()
     {
-        Vector2Int resolution = resolutions[resolutionIndex];
-        resolutionText.text = resolution.x + " x " + resolution.y;
+        if (Screen.fullScreen)
+        {
+            Resolution res = Screen.currentResolution;
+            resolutionText.text = res.width + " x " + res.height;
+        }
+        else
+        {
+            resolutionText.text = Screen.width + " x " + Screen.height;
+        }
     }
 
     // --- 사운드 조절 함수 ---
