@@ -109,11 +109,11 @@ public class SettingManager : MonoBehaviour
     {
         if (Screen.fullScreen)
         {
-            fullScreenText.text = "WindowMode";
+            fullScreenText.text = "Full Screen";
         }
         else
         {
-            fullScreenText.text = "FullScreen";
+            fullScreenText.text = "Window mode";
         }
     }
 

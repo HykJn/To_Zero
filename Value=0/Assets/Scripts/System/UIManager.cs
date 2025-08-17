@@ -115,9 +115,9 @@ public class UIManager : MonoBehaviour
         loading.allowSceneActivation = true;
 
         loadingPanel.alpha = 1;
-        loadingText.text = "Press any key to continue...";
 
-        while (!Input.anyKeyDown) yield return null;
+        yield return new WaitForSeconds(0.2f);
+
         CurrentScene = sceneID;
 
         BGMID id = sceneID switch

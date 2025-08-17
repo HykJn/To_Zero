@@ -263,7 +263,13 @@ public class Player : MonoBehaviour
 
     private void Restart()
     {
-        if (!IsMovable) return;
+        if (onHold && !IsMovable)
+        {
+            onHold = false;
+            box.transform.localScale = Vector3.one;
+            if (box != null) box.GetComponent<Box>().ClearPreview();
+        }
+        else if (!IsMovable) return;
         GameManager.Instance.Restart();
         //TODO: Modify later
         this.GetComponent<SpriteRenderer>().flipX = false;
