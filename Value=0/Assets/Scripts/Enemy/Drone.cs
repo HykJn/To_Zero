@@ -47,6 +47,20 @@ public class Drone : MonoBehaviour
 
     public void Move()
     {
+        if (curSteps == 0)
+        {
+            curSteps--;
+            return;
+        }
+        else if (curSteps == -1)
+        {
+            curDirection = (Direction)(-(int)curDirection);
+            this.GetComponent<Animator>().SetFloat("Direction", (int)curDirection);
+            curSteps = steps;
+            scanner.transform.localPosition = -scanner.transform.localPosition;
+            return;
+        }
+
         this.transform.position += curDirection switch
         {
             Direction.Up => Vector3.up,
@@ -56,14 +70,6 @@ public class Drone : MonoBehaviour
             _ => throw new System.ArgumentOutOfRangeException()
         };
         curSteps--;
-
-        if (curSteps == 0)
-        {
-            curDirection = (Direction)(-(int)curDirection);
-            this.GetComponent<Animator>().SetFloat("Direction", (int)curDirection);
-            curSteps = steps;
-            scanner.transform.localPosition = -scanner.transform.localPosition;
-        }
     }
     #endregion
 

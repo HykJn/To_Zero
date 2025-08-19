@@ -3,15 +3,17 @@ using UnityEngine;
 
 public class InGameUIController : MonoBehaviour
 {
+    public DialogueSystem DialogPanel => dialogPanel;
+
     [Header("Panels")]
     [SerializeField] private GameObject pausePanel;
     [SerializeField] private GameObject descriptionPanel;
 
+    [SerializeField] private DialogueSystem dialogPanel;
+
     [SerializeField] private TMP_Text stageNum_T;
-    [SerializeField] private TMP_Text currentMove_T;
+    [SerializeField] private TMP_Text value_T;
     [SerializeField] private TMP_Text moveCount_T;
-
-
 
     private Player player;
 
@@ -30,15 +32,14 @@ public class InGameUIController : MonoBehaviour
         Update_StageNum();
         Update_Value();
         Update_MoveCount();
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            SetActive_PausePanel(!pausePanel.activeSelf);
-        }
     }
 
     public void SetActive_PausePanel(bool isActive)
     {
+        SoundManager.Instance.Play_UI_SFX(isActive ? UISFXID.PanelOpen : UISFXID.PanelClose);
+
         pausePanel.SetActive(isActive);
+        if (isActive) UIManager.Instance.OpenPanel.Push(pausePanel);
     }
     public void SetActive_DescriptionPanel(bool isActive)
     {
@@ -59,23 +60,15 @@ public class InGameUIController : MonoBehaviour
 
     public void Update_Value()
     {
-        string sign;
-        if (player.Value < 0)
-        {
-            currentMove_T.color = Color.red;
-            sign = "-";
-        }
-        else if (player.Value == 0)
-        {
-            currentMove_T.color = Color.white;
-            sign = "";
-        }
+        string sign = string.Empty;
+        if (player.Value < 0) value_T.color = new Color(1, 75 / 255f, 75 / 255f);
+        else if (player.Value == 0) value_T.color = Color.white;
         else
         {
-            currentMove_T.color = Color.blue;
+            value_T.color = new Color(100 / 255f, 200 / 255f, 1);
             sign = "+";
         }
-        currentMove_T.text = sign + player.Value.ToString();
+        value_T.text = sign + player.Value.ToString();
     }
 
     public void Update_MoveCount()

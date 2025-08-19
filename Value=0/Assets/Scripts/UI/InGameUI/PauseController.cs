@@ -10,7 +10,7 @@ public class PauseController : MonoBehaviour
         Time.timeScale = 0f;
         GameObject player = GameObject.FindWithTag("Player");
         if (player == null) return;
-        player.GetComponent<Player>().Controllable = false;
+        //player.GetComponent<Player>().Controllable = false;
     }
 
     private void OnDisable()
@@ -18,25 +18,37 @@ public class PauseController : MonoBehaviour
         Time.timeScale = 1f;
         GameObject player = GameObject.FindWithTag("Player");
         if (player == null) return;
-        player.GetComponent<Player>().Controllable = true;
+        //player.GetComponent<Player>().Controllable = true;
     }
 
     #region ========== ButtonEvent ==========
 
     public void OnClick_Resume()
     {
-        inGameUIController.SetActive_PausePanel(false);
+        //SoundManager.Instance.Play_UI_SFX(UISFXID.ButtonClick);
+
+        //inGameUIController.SetActive_PausePanel(false);
+
+        UIManager.Instance.ClosePanel();
     }
     public void OnClick_Option()
     {
-        SettingManager.instance.SetActiveSettingPanel(true);
+        SoundManager.Instance.Play_UI_SFX(UISFXID.ButtonClick);
+
+        UIManager.Instance.Setting.SetActiveSettingPanel(true);
     }
     public void OnClick_Title()
     {
+        SoundManager.Instance.Play_UI_SFX(UISFXID.ButtonClick);
+        UIManager.Instance.ClosePanel();
+
         SceneManager.LoadScene("MainMenu");
+        SoundManager.Instance.Play_BGM(BGMID.Title);
     }
     public void OnClick_Exit()
     {
+        SoundManager.Instance.Play_UI_SFX(UISFXID.ButtonClick);
+
         Debug.Log("게임 종료 ");
         Application.Quit();
     }

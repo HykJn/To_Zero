@@ -1,3 +1,8 @@
+public enum Character
+{
+    Value, System, Unknown
+}
+
 public enum Operator
 {
     None,
@@ -11,15 +16,38 @@ public enum Operator
 public enum ObjectID
 {
     None,
-    OperationTile, SwapTile, Wall, Box, Portal,
+    OperationTile, SwapTile, Wall, Box,
     Drone
 }
 
 public enum EventID
 {
-    PlayerMove, PlayerDie, NextStage,
+    PlayerMove, NextStage,
+    PlayerDieByDrone,
+    PlayerDieByMoves,
+    PlayerDieBySystem,
 }
 
-public enum BGMID { }
-public enum SFXID { }
-public enum UISFXID { }
+public enum BGMID
+{
+    Title, InGame, BossRoom, Ending,
+}
+public enum SFXID
+{
+    PlayerMove, PlayerRespawn, PlayerHoldBox, PlayerUnholdBox,
+    DroneDetect,
+    SystemAttack, SystemDie,
+    PortalIn, PortalOut
+}
+public enum UISFXID
+{
+    StartButtonClick,
+    ButtonClick,
+    PanelOpen, PanelClose,
+    NextDialog,
+}
+
+public enum SceneID
+{
+    Title, InGame,
+}
