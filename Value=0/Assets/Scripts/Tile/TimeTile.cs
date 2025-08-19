@@ -7,7 +7,7 @@ public class TimeTile : OperationTile
     #endregion
 
     #region ==========Fields==========
-    [SerializeField] private Operator[] opers;
+    [SerializeField] private TileType[] opers;
     [SerializeField] private int[] values;
     [SerializeField] private readonly float time = 5f;
     private float tick_time = 0f;
@@ -24,7 +24,7 @@ public class TimeTile : OperationTile
     #region ==========Methods==========
     public void Init()
     {
-        opers = new Operator[4];
+        opers = new TileType[4];
         values = new int[4];
         idx = 0;
         tick_time = 0f;
@@ -34,8 +34,8 @@ public class TimeTile : OperationTile
 
         for (int i = 1; i < 4; i++)
         {
-            opers[i] = (Operator)Random.Range(1, 5);
-            values[i] = opers[i] == Operator.Mul || opers[i] == Operator.Div
+            opers[i] = (TileType)Random.Range(1, 5);
+            values[i] = opers[i] == TileType.Mul || opers[i] == TileType.Div
                 ? Random.Range(2, 4)
                 : Random.Range(1, 8);
         }
@@ -50,7 +50,7 @@ public class TimeTile : OperationTile
             tick_time = 0f;
             idx = (idx + 1) % opers.Length;
 
-            this.Operator = opers[idx];
+            this.TileType = opers[idx];
             this.Value = values[idx];
         }
     }

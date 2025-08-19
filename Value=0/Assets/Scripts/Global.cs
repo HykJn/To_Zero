@@ -3,14 +3,13 @@ public enum Character
     Value, System, Unknown
 }
 
-public enum Operator
+public enum TileType
 {
-    None,
+    None, Start, Portal,
     // Basic arithmetic operations
     Add, Sub, Mul, Div,
-    // Conditional operation
+    // Conditional operations
     Equal, Not, Greater, Less,
-    Portal
 }
 
 public enum ObjectID

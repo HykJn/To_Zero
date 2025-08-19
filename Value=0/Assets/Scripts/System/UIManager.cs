@@ -9,13 +9,14 @@ using UnityEngine.UI;
 public class UIManager : MonoBehaviour
 {
     #region ==========Properties==========
-    public static UIManager Instance => instance;
+    public static UIManager Instance { get; private set; } = null;
 
     public SettingManager Setting => setting;
-    public MainUIController MainUI => mainUI;
-    public InGameUIController InGameUI => inGameUI;
+    public MainUIController MainUI { get; private set; }
 
-    public Stack<GameObject> OpenPanel => openPanel;
+    public InGameUIController InGameUI { get; private set; }
+
+    public Stack<GameObject> OpenPanel => _openPanel;
 
     public SceneID CurrentScene
     {
@@ -23,40 +24,36 @@ public class UIManager : MonoBehaviour
         {
             if (value == SceneID.Title)
             {
-                mainUI = GameObject.FindWithTag("MainUI").GetComponent<MainUIController>();
-                inGameUI = null;
+                MainUI = GameObject.FindWithTag("MainUI").GetComponent<MainUIController>();
+                InGameUI = null;
             }
             else if (value == SceneID.InGame)
             {
-                mainUI = null;
-                inGameUI = GameObject.FindWithTag("InGameUI").GetComponent<InGameUIController>();
+                MainUI = null;
+                InGameUI = GameObject.FindWithTag("InGameUI").GetComponent<InGameUIController>();
             }
         }
     }
 
-    public bool AnyPanelActivated => openPanel.Count > 0;
+    public bool AnyPanelActivated => _openPanel.Count > 0;
     #endregion
 
     #region ==========Fields==========
-    private static UIManager instance = null;
 
     [SerializeField] private SettingManager setting;
     [SerializeField] private CanvasGroup loadingPanel;
     [SerializeField] private TMP_Text loadingText;
     [SerializeField] private Image loadingFill;
 
-    private MainUIController mainUI;
-    private InGameUIController inGameUI;
-
-    private Stack<GameObject> openPanel;
+    private Stack<GameObject> _openPanel;
     #endregion
 
     #region ==========Unity==========
     private void Awake()
     {
-        if (instance == null)
+        if (Instance == null)
         {
-            instance = this;
+            Instance = this;
             DontDestroyOnLoad(this.gameObject);
         }
         else
@@ -64,7 +61,7 @@ public class UIManager : MonoBehaviour
             Destroy(this.gameObject);
         }
 
-        openPanel = new Stack<GameObject>();
+        _openPanel = new Stack<GameObject>();
     }
 
     private void Start()
@@ -77,7 +74,7 @@ public class UIManager : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             if (AnyPanelActivated) ClosePanel();
-            else if (inGameUI != null) inGameUI.SetActive_PausePanel(true);
+            else if (InGameUI != null) InGameUI.SetActive_PausePanel(true);
         }
     }
     #endregion
@@ -87,10 +84,10 @@ public class UIManager : MonoBehaviour
     {
         if (!AnyPanelActivated) return;
 
-        openPanel.Pop().SetActive(false);
+        _openPanel.Pop().SetActive(false);
         SoundManager.Instance.Play_UI_SFX(UISFXID.PanelClose);
 
-        if (openPanel.Count == 0) Time.timeScale = 1;
+        if (_openPanel.Count == 0) Time.timeScale = 1;
     }
 
     private IEnumerator LoadScene(SceneID sceneID, Action onSceneLoaded = null, Action onSceneChanged = null)

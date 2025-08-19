@@ -5,7 +5,8 @@ using UnityEngine;
 public class SoundManager : MonoBehaviour
 {
     #region ==========Properties==========
-    public static SoundManager Instance => instance;
+    public static SoundManager Instance { get; private set; } = null;
+
     public float MasterVolume
     {
         get => masterVolume;
@@ -46,17 +47,16 @@ public class SoundManager : MonoBehaviour
     }
     public bool TraverseBGM
     {
-        get => traverseBgm;
+        get => _traverseBgm;
         set
         {
-            traverseBgm = value;
+            _traverseBgm = value;
             bgmChannel.loop = !value;
         }
     }
     #endregion
 
     #region ==========Fields==========
-    private static SoundManager instance = null;
 
     [Header("Channels")]
     [SerializeField] private AudioSource bgmChannel;
@@ -74,16 +74,16 @@ public class SoundManager : MonoBehaviour
     [SerializeField, Range(0, 1)] private float sfxVolume;
     [SerializeField, Range(0, 1)] private float uiVolume;
 
-    private bool traverseBgm = false;
-    private int bgmIdx = 0;
+    private bool _traverseBgm = false;
+    private int _bgmIdx = 0;
     #endregion
 
     #region ==========Unity Methods==========
     private void Awake()
     {
-        if (instance == null)
+        if (Instance == null)
         {
-            instance = this;
+            Instance = this;
         }
         else
         {
@@ -105,7 +105,7 @@ public class SoundManager : MonoBehaviour
     #region ==========Methods==========
     public void Play_BGM(BGMID id, bool isLoop = false)
     {
-        bgmIdx = (int)id;
+        _bgmIdx = (int)id;
         bgmChannel.clip = bgmClips[(int)id];
         bgmChannel.loop = isLoop;
         bgmChannel.Play();
@@ -167,8 +167,8 @@ public class SoundManager : MonoBehaviour
         //Next track
         if (!bgmChannel.isPlaying)
         {
-            bgmIdx = (bgmIdx + 1) % bgmClips.Length;
-            bgmChannel.clip = bgmClips[bgmIdx];
+            _bgmIdx = (_bgmIdx + 1) % bgmClips.Length;
+            bgmChannel.clip = bgmClips[_bgmIdx];
         }
     }
     #endregion

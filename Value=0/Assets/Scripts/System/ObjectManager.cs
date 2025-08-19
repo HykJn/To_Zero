@@ -1,36 +1,38 @@
 using System;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class ObjectManager : MonoBehaviour
 {
     #region ==========Properties==========
-    public static ObjectManager Instance => instance;
+    public static ObjectManager Instance { get; private set; } = null;
+
     #endregion
 
     #region ==========Fields==========
-    private static ObjectManager instance = null;
 
     [Header("Prefabs")]
-    [SerializeField] private GameObject prefab_operationTile;
-    [SerializeField] private GameObject prefab_swapTile;
-    [SerializeField] private GameObject prefab_wall;
-    [SerializeField] private GameObject prefab_box;
-    [SerializeField] private GameObject prefab_drone;
+    [FormerlySerializedAs("prefab_operationTile")]
+    [SerializeField] private GameObject prefabOperationTile;
+    [FormerlySerializedAs("prefab_swapTile")] [SerializeField] private GameObject prefabSwapTile;
+    [FormerlySerializedAs("prefab_wall")] [SerializeField] private GameObject prefabWall;
+    [FormerlySerializedAs("prefab_box")] [SerializeField] private GameObject prefabBox;
+    [FormerlySerializedAs("prefab_drone")] [SerializeField] private GameObject prefabDrone;
 
     //pools
-    GameObject[] obj_operationTiles;
-    GameObject[] obj_swapTiles;
-    GameObject[] obj_walls;
-    GameObject[] obj_boxes;
-    GameObject[] obj_drones;
+    private GameObject[] _objOperationTiles;
+    private GameObject[] _objSwapTiles;
+    private GameObject[] _objWalls;
+    private GameObject[] _objBoxes;
+    private GameObject[] _objDrones;
     #endregion
 
     #region ==========Unity Methods==========
     private void Awake()
     {
-        if (instance == null)
+        if (Instance == null)
         {
-            instance = this;
+            Instance = this;
         }
         else
         {
@@ -45,45 +47,45 @@ public class ObjectManager : MonoBehaviour
     #region ==========Methods==========
     private void InitPool()
     {
-        obj_operationTiles = new GameObject[128];
-        obj_swapTiles = new GameObject[128];
-        obj_walls = new GameObject[128];
-        obj_boxes = new GameObject[128];
-        obj_drones = new GameObject[16];
+        _objOperationTiles = new GameObject[128];
+        _objSwapTiles = new GameObject[128];
+        _objWalls = new GameObject[128];
+        _objBoxes = new GameObject[128];
+        _objDrones = new GameObject[16];
 
         //Operation Tiles
-        for (int i = 0; i < obj_operationTiles.Length; i++)
+        for (int i = 0; i < _objOperationTiles.Length; i++)
         {
-            obj_operationTiles[i] = Instantiate(prefab_operationTile, this.transform);
-            obj_operationTiles[i].SetActive(false);
+            _objOperationTiles[i] = Instantiate(prefabOperationTile, this.transform);
+            _objOperationTiles[i].SetActive(false);
         }
 
         //Swap Tiles
-        for (int i = 0; i < obj_swapTiles.Length; i++)
+        for (int i = 0; i < _objSwapTiles.Length; i++)
         {
-            obj_swapTiles[i] = Instantiate(prefab_swapTile, this.transform);
-            obj_swapTiles[i].SetActive(false);
+            _objSwapTiles[i] = Instantiate(prefabSwapTile, this.transform);
+            _objSwapTiles[i].SetActive(false);
         }
 
         //Walls
-        for (int i = 0; i < obj_walls.Length; i++)
+        for (int i = 0; i < _objWalls.Length; i++)
         {
-            obj_walls[i] = Instantiate(prefab_wall, this.transform);
-            obj_walls[i].SetActive(false);
+            _objWalls[i] = Instantiate(prefabWall, this.transform);
+            _objWalls[i].SetActive(false);
         }
 
         //Boxes
-        for (int i = 0; i < obj_boxes.Length; i++)
+        for (int i = 0; i < _objBoxes.Length; i++)
         {
-            obj_boxes[i] = Instantiate(prefab_box, this.transform);
-            obj_boxes[i].SetActive(false);
+            _objBoxes[i] = Instantiate(prefabBox, this.transform);
+            _objBoxes[i].SetActive(false);
         }
 
         //Drones
-        for (int i = 0; i < obj_drones.Length; i++)
+        for (int i = 0; i < _objDrones.Length; i++)
         {
-            obj_drones[i] = Instantiate(prefab_drone, this.transform);
-            obj_drones[i].SetActive(false);
+            _objDrones[i] = Instantiate(prefabDrone, this.transform);
+            _objDrones[i].SetActive(false);
         }
     }
 
@@ -91,12 +93,12 @@ public class ObjectManager : MonoBehaviour
     {
         GameObject[] pool = id switch
         {
-            ObjectID.OperationTile => obj_operationTiles,
-            ObjectID.SwapTile => obj_swapTiles,
-            ObjectID.Wall => obj_walls,
-            ObjectID.Box => obj_boxes,
+            ObjectID.OperationTile => _objOperationTiles,
+            ObjectID.SwapTile => _objSwapTiles,
+            ObjectID.Wall => _objWalls,
+            ObjectID.Box => _objBoxes,
             //ObjectID.Portal => obj_portals,
-            ObjectID.Drone => obj_drones,
+            ObjectID.Drone => _objDrones,
             _ => throw new ArgumentException("Invalid ObjectID", nameof(id))
         };
 

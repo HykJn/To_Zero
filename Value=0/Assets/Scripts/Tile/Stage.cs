@@ -7,200 +7,146 @@ using TMPro;
 public class Stage : MonoBehaviour
 {
     #region ==========Properties==========
+
     public DialogueData[] Dialogs => dialogs;
+
     #endregion
 
     #region ==========Fields==========
+
     [SerializeField, TextArea(6, 6)] private string stageMap;
     [SerializeField] private int startNumber, moves;
-    [SerializeField] private Vector3 startPos;
     [SerializeField] private DroneInfo[] droneInfo;
-    private List<Drone> drones;
-    private List<GameObject> objs;
-    [SerializeField] private List<SwapTile> swapTiles;
     [SerializeField] private DialogueData[] dialogs;
+
+    private Dictionary<Vector3, OperationTile> _tileMap;
+    private Vector3 _startPos;
+    private List<GameObject> _objs;
+
     #endregion
 
     #region ==========Unity Methods==========
+
     private void OnEnable()
     {
-        Init();
-        Player player = GameObject.FindWithTag("Player").GetComponent<Player>();
-        player.transform.position = startPos;
-        player.Value = startNumber;
-        player.Moves = moves;
+        GameManager.Instance.OnRestart += Restart;
+        LoadStage();
     }
 
     private void OnDisable()
     {
+        GameManager.Instance.OnRestart -= Restart;
         UnloadStage();
     }
+
     #endregion
 
     #region ==========Methods==========
-    private void Init()
-    {
-        objs = new();
-        swapTiles = new();
-        drones = new();
-        LoadStage();
-    }
 
     private void LoadStage()
     {
+        //Initialize
+        _tileMap = new();
+        _objs = new();
+
+        string[] rows = stageMap.Split('\n');
+        int height = rows.Length, width = rows[0].Length;
+        float top = height / 2f - 0.5f, left = -(width / 2f - 0.5f);
+
         //Load Tiles
-        string[] lines = stageMap.Split("\n");
-        int height = lines.Length, width = lines[0].Split(' ').Length;
-
-        if (height % 2 != 0) this.transform.position += Vector3.down * 0.5f;
-        if (width % 2 != 0) this.transform.position += Vector3.left * 0.5f;
-
-        int left = -width / 2, top = height % 2 == 0 ? (height / 2) - 1 : height / 2;
-
-        for (int y = 0; y < height; y++)
+        for (int y = 0; y < rows.Length; y++)
         {
-            string[] tiles = lines[y].Split(' ');
-            for (int x = 0; x < width; x++)
+            string[] columns = rows[y].Split(' ');
+            for (int x = 0; x < columns.Length; x++)
             {
-                if (tiles[x] == "0" || tiles[x] == "N" || tiles[x] == "0") continue;
-                Vector2 pos = new(left + x, top - y);
-                if (tiles[x] == "Start")
+                if (columns[x] == "0") continue;
+
+                Vector3 position = new(left + x, top - y);
+                if (columns[x][0] == 'b')
                 {
-                    startPos = new Vector3(left + x, top - y);
-                    OperationTile tile = ObjectManager.Instance.GetObject(ObjectID.OperationTile, pos).GetComponent<OperationTile>();
-                    tile.Operator = Operator.None;
-                    tile.Value = 0;
-                    tile.OnPlayer = true;
-                    objs.Add(tile.gameObject);
+                    Box box = ObjectManager.Instance.GetObject(ObjectID.Box, position).GetComponent<Box>();
+                    box.Init(position);
+                    _objs.Add(box.gameObject);
+
+                    columns[x] = columns[x][1..];
                 }
-                else if (tiles[x] == "W" || tiles[x] == "w")
+
+                if (columns[x][0] == 's')
                 {
-                    OperationTile tile = ObjectManager.Instance.GetObject(ObjectID.OperationTile, pos).GetComponent<OperationTile>();
-                    tile.Operator = Operator.None;
-                    tile.Value = 0;
-                    tile.GetComponent<Animator>().enabled = false;
-                    objs.Add(tile.gameObject);
-                    objs.Add(ObjectManager.Instance.GetObject(ObjectID.Wall, (Vector3)pos + Vector3.back));
-                }
-                else if (tiles[x][0] == 'S' || tiles[x][0] == 's')
-                {
-                    SwapTile swapTile = ObjectManager.Instance.GetObject(ObjectID.SwapTile, pos).GetComponent<SwapTile>();
-                    swapTile.SetTile(tiles[x][1..]);
-                    swapTiles.Add(swapTile);
+                    SwapTile sTile = ObjectManager.Instance.GetObject(ObjectID.SwapTile, position)
+                        .GetComponent<SwapTile>();
+
+                    _tileMap.Add(position, sTile);
+                    sTile.SetTile(columns[x][1..]);
                 }
                 else
                 {
-                    OperationTile tile = ObjectManager.Instance.GetObject(ObjectID.OperationTile, pos).GetComponent<OperationTile>();
+                    OperationTile newTile = ObjectManager.Instance.GetObject(ObjectID.OperationTile, position)
+                        .GetComponent<OperationTile>();
+                    _tileMap.Add(position, newTile);
 
-                    if (tiles[x] == "P" || tiles[x] == "p")
+                    switch (columns[x])
                     {
-                        //TODO: Fix later
-                        Camera.main.GetComponent<PPTransition>().Portal = (Vector3)pos + Vector3.back;
-                        //GameObject portal = ObjectManager.Instance.GetObject(ObjectID.Portal, pos);
-                        //objs.Add(portal);
-                        tile.Operator = Operator.Portal;
-                        tile.Value = 0;
+                        case "w":
+                            newTile.TileType = TileType.None;
+                            newTile.Value = 0;
+                            _objs.Add(ObjectManager.Instance.GetObject(ObjectID.Wall, position));
+                            break;
+                        case "S":
+                            _startPos = position;
+                            newTile.TileType = TileType.Start;
+                            newTile.Value = 0;
+                            break;
+                        case "P":
+                            newTile.TileType = TileType.Portal;
+                            newTile.Value = 0;
+                            break;
+                        default:
+                            newTile.TileType = columns[x][0] switch
+                            {
+                                '+' => TileType.Add, '-' => TileType.Sub, '*' => TileType.Mul, '/' => TileType.Div,
+                                '=' => TileType.Equal, '!' => TileType.Not, '>' => TileType.Greater,
+                                '<' => TileType.Less, _ => TileType.None,
+                            };
+                            newTile.Value = int.Parse(columns[x][1..]);
+                            break;
                     }
-                    else
-                    {
-                        GameObject obj = null;
-                        if (tiles[x][0] == 'B' || tiles[x][0] == 'b')
-                        {
-                            tile.GetComponent<Animator>().enabled = false;
-                            obj = ObjectManager.Instance.GetObject(ObjectID.Box, (Vector3)pos + Vector3.back);
-                            objs.Add(obj);
-                            tiles[x] = tiles[x][1..];
-                        }
-
-                        tile.Operator = tiles[x][0] switch
-                        {
-                            '+' => Operator.Add,
-                            '-' => Operator.Sub,
-                            '*' => Operator.Mul,
-                            '/' => Operator.Div,
-                            '=' => Operator.Equal,
-                            '!' => Operator.Not,
-                            '>' => Operator.Greater,
-                            '<' => Operator.Less,
-                            _ => throw new InvalidOperationException("Invalid operator in stage map.")
-                        };
-                        tile.Value = int.Parse(tiles[x][1..]);
-
-                        if (obj != null)
-                        {
-                            obj.GetComponentInChildren<TMP_Text>().text =
-                                tile.GetComponentInChildren<TMP_Text>().text;
-                        }
-                    }
-
-                    objs.Add(tile.gameObject);
                 }
             }
         }
 
-        //Load Drone
-        if (droneInfo.Length > 0)
+        //Load Drones
+        foreach (DroneInfo info in droneInfo)
         {
-            foreach (DroneInfo info in droneInfo)
-            {
-                Drone drone = ObjectManager.Instance.GetObject(ObjectID.Drone, info.start).GetComponent<Drone>();
-                drone.Init(info.start, info.direction, info.steps);
-                drones.Add(drone);
-            }
+            Drone drone = ObjectManager.Instance.GetObject(ObjectID.Drone).GetComponent<Drone>();
+            drone.Init(info.start, info.direction, info.steps);
+            _objs.Add(drone.gameObject);
         }
     }
 
     private void UnloadStage()
     {
-        foreach (GameObject obj in objs)
-        {
-            if (obj != null) obj.SetActive(false);
-        }
-        objs.Clear();
+        foreach (OperationTile tile in _tileMap.Values)
+            tile.gameObject.SetActive(false);
+        _tileMap.Clear();
 
-        foreach (SwapTile tile in swapTiles)
-        {
-            if (tile != null) tile.gameObject.SetActive(false);
-        }
-        swapTiles.Clear();
-
-        foreach (Drone drone in drones)
-        {
-            if (drone != null) drone.gameObject.SetActive(false);
-        }
-        drones.Clear();
+        foreach (GameObject obj in _objs)
+            obj.SetActive(false);
+        _objs.Clear();
     }
 
-    public void Restart()
+    public bool IsMovable(Vector3 position)
     {
-        UnloadStage();
-        LoadStage();
-        Player player = GameObject.FindWithTag("Player").GetComponent<Player>();
-        player.transform.position = startPos;
-        player.Value = startNumber;
-        player.Moves = moves;
-
-        foreach (Drone drone in drones)
-        {
-            drone.Init();
-        }
+        return GetTile(position)?.TileType != TileType.None;
     }
 
-    public void SwapTiles()
+    public OperationTile GetTile(Vector3 position)
     {
-        if (swapTiles.Count == 0) return;
-        foreach (SwapTile tile in swapTiles)
-        {
-            tile.Swap();
-        }
+        return _tileMap.GetValueOrDefault(position, null);
     }
 
-    public void MoveDrone()
-    {
-        if (drones.Count == 0) return;
-        foreach (Drone drone in drones)
-            drone.Move();
-    }
+    private void Restart() => GameObject.FindWithTag("Player").transform.position = _startPos;
+
     #endregion
 
     [Serializable]
