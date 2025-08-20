@@ -37,7 +37,7 @@ public class MainUIController : MonoBehaviour
 
         SoundManager.Instance.Play_UI_SFX(UISFXID.StartButtonClick);
 
-        UIManager.Instance.ToPlay(1);
+        UIManager.Instance.ToPlay(3);
     }
 
     public void OnClick_StagePanelExit()

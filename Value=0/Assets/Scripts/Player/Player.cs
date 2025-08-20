@@ -12,8 +12,8 @@ public class Player : MonoBehaviour
 
     #region ==========Properties==========
 
-    public int Value { get; private set; }
-    public int Moves { get; private set; }
+    public int Value { get; set; }
+    public int Moves { get; set; }
     public bool IsMovable { get; set; } = true;
     public bool Controllable { get; set; } = true;
 
@@ -138,25 +138,23 @@ public class Player : MonoBehaviour
     private void HoldBox()
     {
         if (!_box) return;
+
         SoundManager.Instance.Play_SFX(SFXID.PlayerHoldBox);
-        IsMovable = false;
-
-        _box.SetPreview(true);
-
-        _onHold = true;
-        _box.Selected = true;
-
         animator.SetBool(Animator.StringToHash("HoldBox"), true);
+
+        IsMovable = false;
+        _onHold = true;
+        _box.SetPreview(true);
     }
 
     private void UnHoldBox()
     {
         SoundManager.Instance.Play_SFX(SFXID.PlayerUnholdBox);
-        _onHold = false;
-        _box.Selected = false;
-        if (_box) _box.SetPreview(false);
-
         animator.SetBool(Animator.StringToHash("HoldBox"), false);
+
+        IsMovable = true;
+        _onHold = false;
+        if (_box) _box.SetPreview(false);
     }
 
     private void MoveBox()
@@ -168,22 +166,22 @@ public class Player : MonoBehaviour
         else if (Input.GetKeyDown(KeyCode.A)) dir = Vector3.left;
         else if (Input.GetKeyDown(KeyCode.S)) dir = Vector3.down;
         else if (Input.GetKeyDown(KeyCode.D)) dir = Vector3.right;
-
-        if (dir != Vector3.zero) _box.Move(dir);
+        if (dir == Vector3.zero) return;
+        
+        if(!_box.Move(dir)) return;
         UnHoldBox();
         _box = null;
-
+        
         Moves--;
         OnPlayerMove?.Invoke();
-
-
+        
         animator.SetTrigger(Animator.StringToHash("MoveBox"));
         animator.SetBool(Animator.StringToHash("HoldBox"), false);
     }
 
     private void CheckTile()
     {
-        OperationTile tile = GameManager.Instance.CurrentStage.GetTile(this.transform.position);
+        Tile tile = GameManager.Instance.CurrentStage.GetTile(this.transform.position);
         switch (tile.TileType)
         {
             case TileType.Portal:
@@ -246,7 +244,6 @@ public class Player : MonoBehaviour
     {
         if (_onHold && !IsMovable)
         {
-            _onHold = false;
             UnHoldBox();
             if (_box) _box.SetPreview(false);
             _box = null;
@@ -254,6 +251,7 @@ public class Player : MonoBehaviour
         }
         else if (!IsMovable) return;
 
+        _box = null;
         GameManager.Instance.Restart();
     }
 

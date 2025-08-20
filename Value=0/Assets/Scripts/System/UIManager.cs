@@ -127,14 +127,6 @@ public class UIManager : MonoBehaviour
 
         onSceneLoaded?.Invoke();
 
-        //t = 1;
-        //while (t >= 0)
-        //{
-        //    t -= Time.deltaTime;
-        //    loadingPanel.alpha = Mathf.Clamp01(t);
-        //    yield return null;
-        //}
-
         loadingPanel.alpha = 0;
         loadingPanel.blocksRaycasts = false;
         onSceneChanged?.Invoke();

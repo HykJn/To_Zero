@@ -12,12 +12,11 @@ public class ObjectManager : MonoBehaviour
     #region ==========Fields==========
 
     [Header("Prefabs")]
-    [FormerlySerializedAs("prefab_operationTile")]
     [SerializeField] private GameObject prefabOperationTile;
-    [FormerlySerializedAs("prefab_swapTile")] [SerializeField] private GameObject prefabSwapTile;
-    [FormerlySerializedAs("prefab_wall")] [SerializeField] private GameObject prefabWall;
-    [FormerlySerializedAs("prefab_box")] [SerializeField] private GameObject prefabBox;
-    [FormerlySerializedAs("prefab_drone")] [SerializeField] private GameObject prefabDrone;
+    [SerializeField] private GameObject prefabSwapTile;
+    [SerializeField] private GameObject prefabWall;
+    [SerializeField] private GameObject prefabBox;
+    [SerializeField] private GameObject prefabDrone;
 
     //pools
     private GameObject[] _objOperationTiles;

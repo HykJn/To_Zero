@@ -2,40 +2,32 @@ using UnityEngine;
 
 public class Drone : MonoBehaviour
 {
-    #region ==========Properties==========
-    #endregion
-
     #region ==========Fields==========
-    [SerializeField] private Vector2 start;
-    [SerializeField] private Direction direction;
-    private Direction curDirection;
-    [SerializeField] private int steps;
-    private int curSteps;
-    [SerializeField] private GameObject scanner;
+    [Header("Components"), SerializeField] private Animator animator;
+    [Header("References"), SerializeField] private GameObject scanner;
+    private Vector2 _start;
+    private Direction _direction, _curDirection;
+    private int _steps, _curSteps;
     #endregion
-
-    #region ==========Unity Methods==========
-
-    #endregion
-
+    
     #region ==========Methods==========
     public void Init(Vector2 start, Direction direction, int steps)
     {
-        this.start = start;
-        this.direction = direction;
-        this.steps = steps;
+        _start = start;
+        _direction = direction;
+        _steps = steps;
 
-        Init();
+        Restart();
     }
 
-    public void Init()
+    public void Restart()
     {
-        this.transform.position = start;
-        curSteps = steps;
-        curDirection = direction;
-        this.GetComponent<Animator>().SetFloat("Direction", (int)curDirection);
+        this.transform.position = _start;
+        _curSteps = _steps;
+        _curDirection = _direction;
+        animator.SetFloat(Animator.StringToHash("Direction"), (int)_curDirection);
 
-        scanner.transform.localPosition = direction switch
+        scanner.transform.localPosition = _direction switch
         {
             Direction.Up => Vector2.up,
             Direction.Down => Vector2.down,
@@ -44,24 +36,23 @@ public class Drone : MonoBehaviour
             _ => throw new System.InvalidOperationException()
         };
     }
-
+    
     public void Move()
     {
-        if (curSteps == 0)
+        if (_curSteps == 0)
         {
-            curSteps--;
-            return;
+            _curSteps--;
         }
-        else if (curSteps == -1)
+        else if (_curSteps == -1)
         {
-            curDirection = (Direction)(-(int)curDirection);
-            this.GetComponent<Animator>().SetFloat("Direction", (int)curDirection);
-            curSteps = steps;
+            _curDirection = (Direction)(-(int)_curDirection);
+            animator.SetFloat(Animator.StringToHash("Direction"), (int)_curDirection);
+            _curSteps = _steps;
             scanner.transform.localPosition = -scanner.transform.localPosition;
             return;
         }
 
-        this.transform.position += curDirection switch
+        this.transform.position += _curDirection switch
         {
             Direction.Up => Vector3.up,
             Direction.Down => Vector3.down,
@@ -69,7 +60,7 @@ public class Drone : MonoBehaviour
             Direction.Right => Vector3.right,
             _ => throw new System.ArgumentOutOfRangeException()
         };
-        curSteps--;
+        _curSteps--;
     }
     #endregion
 

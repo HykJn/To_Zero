@@ -1,6 +1,7 @@
 using UnityEngine;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine.Tilemaps;
 using TMPro;
 
@@ -9,18 +10,23 @@ public class Stage : MonoBehaviour
     #region ==========Properties==========
 
     public DialogueData[] Dialogs => dialogs;
+    public Vector3 StartPos { get; private set; }
+    public int StartNumber => startNumber;
+    public int Moves => moves;
 
     #endregion
 
     #region ==========Fields==========
 
-    [SerializeField, TextArea(6, 6)] private string stageMap;
+    [Header("Stage Configuration"), SerializeField, TextArea(6, 6)]
+    private string stageMap;
+
     [SerializeField] private int startNumber, moves;
     [SerializeField] private DroneInfo[] droneInfo;
     [SerializeField] private DialogueData[] dialogs;
 
-    private Dictionary<Vector3, OperationTile> _tileMap;
-    private Vector3 _startPos;
+    private Dictionary<Vector3, Tile> _tileMap;
+    private List<Drone> _drones;
     private List<GameObject> _objs;
 
     #endregion
@@ -29,28 +35,57 @@ public class Stage : MonoBehaviour
 
     private void OnEnable()
     {
-        GameManager.Instance.OnRestart += Restart;
-        LoadStage();
+        Restart();
+        GameManager.Instance.OnPlayerMove += OnPlayerMove;
     }
 
     private void OnDisable()
     {
-        GameManager.Instance.OnRestart -= Restart;
-        UnloadStage();
+        GameManager.Instance.OnPlayerMove -= OnPlayerMove;
     }
 
     #endregion
 
     #region ==========Methods==========
 
+    public void Init()
+    {
+        _tileMap = new();
+        _drones = new();
+        _objs = new();
+        LoadStage();
+
+        foreach (Tile tile in _tileMap.Values)
+            tile.Init();
+        foreach (Drone drone in _drones)
+            drone.Restart();
+    }
+
+    public void Restart()
+    {
+        Player player = GameObject.FindWithTag("Player").GetComponent<Player>();
+        player.transform.position = StartPos;
+        player.Moves = moves;
+        player.Value = startNumber;
+
+        foreach (Tile tile in _tileMap.Values)
+            tile.Restart();
+        foreach (Drone drone in _drones)
+            drone.Restart();
+    }
+
+    public void OnPlayerMove()
+    {
+        foreach (Tile tile in _tileMap.Values)
+            tile.Swap();
+        foreach (Drone drone in _drones)
+            drone.Move();
+    }
+
     private void LoadStage()
     {
-        //Initialize
-        _tileMap = new();
-        _objs = new();
-
         string[] rows = stageMap.Split('\n');
-        int height = rows.Length, width = rows[0].Length;
+        int height = rows.Length, width = rows[0].Split(' ').Length;
         float top = height / 2f - 0.5f, left = -(width / 2f - 0.5f);
 
         //Load Tiles
@@ -62,56 +97,18 @@ public class Stage : MonoBehaviour
                 if (columns[x] == "0") continue;
 
                 Vector3 position = new(left + x, top - y);
+                Tile tile = ObjectManager.Instance.GetObject(ObjectID.OperationTile, position).GetComponent<Tile>();
+                _tileMap.Add(position, tile);
+
                 if (columns[x][0] == 'b')
                 {
                     Box box = ObjectManager.Instance.GetObject(ObjectID.Box, position).GetComponent<Box>();
-                    box.Init(position);
+                    tile.Box = box;
                     _objs.Add(box.gameObject);
-
                     columns[x] = columns[x][1..];
                 }
 
-                if (columns[x][0] == 's')
-                {
-                    SwapTile sTile = ObjectManager.Instance.GetObject(ObjectID.SwapTile, position)
-                        .GetComponent<SwapTile>();
-
-                    _tileMap.Add(position, sTile);
-                    sTile.SetTile(columns[x][1..]);
-                }
-                else
-                {
-                    OperationTile newTile = ObjectManager.Instance.GetObject(ObjectID.OperationTile, position)
-                        .GetComponent<OperationTile>();
-                    _tileMap.Add(position, newTile);
-
-                    switch (columns[x])
-                    {
-                        case "w":
-                            newTile.TileType = TileType.None;
-                            newTile.Value = 0;
-                            _objs.Add(ObjectManager.Instance.GetObject(ObjectID.Wall, position));
-                            break;
-                        case "S":
-                            _startPos = position;
-                            newTile.TileType = TileType.Start;
-                            newTile.Value = 0;
-                            break;
-                        case "P":
-                            newTile.TileType = TileType.Portal;
-                            newTile.Value = 0;
-                            break;
-                        default:
-                            newTile.TileType = columns[x][0] switch
-                            {
-                                '+' => TileType.Add, '-' => TileType.Sub, '*' => TileType.Mul, '/' => TileType.Div,
-                                '=' => TileType.Equal, '!' => TileType.Not, '>' => TileType.Greater,
-                                '<' => TileType.Less, _ => TileType.None,
-                            };
-                            newTile.Value = int.Parse(columns[x][1..]);
-                            break;
-                    }
-                }
+                tile.SetTile(columns[x]);
             }
         }
 
@@ -126,7 +123,7 @@ public class Stage : MonoBehaviour
 
     private void UnloadStage()
     {
-        foreach (OperationTile tile in _tileMap.Values)
+        foreach (Tile tile in _tileMap.Values)
             tile.gameObject.SetActive(false);
         _tileMap.Clear();
 
@@ -135,17 +132,16 @@ public class Stage : MonoBehaviour
         _objs.Clear();
     }
 
-    public bool IsMovable(Vector3 position)
+    public Tile GetTile(Vector3 position)
     {
-        return GetTile(position)?.TileType != TileType.None;
+        throw new NotImplementedException();
     }
 
-    public OperationTile GetTile(Vector3 position)
+    public Box GetBox(Vector3 position)
     {
-        return _tileMap.GetValueOrDefault(position, null);
+        Box box = GetTile(position).Box;
+        return box ? box : null;
     }
-
-    private void Restart() => GameObject.FindWithTag("Player").transform.position = _startPos;
 
     #endregion
 

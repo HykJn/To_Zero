@@ -14,7 +14,6 @@ public class Box : MonoBehaviour
             _isSelected = value;
             this.transform.localScale = value ? new Vector3(1.1f, 1.1f, 1) : Vector3.one;
             spriteRenderer.sprite = _isSelected ? outline : @default;
-            SetPreview(value);
         }
     }
 
@@ -53,7 +52,7 @@ public class Box : MonoBehaviour
     public void Init(Vector3 initPos)
     {
         _initPos = initPos;
-        _isSelected = false;
+        Selected = false;
         UpdateValue();
     }
 
@@ -66,7 +65,7 @@ public class Box : MonoBehaviour
 
     public void UpdateValue()
     {
-        OperationTile tile = GameManager.Instance.CurrentStage.GetTile(this.transform.position);
+        Tile tile = GameManager.Instance.CurrentStage.GetTile(this.transform.position);
         text.text = tile ? tile.GetComponentInChildren<TMP_Text>().text : string.Empty;
     }
 
@@ -84,6 +83,7 @@ public class Box : MonoBehaviour
             {
                 previews[i].SetActive(
                     GameManager.Instance.CurrentStage.IsMovable(this.transform.position + directions[i]) &&
+                    GameObject.FindWithTag("Player").transform.position != this.transform.position + directions[i] &&
                     GameManager.Instance.CurrentStage.GetTile(this.transform.position + directions[i]).TileType !=
                     TileType.Portal
                 );
@@ -91,18 +91,20 @@ public class Box : MonoBehaviour
         }
     }
 
-    public void Move(Vector3 direction)
+    public bool Move(Vector3 direction)
     {
-        if (!Selected) return;
+        if (!Selected) return false;
         if (!GameManager.Instance.CurrentStage.IsMovable(this.transform.position + direction) ||
+            GameObject.FindWithTag("Player").transform.position == this.transform.position + direction ||
             GameManager.Instance.CurrentStage.GetTile(this.transform.position + direction).TileType ==
-            TileType.Portal) return;
+            TileType.Portal) return false;
 
         GameManager.Instance.CurrentStage.GetTile(this.transform.position).GetComponent<Animator>().enabled = false;
         this.transform.position += direction;
         GameManager.Instance.CurrentStage.GetTile(this.transform.position).GetComponent<Animator>().enabled = true;
         UpdateValue();
         Selected = false;
+        return true;
     }
 
     #endregion

@@ -355,9 +355,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 73bb4595f620238488b233724eabf27f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _default: {fileID: -5932775322478234029, guid: a1e784f31aedc9d47b0c376fa10f49f4, type: 3}
+  spriteRenderer: {fileID: 2831263423386844479}
+  default: {fileID: -5932775322478234029, guid: a1e784f31aedc9d47b0c376fa10f49f4, type: 3}
   outline: {fileID: 7149891433825486853, guid: 0d888aa735f343e4ba87c371128f0497, type: 3}
-  preview: {fileID: 5741883001929958844}
+  text: {fileID: 4487584145953939377}
+  previews:
+  - {fileID: 2254465566783159385}
+  - {fileID: 1527797185122787944}
+  - {fileID: 5576906511793601587}
+  - {fileID: 4257131512987652906}
 --- !u!1 &4257131512987652906
 GameObject:
   m_ObjectHideFlags: 0

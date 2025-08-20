@@ -187,8 +187,10 @@ MonoBehaviour:
   oper: 0
   value: 0
   text: {fileID: 6597876017222165100}
-  _default: {fileID: 21300000, guid: 3d3813d5ae5634f43bc9fe4337a2b563, type: 3}
+  spriteRenderer: {fileID: 7942392861995942763}
+  default: {fileID: 3749298682360118734, guid: 26f00526955e7ea45b521b1a1e7047a3, type: 3}
   onPlayer: {fileID: 21300000, guid: 17191b97f483647498a6d4d6bc0ab24e, type: 3}
+  animator: {fileID: 5048211516357005376}
   portal: {fileID: 1295960014901827569}
 --- !u!95 &5048211516357005376
 Animator:

@@ -5,7 +5,10 @@ public class GameManager : MonoBehaviour
 {
     #region ==========Events==========
 
+    public event Action OnInit;
+    public event Action OnStageLoad;
     public event Action OnRestart;
+    public event Action OnPlayerMove;
 
     #endregion
 
@@ -13,25 +16,19 @@ public class GameManager : MonoBehaviour
 
     public static GameManager Instance { get; private set; } = null;
 
-    public int Stage
+    public Stage Stage => stages[curStage - 1];
+
+    public int StageNumber
     {
         get => curStage;
         set
         {
-            if (value < 1 || value > stages.Length + 1)
-                throw new IndexOutOfRangeException();
-            else if (value == stages.Length + 1)
-                demoCanvas.SetActive(true);
-
+            stages[curStage - 1].gameObject.SetActive(false);
             curStage = value;
-            for (int i = 0; i < stages.Length; i++)
-            {
-                stages[i].gameObject.SetActive(i == curStage - 1);
-            }
+            stages[curStage - 1].gameObject.SetActive(true);
+            OnStageLoad?.Invoke();
         }
     }
-
-    public Stage CurrentStage => stages[curStage - 1];
 
     #endregion
 
@@ -41,7 +38,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private int curStage;
     [SerializeField] private GameObject demoCanvas;
 
-    [SerializeField] private DialogueSystem dialog;
+    [SerializeField] private DialogueSystem dialogSystem;
 
     #endregion
 
@@ -53,23 +50,23 @@ public class GameManager : MonoBehaviour
         else Destroy(this.gameObject);
     }
 
-    private void Start()
-    {
-        Stage = 1;
-    }
-
     #endregion
 
     #region ==========Methods==========
 
-    public void Transition(EventID id) => Camera.main.GetComponent<PPTransition>().Transition(id);
-
-    public void Restart() => OnRestart?.Invoke();
-
-    public void SetDialog()
+    public void Init()
     {
-        DialogueData[] dialog = stages[Stage - 1].GetComponent<Stage>().Dialogs;
-        if (dialog.Length > 0) UIManager.Instance.InGameUI.DialogPanel.SetDialog(dialog);
+        foreach (Stage stage in stages)
+            stage.Init();
+
+        OnInit?.Invoke();
+    }
+
+    public void Restart()
+    {
+        foreach (Stage stage in stages)
+            stage.Restart();
+        OnRestart?.Invoke();
     }
 
     #endregion

@@ -630,16 +630,14 @@ MonoBehaviour:
 
     -1 +3 w w *-2 /-3
 
-    p w 0
-    0 0 Start'
+    P w 0
+    0 0 S'
   startNumber: -3
   moves: 20
-  startPos: {x: 0, y: 0, z: 0}
   droneInfo:
   - start: {x: -3.5, y: 1.5}
     direction: -2
     steps: 6
-  swapTiles: []
   dialogs: []
 --- !u!156049354 &131294068
 Grid:
@@ -1245,21 +1243,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8262970eedc73c24087af7c749d5af77, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  stageMap: 'Start *2 -3 +3 w
+  stageMap: 'S *2 -3 +3 w
 
     +3 +2 -1 /2 +1
 
     0 0 +1 -2 +2
 
-    0 -2 +2
-    -1 -2
+    0 -2 +2 -1 -2
 
-    w p -3 +1 w'
+    w
+    P -3 +1 w'
   startNumber: 2
   moves: 11
-  startPos: {x: 0, y: 0, z: 0}
   droneInfo: []
-  swapTiles: []
   dialogs:
   - character: 1
     dialogue: "\uC0AD\uC81C \uC9C4\uD589 \uC9C0\uC5F0. \uB09C\uC774\uB3C4 \uC0C1\uC2B9
@@ -1479,21 +1475,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8262970eedc73c24087af7c749d5af77, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  stageMap: '+1 -2 -3 -2 Start
+  stageMap: '+1 -2 -3 -2 S
 
     +2 -3 +3 +1 +2
 
     +3 0 0 +3 +1
 
-    +2 p 0
-    +2 +3
+    +2 P 0 +2 +3
 
-    0 +1 +2 +3 +1'
+    0
+    +1 +2 +3 +1'
   startNumber: 3
   moves: 8
-  startPos: {x: 0, y: 0, z: 0}
   droneInfo: []
-  swapTiles: []
   dialogs:
   - character: 0
     dialogue: "\uB610 \uB2E4\uB978 \uACF5\uAC04. \uC774\uACF3\uC740 Trash zone\uC778\uAC00."
@@ -1564,7 +1558,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8262970eedc73c24087af7c749d5af77, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  stageMap: '0 -2 +1 p
+  stageMap: '0 -2 +1 P
 
     +2 -1 +3 +2
 
@@ -1572,13 +1566,11 @@ MonoBehaviour:
 
     +3 +2 +3 0
 
-    Start
-    +2 0 0'
+    S +2
+    0 0'
   startNumber: 1
   moves: 7
-  startPos: {x: 0, y: 0, z: 0}
   droneInfo: []
-  swapTiles: []
   dialogs:
   - character: 2
     dialogue: "#@!$%@... \uCF54\u3137@#!!@#....\uCF54\uB4DC, \uBCA8\uB958. \uD604\uC7AC
@@ -1981,18 +1973,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stages:
-  - {fileID: 438444095}
-  - {fileID: 425267527}
-  - {fileID: 1209751502}
-  - {fileID: 240402052}
-  - {fileID: 1081415145}
-  - {fileID: 1545680364}
-  - {fileID: 855168439}
-  - {fileID: 747522467}
-  - {fileID: 131294066}
+  - {fileID: 438444096}
+  - {fileID: 425267528}
+  - {fileID: 1209751503}
+  - {fileID: 240402053}
+  - {fileID: 1081415146}
+  - {fileID: 1545680365}
+  - {fileID: 855168440}
+  - {fileID: 747522468}
+  - {fileID: 131294067}
   curStage: 1
   demoCanvas: {fileID: 1972231308}
-  dialog: {fileID: 0}
+  dialog: {fileID: 186277958}
 --- !u!4 &617727815
 Transform:
   m_ObjectHideFlags: 0
@@ -2045,7 +2037,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: 0, y: -222.00002}
+  m_AnchoredPosition: {x: 0, y: -222}
   m_SizeDelta: {x: 2048, y: 658}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!114 &619682807
@@ -2617,22 +2609,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8262970eedc73c24087af7c749d5af77, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  stageMap: '0 Start +1 *-2 /2 0 0
+  stageMap: '0 S +1 *-2 /2 0 0
 
     0 *2 -1 b/-2 +1 /3 +1
 
-    0 w w +3 +2 -1
-    *2
+    0 w w +3 +2 -1 *2
 
-    0 w w w s*-2,+4 +1 -3
+    0
+    w w w s*-2,+4 +1 -3
 
     +1 -2 -1 /3 -1 *-2 /3
 
-    p -2 b-1 +1 /-3
-    *-2 +2'
+    P -2 b-1 +1 /-3 *-2 +2'
   startNumber: 4
   moves: 18
-  startPos: {x: 0, y: 0, z: 0}
   droneInfo:
   - start: {x: -3.5, y: 0.5}
     direction: -2
@@ -2640,7 +2630,6 @@ MonoBehaviour:
   - start: {x: -3.5, y: -2.5}
     direction: -2
     steps: 7
-  swapTiles: []
   dialogs:
   - character: 1
     dialogue: "\uC0AD\uC81C \uD6A8\uC728\uC131 \uC800\uD558. \uAC10\uC2DC\uB4DC\uB860
@@ -2920,23 +2909,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8262970eedc73c24087af7c749d5af77, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  stageMap: '0 Start *-2 -4 w
+  stageMap: '0 S *-2 -4 w
 
     0 +4 -2 b*-2 s/-2,+1
 
     0 w w +2 +2
 
-    -2
-    -3 s*2,+3 -1 /2
+    -2 -3 s*2,+3
+    -1 /2
 
     +3 w -2 b-1 +1
 
-    p -1 +2 -2 0'
+    P -1 +2 -2 0'
   startNumber: -3
   moves: 13
-  startPos: {x: 0, y: 0, z: 0}
   droneInfo: []
-  swapTiles: []
   dialogs: []
 --- !u!156049354 &855168441
 Grid:
@@ -3648,7 +3635,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8262970eedc73c24087af7c749d5af77, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  stageMap: 'p -2 *2 +3 +2 0
+  stageMap: 'P -2 *2 +3 +2 0
 
     0 +2 w /2 +1 0
 
@@ -3657,12 +3644,10 @@ MonoBehaviour:
     +2 *2
     -2 b+3 w 0
 
-    w -1 -1 +1 +1 Start'
+    w -1 -1 +1 +1 S'
   startNumber: -4
   moves: 14
-  startPos: {x: 0, y: 0, z: 0}
   droneInfo: []
-  swapTiles: []
   dialogs: []
 --- !u!156049354 &1081415147
 Grid:
@@ -4223,12 +4208,10 @@ MonoBehaviour:
     -2 -3 0 -3
     +4
 
-    Start -4 0 w p'
+    S -4 0 w P'
   startNumber: -4
   moves: 14
-  startPos: {x: 0, y: 0, z: 0}
   droneInfo: []
-  swapTiles: []
   dialogs:
   - character: 1
     dialogue: "\uAC1C\uCCB4 \uC0AD\uC81C \uC2E4\uD328. \uB3C4\uC8FC\uB85C \uCC28\uB2E8"
@@ -4293,11 +4276,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 634f6fa3621663148907b08990231448, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  prefab_operationTile: {fileID: 1030933736242688238, guid: b90fd50485c8b9e4c8f6a413f89fb40c, type: 3}
-  prefab_swapTile: {fileID: 1030933736242688238, guid: 6bd4ff02c4cd0624aa636d7a729075ac, type: 3}
-  prefab_wall: {fileID: 1030933736242688238, guid: 7aab86b6c8e74d5468d7f2f4d0930bfd, type: 3}
-  prefab_box: {fileID: 2594196179184477090, guid: 45115e0054613564e963dae1dbf353a2, type: 3}
-  prefab_drone: {fileID: 7276949923402202544, guid: 9d90ea235f5ce5440a8840296106c3ac, type: 3}
+  prefabOperationTile: {fileID: 1030933736242688238, guid: b90fd50485c8b9e4c8f6a413f89fb40c, type: 3}
+  prefabSwapTile: {fileID: 1030933736242688238, guid: 6bd4ff02c4cd0624aa636d7a729075ac, type: 3}
+  prefabWall: {fileID: 1030933736242688238, guid: 7aab86b6c8e74d5468d7f2f4d0930bfd, type: 3}
+  prefabBox: {fileID: 2594196179184477090, guid: 45115e0054613564e963dae1dbf353a2, type: 3}
+  prefabDrone: {fileID: 7276949923402202544, guid: 9d90ea235f5ce5440a8840296106c3ac, type: 3}
 --- !u!4 &1290141055
 Transform:
   m_ObjectHideFlags: 0
@@ -4755,7 +4738,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8262970eedc73c24087af7c749d5af77, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  stageMap: 'Start w w +2 p
+  stageMap: 'S w w +2 P
 
     +1 w -2 b+2 -4
 
@@ -4769,9 +4752,7 @@ MonoBehaviour:
     /2 -1 +3 +1 w'
   startNumber: 2
   moves: 15
-  startPos: {x: 0, y: 0, z: 0}
   droneInfo: []
-  swapTiles: []
   dialogs:
   - character: 1
     dialogue: "\uB300\uC0C1 \uC801\uC751\uB3C4 \uD655\uC778. \uCD94\uAC00 \uC81C\uC57D
@@ -6008,6 +5989,9 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  spriteRenderer: {fileID: 1975691524}
+  animator: {fileID: 1975691525}
+  col: {fileID: 1975691526}
 --- !u!50 &1975691528
 Rigidbody2D:
   serializedVersion: 5
