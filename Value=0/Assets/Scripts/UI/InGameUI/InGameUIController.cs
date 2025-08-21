@@ -3,76 +3,52 @@ using UnityEngine;
 
 public class InGameUIController : MonoBehaviour
 {
-    public DialogueSystem DialogPanel => dialogPanel;
+    #region ==========Properties==========
+
+    public DialogPanel DialogPanel => dialogPanel;
+    public PausePanel PausePanel => pausePanel;
+    public DescriptionPanel DescriptionPanel => descriptionPanel;
+
+    public int Stage
+    {
+        set => text_Stage.text = $"Stage {value}";
+    }
+
+    public int Moves
+    {
+        set => text_Moves.text = value.ToString();
+    }
+
+    public int Value
+    {
+        set
+        {
+            text_Value.text = value.ToString();
+            text_Value.color = value switch
+            {
+                > 0 => new Color(100 / 255f, 200 / 255f, 255 / 255f),
+                0 => Color.white,
+                < 0 => new Color(255 / 255f, 100 / 255f, 100 / 255f),
+            };
+        }
+    }
+
+    #endregion
 
     [Header("Panels")]
-    [SerializeField] private GameObject pausePanel;
-    [SerializeField] private GameObject descriptionPanel;
+    [SerializeField] private PausePanel pausePanel;
+    [SerializeField] private DescriptionPanel descriptionPanel;
 
-    [SerializeField] private DialogueSystem dialogPanel;
+    [SerializeField] private DialogPanel dialogPanel;
 
-    [SerializeField] private TMP_Text stageNum_T;
-    [SerializeField] private TMP_Text value_T;
-    [SerializeField] private TMP_Text moveCount_T;
+    [SerializeField] private TMP_Text text_Stage;
+    [SerializeField] private TMP_Text text_Moves;
+    [SerializeField] private TMP_Text text_Value;
 
-    private Player player;
-
-    void Awake()
+    public void Init()
     {
-        player = GameObject.FindWithTag("Player").GetComponent<Player>();
-    }
-
-    void Start()
-    {
-        InitializeTexts();
-    }
-
-    void Update()
-    {
-        Update_StageNum();
-        Update_Value();
-        Update_MoveCount();
-    }
-
-    public void SetActive_PausePanel(bool isActive)
-    {
-        SoundManager.Instance.Play_UI_SFX(isActive ? UISFXID.PanelOpen : UISFXID.PanelClose);
-
-        pausePanel.SetActive(isActive);
-        if (isActive) UIManager.Instance.OpenPanel.Push(pausePanel);
-    }
-    public void SetActive_DescriptionPanel(bool isActive)
-    {
-        descriptionPanel.SetActive(isActive);
-    }
-
-    private void InitializeTexts()
-    {
-        Update_StageNum();
-        Update_Value();
-        Update_MoveCount();
-    }
-
-    public void Update_StageNum()
-    {
-        stageNum_T.text = "Stage " + GameManager.Instance.Stage.ToString();
-    }
-
-    public void Update_Value()
-    {
-        string sign = string.Empty;
-        if (player.Value < 0) value_T.color = new Color(1, 75 / 255f, 75 / 255f);
-        else if (player.Value == 0) value_T.color = Color.white;
-        else
-        {
-            value_T.color = new Color(100 / 255f, 200 / 255f, 1);
-            sign = "+";
-        }
-        value_T.text = sign + player.Value.ToString();
-    }
-
-    public void Update_MoveCount()
-    {
-        moveCount_T.text = player.Moves.ToString();
+        text_Stage.text = string.Empty;
+        text_Moves.text = string.Empty;
+        text_Value.text = string.Empty;
     }
 }

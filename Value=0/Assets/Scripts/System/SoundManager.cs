@@ -1,11 +1,11 @@
-using System;
-using System.Collections;
 using UnityEngine;
+using static GlobalDefines;
 
 public class SoundManager : MonoBehaviour
 {
     #region ==========Properties==========
-    public static SoundManager Instance { get; private set; } = null;
+
+    public static SoundManager Instance { get; private set; }
 
     public float MasterVolume
     {
@@ -13,12 +13,13 @@ public class SoundManager : MonoBehaviour
         set
         {
             masterVolume = value;
-            BGMVolume = BGMVolume;
-            SFXVolume = SFXVolume;
-            UIVolume = UIVolume;
+            BGM_Volume = BGM_Volume;
+            SFX_Volume = SFX_Volume;
+            UI_Volume = UI_Volume;
         }
     }
-    public float BGMVolume
+
+    public float BGM_Volume
     {
         get => bgmVolume;
         set
@@ -27,7 +28,8 @@ public class SoundManager : MonoBehaviour
             bgmChannel.volume = value * masterVolume;
         }
     }
-    public float SFXVolume
+
+    public float SFX_Volume
     {
         get => sfxVolume;
         set
@@ -36,7 +38,8 @@ public class SoundManager : MonoBehaviour
             sfxChannel.volume = value * masterVolume;
         }
     }
-    public float UIVolume
+
+    public float UI_Volume
     {
         get => uiVolume;
         set
@@ -45,6 +48,7 @@ public class SoundManager : MonoBehaviour
             uiChannel.volume = value * masterVolume;
         }
     }
+
     public bool TraverseBGM
     {
         get => _traverseBgm;
@@ -54,6 +58,7 @@ public class SoundManager : MonoBehaviour
             bgmChannel.loop = !value;
         }
     }
+
     #endregion
 
     #region ==========Fields==========
@@ -74,11 +79,13 @@ public class SoundManager : MonoBehaviour
     [SerializeField, Range(0, 1)] private float sfxVolume;
     [SerializeField, Range(0, 1)] private float uiVolume;
 
-    private bool _traverseBgm = false;
-    private int _bgmIdx = 0;
+    private bool _traverseBgm;
+    private int _bgmIdx;
+
     #endregion
 
     #region ==========Unity Methods==========
+
     private void Awake()
     {
         if (Instance == null)
@@ -93,17 +100,19 @@ public class SoundManager : MonoBehaviour
 
     private void Start()
     {
-        Play_BGM(BGMID.Title, true);
+        Play_BGM(BGM_ID.Title, true);
     }
 
     private void Update()
     {
         U_TraverseBGM();
     }
+
     #endregion
 
     #region ==========Methods==========
-    public void Play_BGM(BGMID id, bool isLoop = false)
+
+    public void Play_BGM(BGM_ID id, bool isLoop = false)
     {
         _bgmIdx = (int)id;
         bgmChannel.clip = bgmClips[(int)id];
@@ -116,13 +125,13 @@ public class SoundManager : MonoBehaviour
         bgmChannel.Stop();
     }
 
-    public void Play_SFX(SFXID id)
+    public void Play_SFX(SFX_ID id)
     {
         sfxChannel.clip = sfxClips[(int)id];
         sfxChannel.Play();
     }
 
-    public void PlayOneShot_SFX(SFXID id)
+    public void PlayOneShot_SFX(SFX_ID id)
     {
         sfxChannel.PlayOneShot(sfxClips[(int)id]);
     }
@@ -132,13 +141,13 @@ public class SoundManager : MonoBehaviour
         sfxChannel.Stop();
     }
 
-    public void Play_UI_SFX(UISFXID id)
+    public void Play_UI_SFX(UI_SFX_ID id)
     {
         uiChannel.clip = uiClips[(int)id];
         uiChannel.Play();
     }
 
-    public void PlayOneShot_UI_SFX(UISFXID id)
+    public void PlayOneShot_UI_SFX(UI_SFX_ID id)
     {
         uiChannel.PlayOneShot(uiClips[(int)id]);
     }
@@ -171,5 +180,6 @@ public class SoundManager : MonoBehaviour
             bgmChannel.clip = bgmClips[_bgmIdx];
         }
     }
+
     #endregion
 }

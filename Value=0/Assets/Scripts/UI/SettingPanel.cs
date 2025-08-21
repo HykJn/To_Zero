@@ -1,16 +1,15 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using static GlobalDefines;
 
-public class SettingManager : MonoBehaviour
+public class SettingPanel : Panel
 {
     public Slider BGMSlider => bgmSlider;
     public Slider SFXSlider => sfxSlider;
     public Slider UISlider => uiSlider;
 
-    [SerializeField] private GameObject SettingPanel;
     [SerializeField] private GameObject closeButton;
 
     public TextMeshProUGUI fullScreenText;
@@ -24,8 +23,8 @@ public class SettingManager : MonoBehaviour
     [SerializeField] private Slider uiSlider;
 
 
-    private int resolutionIndex = 0;
-    private List<Vector2Int> resolutions = new List<Vector2Int>
+    private int _resolutionIndex;
+    private readonly List<Vector2Int> _resolutions = new List<Vector2Int>
     {
         new Vector2Int(1920, 1080),
         new Vector2Int(2560, 1440)
@@ -42,97 +41,72 @@ public class SettingManager : MonoBehaviour
         UpdateScreenModeText();
         UpdateResolutionText();
     }
-    public void SetActiveSettingPanel(bool isActive)
-    {
-        SoundManager.Instance.Play_UI_SFX(isActive ? UISFXID.PanelOpen : UISFXID.PanelClose);
-        Time.timeScale = isActive ? 0 : 1;
-        SettingPanel.SetActive(isActive);
-
-        if (isActive) UIManager.Instance.OpenPanel.Push(SettingPanel);
-    }
 
     public void OnClickCloseButton()
     {
-        //SoundManager.Instance.Play_UI_SFX(UISFXID.ButtonClick);
-
-        //SetActiveSettingPanel(false);
-
-        UIManager.Instance.ClosePanel();
-        Time.timeScale = 1;
+        ClosePanel();
     }
 
     // 전체 화면/창 모드 전환 (좌우 화살표)
     public void OnClickFullScreenLeftArrow()
     {
-        SoundManager.Instance.Play_UI_SFX(UISFXID.ButtonClick);
-
         Screen.fullScreen = !Screen.fullScreen;
         UpdateScreenModeText();
+
+        SoundManager.Instance.Play_UI_SFX(UI_SFX_ID.ButtonClick);
     }
 
     public void OnClickFullScreenRightArrow()
     {
-        SoundManager.Instance.Play_UI_SFX(UISFXID.ButtonClick);
-
         Screen.fullScreen = !Screen.fullScreen;
         UpdateScreenModeText();
+
+        SoundManager.Instance.Play_UI_SFX(UI_SFX_ID.ButtonClick);
     }
 
     // 해상도 변경 (좌우 화살표)
     public void OnClickResolutionLeftArrow()
     {
-        SoundManager.Instance.Play_UI_SFX(UISFXID.ButtonClick);
-
-        resolutionIndex--;
-        if (resolutionIndex < 0)
+        _resolutionIndex--;
+        if (_resolutionIndex < 0)
         {
-            resolutionIndex = resolutions.Count - 1;
+            _resolutionIndex = _resolutions.Count - 1;
         }
+
         SetResolution();
+        SoundManager.Instance.Play_UI_SFX(UI_SFX_ID.ButtonClick);
     }
 
     public void OnClickResolutionRightArrow()
     {
-        SoundManager.Instance.Play_UI_SFX(UISFXID.ButtonClick);
-
-        resolutionIndex++;
-        if (resolutionIndex >= resolutions.Count)
+        _resolutionIndex++;
+        if (_resolutionIndex >= _resolutions.Count)
         {
-            resolutionIndex = 0;
+            _resolutionIndex = 0;
         }
+
+
         SetResolution();
+        SoundManager.Instance.Play_UI_SFX(UI_SFX_ID.ButtonClick);
     }
 
     private void SetResolution()
     {
-        Vector2Int resolution = resolutions[resolutionIndex];
+        Vector2Int resolution = _resolutions[_resolutionIndex];
         Screen.SetResolution(resolution.x, resolution.y, Screen.fullScreen);
         UpdateResolutionText();
     }
 
     private void UpdateScreenModeText()
     {
-        if (Screen.fullScreen)
-        {
-            fullScreenText.text = "전체화면";
-        }
-        else
-        {
-            fullScreenText.text = "창 모드";
-        }
+        fullScreenText.text = Screen.fullScreen ? "전체화면" : "창 모드";
     }
 
     private void UpdateResolutionText()
     {
-        if (Screen.fullScreen)
-        {
-            Resolution res = Screen.currentResolution;
-            resolutionText.text = res.width + " x " + res.height;
-        }
-        else
-        {
-            resolutionText.text = Screen.width + " x " + Screen.height;
-        }
+        resolutionText.text = Screen.fullScreen
+            ? Screen.currentResolution.width + " x " + Screen.currentResolution.height
+            : Screen.width + " x " + Screen.height;
     }
 
     // --- 사운드 조절 함수 ---
@@ -140,27 +114,27 @@ public class SettingManager : MonoBehaviour
     {
         //Update text
         value = (int)(value * 100);
-        masterSlider.GetComponentInChildren<TMP_Text>().text = value.ToString() + "%";
+        masterSlider.GetComponentInChildren<TMP_Text>().text = value + "%";
     }
 
     public void OnBGMVolumeChanged(float value)
     {
         //Update text
         value = (int)(value * 100);
-        bgmSlider.GetComponentInChildren<TMP_Text>().text = value.ToString() + "%";
+        bgmSlider.GetComponentInChildren<TMP_Text>().text = value + "%";
     }
 
     public void OnSFXVolumeChanged(float value)
     {
         //Update text
         value = (int)(value * 100);
-        sfxSlider.GetComponentInChildren<TMP_Text>().text = value.ToString() + "%";
+        sfxSlider.GetComponentInChildren<TMP_Text>().text = value + "%";
     }
 
     public void OnUIVolumeChanged(float value)
     {
         //Update text
         value = (int)(value * 100);
-        uiSlider.GetComponentInChildren<TMP_Text>().text = value.ToString() + "%";
+        uiSlider.GetComponentInChildren<TMP_Text>().text = value + "%";
     }
 }

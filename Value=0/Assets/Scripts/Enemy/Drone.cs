@@ -3,14 +3,17 @@ using UnityEngine;
 public class Drone : MonoBehaviour
 {
     #region ==========Fields==========
+
     [Header("Components"), SerializeField] private Animator animator;
     [Header("References"), SerializeField] private GameObject scanner;
     private Vector2 _start;
     private Direction _direction, _curDirection;
     private int _steps, _curSteps;
+
     #endregion
-    
+
     #region ==========Methods==========
+
     public void Init(Vector2 start, Direction direction, int steps)
     {
         _start = start;
@@ -36,7 +39,7 @@ public class Drone : MonoBehaviour
             _ => throw new System.InvalidOperationException()
         };
     }
-    
+
     public void Move()
     {
         if (_curSteps == 0)
@@ -62,6 +65,7 @@ public class Drone : MonoBehaviour
         };
         _curSteps--;
     }
+
     #endregion
 
     public enum Direction

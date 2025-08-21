@@ -14,31 +14,35 @@ public class GameManager : MonoBehaviour
 
     #region ==========Properties==========
 
-    public static GameManager Instance { get; private set; } = null;
+    public static GameManager Instance { get; private set; }
 
-    public Stage Stage => stages[curStage - 1];
+    public Stage Stage => stages[_curStage - 1];
 
     public int StageNumber
     {
-        get => curStage;
+        get => _curStage;
         set
         {
-            stages[curStage - 1].gameObject.SetActive(false);
-            curStage = value;
-            stages[curStage - 1].gameObject.SetActive(true);
+            stages[_curStage - 1].gameObject.SetActive(false);
+            _curStage = value;
+            stages[_curStage - 1].gameObject.SetActive(true);
+
             OnStageLoad?.Invoke();
         }
     }
 
+    public Player Player => player;
+
     #endregion
 
     #region ==========Fields==========
-
+    
+    [Header("Stage Configuration")]
+    [SerializeField] private Player player;
     [SerializeField] private Stage[] stages;
-    [SerializeField] private int curStage;
     [SerializeField] private GameObject demoCanvas;
 
-    [SerializeField] private DialogueSystem dialogSystem;
+    private int _curStage;
 
     #endregion
 
@@ -60,6 +64,8 @@ public class GameManager : MonoBehaviour
             stage.Init();
 
         OnInit?.Invoke();
+
+        UIManager.Instance.InGameUI.DialogPanel.SetDialog(Stage.Dialogs);
     }
 
     public void Restart()

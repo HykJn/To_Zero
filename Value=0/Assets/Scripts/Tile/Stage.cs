@@ -1,9 +1,7 @@
 using UnityEngine;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using UnityEngine.Tilemaps;
-using TMPro;
+using static GlobalDefines;
 
 public class Stage : MonoBehaviour
 {
@@ -97,7 +95,9 @@ public class Stage : MonoBehaviour
                 if (columns[x] == "0") continue;
 
                 Vector3 position = new(left + x, top - y);
-                Tile tile = ObjectManager.Instance.GetObject(ObjectID.OperationTile, position).GetComponent<Tile>();
+                if (columns[x] == "S") StartPos = position;
+
+                Tile tile = ObjectManager.Instance.GetObject(ObjectID.Tile, position).GetComponent<Tile>();
                 _tileMap.Add(position, tile);
 
                 if (columns[x][0] == 'b')
@@ -105,6 +105,7 @@ public class Stage : MonoBehaviour
                     Box box = ObjectManager.Instance.GetObject(ObjectID.Box, position).GetComponent<Box>();
                     tile.Box = box;
                     _objs.Add(box.gameObject);
+                    box.Init(position);
                     columns[x] = columns[x][1..];
                 }
 
@@ -117,7 +118,7 @@ public class Stage : MonoBehaviour
         {
             Drone drone = ObjectManager.Instance.GetObject(ObjectID.Drone).GetComponent<Drone>();
             drone.Init(info.start, info.direction, info.steps);
-            _objs.Add(drone.gameObject);
+            _drones.Add(drone);
         }
     }
 
@@ -126,6 +127,10 @@ public class Stage : MonoBehaviour
         foreach (Tile tile in _tileMap.Values)
             tile.gameObject.SetActive(false);
         _tileMap.Clear();
+        
+        foreach(Drone drone in _drones)
+            drone.gameObject.SetActive(false);
+        _drones.Clear();
 
         foreach (GameObject obj in _objs)
             obj.SetActive(false);
@@ -134,7 +139,7 @@ public class Stage : MonoBehaviour
 
     public Tile GetTile(Vector3 position)
     {
-        throw new NotImplementedException();
+        return _tileMap.GetValueOrDefault(position, null);
     }
 
     public Box GetBox(Vector3 position)

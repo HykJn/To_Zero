@@ -2,74 +2,86 @@ using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using static GlobalDefines;
 
 [System.Serializable]
 public struct DialogueData
 {
     public Character character;
-    [TextArea(3, 5)]
-    public string dialogue; // 대사
+    [TextArea(3, 5)] public string dialogue; // 대사
 }
-public class DialogueSystem : MonoBehaviour
+
+public class DialogPanel : Panel
 {
     #region ==========Fields==========
+
+    [Header("References")]
     [SerializeField] private Image player_LD, system_LD;
 
-    [SerializeField] private GameObject dialogPanel;
+    [SerializeField] private Image imageDialog; // 공통 대화창 이미지
+    [SerializeField] private TextMeshProUGUI textName; // 공통 캐릭터 이름
+    [SerializeField] private TextMeshProUGUI textDialogue; // 공통 대사 출력 text
 
-    [SerializeField]
-    private Image imageDialog; // 공통 대화창 이미지
-    [SerializeField]
-    private TextMeshProUGUI textName; // 공통 캐릭터 이름
-    [SerializeField]
-    private TextMeshProUGUI textDialogue; // 공통 대사 출력 text
-
-    [SerializeField]
-    private DialogueData[] dialogs; // 현재 분기의 대사 목록
-
-    [SerializeField] private int dialogIdx = 0; // 현재 대사순번
+    [Header("Settings")]
     [SerializeField] private float typingSpeed = 0.1f;
-    private bool onTyping = false;
+    private int _dialogIdx; // 현재 대사순번
+
+    private DialogueData[] _dialogs; // 현재 분기의 대사 목록
+    private bool _onTyping;
+
     #endregion
 
     #region ==========Unity Methods==========
+
     private void Update()
     {
         UpdateDialog();
     }
+
     #endregion
 
     #region ==========Methods==========
+
     public void SetDialog(DialogueData[] dialogs)
     {
+        //Init fields
         player_LD.enabled = false;
         system_LD.enabled = false;
 
         foreach (DialogueData dialog in dialogs)
         {
-            if (dialog.character == Character.Unknown || dialog.character == Character.Value) player_LD.enabled = true;
-            else if (dialog.character == Character.System) system_LD.enabled = true;
+            switch (dialog.character)
+            {
+                case Character.Unknown or Character.Value:
+                    player_LD.enabled = true;
+                    break;
+                case Character.System:
+                    system_LD.enabled = true;
+                    break;
+            }
         }
-        this.dialogs = dialogs;
-        dialogIdx = 0;
-        this.gameObject.SetActive(true);
-        GameObject.FindWithTag("Player").GetComponent<Player>().Controllable = false;
 
+        _dialogs = dialogs;
+        _dialogIdx = 0;
+
+        GameManager.Instance.Player.Controllable = false;
+
+        OpenPanel();
         SetNextDialog();
     }
 
-    public bool UpdateDialog()
+    public void UpdateDialog()
     {
         if (Input.anyKeyDown && !Input.GetKeyDown(KeyCode.Escape) && !UIManager.Instance.AnyPanelActivated)
         {
-            if (onTyping == true)
+            if (_onTyping)
             {
                 //타이핑 효과 중지하고, 현재 대사 전체 출력
-                onTyping = false;
-                StopAllCoroutines();
-                textDialogue.text = dialogs[dialogIdx++].dialogue;
+                _onTyping = false;
+                // StopAllCoroutines();
+                textDialogue.text = _dialogs[_dialogIdx++].dialogue;
             }
-            else if (dialogIdx < dialogs.Length)
+            else if (_dialogIdx < _dialogs.Length)
             {
                 SetNextDialog();
             }
@@ -78,12 +90,17 @@ public class DialogueSystem : MonoBehaviour
                 EndDialogue();
             }
         }
-        return false;
+
+        if (_onTyping)
+        {
+            //Do Something
+            Typing(_dialogs[_dialogIdx].dialogue).MoveNext();
+        }
     }
 
     private void SetNextDialog()
     {
-        DialogueData data = dialogs[dialogIdx];
+        DialogueData data = _dialogs[_dialogIdx];
 
         //Set active current speaker
         Color inactive = new Color(0.6f, 0.6f, 0.6f);
@@ -95,7 +112,7 @@ public class DialogueSystem : MonoBehaviour
 
         if (data.character == Character.Unknown)
         {
-            player_LD.color = new Color(1, 1, 1, 0);
+            player_LD.color = Color.clear;
             player_LD.rectTransform.localScale = Vector3.one;
         }
         else if (data.character == Character.Value)
@@ -110,34 +127,35 @@ public class DialogueSystem : MonoBehaviour
         }
 
         //Set Text
-        textName.text = dialogs[dialogIdx].character switch
+        textName.text = _dialogs[_dialogIdx].character switch
         {
             Character.Value => "밸류",
             Character.System => "시스템",
             Character.Unknown => "???",
-            _ => throw new System.Exception()
+            _ => throw new System.ArgumentOutOfRangeException()
         };
 
         textDialogue.text = string.Empty;
-        StartCoroutine(Typing(dialogs[dialogIdx].dialogue));
+        // StartCoroutine(Typing(_dialogs[_dialogIdx].dialogue));
+        _onTyping = true;
     }
 
     private void EndDialogue()
     {
-        this.StopAllCoroutines();
-        onTyping = false;
+        // this.StopAllCoroutines();
+        _onTyping = false;
         player_LD.enabled = false;
         system_LD.enabled = false;
         textDialogue.text = string.Empty;
         textName.text = string.Empty;
-        dialogIdx = 0;
-        GameObject.FindWithTag("Player").GetComponent<Player>().Controllable = true;
-        dialogPanel.SetActive(false);
+        _dialogIdx = 0;
+        GameManager.Instance.Player.Controllable = true;
+        ClosePanel();
     }
 
     private IEnumerator Typing(string dialog)
     {
-        onTyping = true;
+        // _onTyping = true;
 
         for (int i = 0; i < dialog.Length; i++)
         {
@@ -145,9 +163,9 @@ public class DialogueSystem : MonoBehaviour
             yield return new WaitForSeconds(typingSpeed);
         }
 
-        dialogIdx++;
-        onTyping = false;
+        _dialogIdx++;
+        // _onTyping = false;
     }
+
     #endregion
 }
-

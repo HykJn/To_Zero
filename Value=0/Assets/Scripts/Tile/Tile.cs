@@ -2,6 +2,7 @@ using System;
 using TMPro;
 using UnityEngine;
 using Random = UnityEngine.Random;
+using static GlobalDefines;
 
 public class Tile : MonoBehaviour
 {
@@ -66,6 +67,7 @@ public class Tile : MonoBehaviour
     public void Restart()
     {
         Init();
+        _box = null;
     }
 
     private void AnimatorValidate()
@@ -115,7 +117,13 @@ public class Tile : MonoBehaviour
                     break;
             }
         }
+
         UpdateText();
+    }
+
+    public string GetValueToString()
+    {
+        return text_Value.text;
     }
 
     /// <summary>

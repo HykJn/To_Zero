@@ -2,12 +2,13 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
+using static GlobalDefines;
 
-public class PPTransition : MonoBehaviour
+public class CameraEffect : MonoBehaviour
 {
-    public Vector3 Portal { get; set; }
-
     #region ==========Fields==========
+
+    [Header("References")]
     [SerializeField] private Volume globalVolume;
     [SerializeField] private Camera mainCamera;
 
@@ -15,10 +16,8 @@ public class PPTransition : MonoBehaviour
     public float effectDuration = 1f;
     public float pinchScale = -1.5f;
     public float pinchIntensity = -2f;
-    public float pinchChorma = 3f;
+    public float pinchChroma = 3f;
     public float pinchVignette = 1f;
-
-    bool _isTransitioning = false;
 
     [Header("Die")]
     public float glitchDuration = 0.7f;
@@ -26,25 +25,29 @@ public class PPTransition : MonoBehaviour
     public float maxLens = 0.5f;
     public float maxGrain = 2f;
 
-    LensDistortion _lens;
-    ColorAdjustments _ColorAdj;
-    Vignette _Vignette;
-    ChromaticAberration _chroma;
-    FilmGrain _grain;
+    private bool _isTransitioning;
+    private LensDistortion _lens;
+    private ColorAdjustments _colorAdj;
+    private Vignette _vignette;
+    private ChromaticAberration _chroma;
+    private FilmGrain _grain;
+
     #endregion
 
     #region ==========Unity Methods==========
-    void Awake()
+
+    private void Awake()
     {
         VolumeProfile profile = globalVolume.profile;
-        profile.TryGet<LensDistortion>(out _lens);
-        profile.TryGet<ChromaticAberration>(out _chroma);
-        profile.TryGet<FilmGrain>(out _grain);
-        profile.TryGet<Vignette>(out _Vignette);
+        profile.TryGet(out _lens);
+        profile.TryGet(out _chroma);
+        profile.TryGet(out _grain);
+        profile.TryGet(out _vignette);
 
         if (mainCamera == null)
             mainCamera = Camera.main;
     }
+
     #endregion
 
     #region ==========Methods==========
@@ -57,83 +60,82 @@ public class PPTransition : MonoBehaviour
             case EventID.NextStage: StartCoroutine(NextStage()); break;
             case EventID.PlayerDieByDrone:
             case EventID.PlayerDieByMoves:
-            case EventID.PlayerDieBySystem:
-                StartCoroutine(Restart(id)); break;
+            case EventID.PlayerDieBySystem: StartCoroutine(Restart(id)); break;
+            default:
+                return;
         }
     }
 
-    IEnumerator NextStage()
+    private IEnumerator NextStage()
     {
         _isTransitioning = true;
-        GameObject.FindWithTag("Player").GetComponent<Player>().Controllable = false;
+        GameManager.Instance.Player.Controllable = false;
 
         _lens.scale.value = 1f;
         _lens.intensity.value = 0f;
 
-        float startScale = _lens.scale.value;
-        float startLensIntensity = _lens.intensity.value;
         float elapsed = 0f;
 
-        SoundManager.Instance.Play_SFX(SFXID.PortalIn);
+        SoundManager.Instance.Play_SFX(SFX_ID.PortalIn);
         while (elapsed < effectDuration)
         {
             elapsed += Time.deltaTime;
             float t = elapsed / effectDuration;
             float smoothT = Mathf.SmoothStep(0f, 1f, t);
 
-            _chroma.intensity.Override(Mathf.Lerp(0f, pinchChorma, smoothT));
+            _chroma.intensity.Override(Mathf.Lerp(0f, pinchChroma, smoothT));
             _lens.intensity.Override(Mathf.Lerp(0f, pinchIntensity, smoothT));
             _lens.scale.Override(Mathf.Lerp(1f, pinchScale, smoothT));
-            _Vignette.intensity.Override(Mathf.Lerp(0f, pinchVignette, Mathf.InverseLerp(0.3f, 1f, t)));
+            _vignette.intensity.Override(Mathf.Lerp(0f, pinchVignette, Mathf.InverseLerp(0.3f, 1f, t)));
 
             yield return null;
         }
 
-        _chroma.intensity.Override(pinchChorma);
-        _lens.scale.Override(pinchScale); _lens.intensity.Override(pinchIntensity);
-        _Vignette.intensity.Override(pinchVignette);
+        _chroma.intensity.Override(pinchChroma);
+        _lens.scale.Override(pinchScale);
+        _lens.intensity.Override(pinchIntensity);
+        _vignette.intensity.Override(pinchVignette);
 
 
         yield return null;
-        GameManager.Instance.Stage++;
+        GameManager.Instance.StageNumber++;
 
         elapsed = 0f;
 
-        SoundManager.Instance.Play_SFX(SFXID.PortalOut);
+        SoundManager.Instance.Play_SFX(SFX_ID.PortalOut);
         while (elapsed < effectDuration)
         {
             elapsed += Time.deltaTime;
             float t = elapsed / effectDuration;
             float smoothT = Mathf.SmoothStep(0f, 1f, t);
 
-            _chroma.intensity.Override(Mathf.Lerp(pinchChorma, 0f, smoothT));
+            _chroma.intensity.Override(Mathf.Lerp(pinchChroma, 0f, smoothT));
             _lens.intensity.Override(Mathf.Lerp(pinchIntensity, 0f, smoothT));
             _lens.scale.Override(Mathf.Lerp(pinchScale, 1f, smoothT));
-            _Vignette.intensity.Override(
-                          Mathf.Lerp(pinchVignette, 0f, Mathf.InverseLerp(0f, 0.8f, t)));
+            _vignette.intensity.Override(
+                Mathf.Lerp(pinchVignette, 0f, Mathf.InverseLerp(0f, 0.8f, t)));
 
             yield return null;
         }
 
         _chroma.intensity.Override(0f);
-        _lens.intensity.Override(0f); _lens.scale.Override(1f);
-        _Vignette.intensity.Override(0f);
+        _lens.intensity.Override(0f);
+        _lens.scale.Override(1f);
+        _vignette.intensity.Override(0f);
 
         _isTransitioning = false;
-        GameObject.FindWithTag("Player").GetComponent<Player>().Controllable = true;
-
-        GameManager.Instance.SetDialog();
+        GameManager.Instance.Player.Controllable = true;
     }
 
-    IEnumerator Restart(EventID diedBy)
+    private IEnumerator Restart(EventID diedBy)
     {
         switch (diedBy)
         {
             case EventID.PlayerDieByDrone:
-                SoundManager.Instance.Play_SFX(SFXID.DroneDetect);
+                SoundManager.Instance.Play_SFX(SFX_ID.DroneDetect);
                 break;
             case EventID.PlayerDieByMoves:
-                SoundManager.Instance.Play_SFX(SFXID.PlayerRespawn);
+                SoundManager.Instance.Play_SFX(SFX_ID.PlayerRespawn);
                 break;
             case EventID.PlayerDieBySystem:
                 //TODO: Implement later
@@ -141,7 +143,7 @@ public class PPTransition : MonoBehaviour
         }
 
         _isTransitioning = true;
-        GameObject.FindWithTag("Player").GetComponent<Player>().Controllable = false;
+        GameManager.Instance.Player.Controllable = false;
         float elapsed = 0f;
 
         _chroma.intensity.value = 0f;
@@ -159,6 +161,7 @@ public class PPTransition : MonoBehaviour
 
             yield return null;
         }
+
         _chroma.intensity.value = maxChroma;
         _lens.intensity.value = maxLens;
         _grain.intensity.value = maxGrain;
@@ -186,7 +189,8 @@ public class PPTransition : MonoBehaviour
         _grain.intensity.value = 0f;
 
         _isTransitioning = false;
-        GameObject.FindWithTag("Player").GetComponent<Player>().Controllable = true;
+        GameManager.Instance.Player.Controllable = true;
     }
+
     #endregion
 }

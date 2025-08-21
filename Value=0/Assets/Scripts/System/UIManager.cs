@@ -1,54 +1,35 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using TMPro;
+
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.UI;
+
+using static GlobalDefines;
 
 public class UIManager : MonoBehaviour
 {
     #region ==========Properties==========
-    public static UIManager Instance { get; private set; } = null;
 
-    public SettingManager Setting => setting;
-    public MainUIController MainUI { get; private set; }
+    public static UIManager Instance { get; private set; }
+    public SettingPanel SettingPanel => settingPanel;
+    public MainUIController MainUI { get; set; }
+    public InGameUIController InGameUI { get; set; } = null;
+    public Stack<Panel> OpenPanel { get; private set; } = new();
+    public bool AnyPanelActivated => OpenPanel.Count != 0;
 
-    public InGameUIController InGameUI { get; private set; }
-
-    public Stack<GameObject> OpenPanel => _openPanel;
-
-    public SceneID CurrentScene
-    {
-        set
-        {
-            if (value == SceneID.Title)
-            {
-                MainUI = GameObject.FindWithTag("MainUI").GetComponent<MainUIController>();
-                InGameUI = null;
-            }
-            else if (value == SceneID.InGame)
-            {
-                MainUI = null;
-                InGameUI = GameObject.FindWithTag("InGameUI").GetComponent<InGameUIController>();
-            }
-        }
-    }
-
-    public bool AnyPanelActivated => _openPanel.Count > 0;
     #endregion
 
     #region ==========Fields==========
 
-    [SerializeField] private SettingManager setting;
-    [SerializeField] private CanvasGroup loadingPanel;
-    [SerializeField] private TMP_Text loadingText;
-    [SerializeField] private Image loadingFill;
+    [Header("Child Panels")]
+    [SerializeField] private SettingPanel settingPanel;
+    [SerializeField] private LoadingPanel loadingPanel;
 
-    private Stack<GameObject> _openPanel;
     #endregion
 
-    #region ==========Unity==========
+    #region ==========Unity Events==========
+
     private void Awake()
     {
         if (Instance == null)
@@ -56,102 +37,79 @@ public class UIManager : MonoBehaviour
             Instance = this;
             DontDestroyOnLoad(this.gameObject);
         }
-        else
-        {
-            Destroy(this.gameObject);
-        }
-
-        _openPanel = new Stack<GameObject>();
-    }
-
-    private void Start()
-    {
-        CurrentScene = SceneID.Title;
+        else Destroy(gameObject);
     }
 
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            if (AnyPanelActivated) ClosePanel();
-            else if (InGameUI != null) InGameUI.SetActive_PausePanel(true);
+            if (AnyPanelActivated)
+            {
+                OpenPanel.Pop().ClosePanel();
+            }
+            else
+            {
+                InGameUI?.PausePanel.OpenPanel();
+            }
         }
     }
+
     #endregion
 
     #region ==========Methods==========
-    public void ClosePanel()
+
+    public void LoadScene(SceneID scene, Action callback = null)
     {
-        if (!AnyPanelActivated) return;
-
-        _openPanel.Pop().SetActive(false);
-        SoundManager.Instance.Play_UI_SFX(UISFXID.PanelClose);
-
-        if (_openPanel.Count == 0) Time.timeScale = 1;
+        StartCoroutine(Co_LoadScene(scene, callback));
     }
 
-    private IEnumerator LoadScene(SceneID sceneID, Action onSceneLoaded = null, Action onSceneChanged = null)
+    private IEnumerator Co_LoadScene(SceneID scene, Action callback)
     {
-        SoundManager.Instance.Stop_BGM();
-        AsyncOperation loading = SceneManager.LoadSceneAsync((int)sceneID);
-        loading.allowSceneActivation = false;
-        loadingPanel.blocksRaycasts = true;
-        float t = 0f;
-        loadingText.text = "Now Loading";
+        AsyncOperation operation = SceneManager.LoadSceneAsync((int)scene);
+        operation!.allowSceneActivation = false;
 
-        loadingPanel.alpha = 1f;
-        while (t <= 3)
+        loadingPanel.OpenPanel();
+
+        float t = 0f;
+        while (t <= 1.5f)
         {
+            loadingPanel.LoadingFill.fillAmount = t / 1.5f;
+            loadingPanel.LoadingText.text = "Now Loading" + new string('.', (int)(t * 2));
+
             t += Time.deltaTime;
-            //loadingPanel.alpha = Mathf.Clamp01(t);
-            loadingFill.fillAmount = t / 3f;
-            loadingText.text = "Now Loading" + new string('.', (int)(t * 3) % 6);
             yield return null;
         }
 
-        loading.allowSceneActivation = true;
+        operation.allowSceneActivation = true;
+        yield return new WaitForSeconds(0.5f);
 
-        loadingPanel.alpha = 1;
-
-        yield return new WaitForSeconds(0.2f);
-
-        CurrentScene = sceneID;
-
-        BGMID id = sceneID switch
+        switch (scene)
         {
-            SceneID.Title => BGMID.Title,
-            SceneID.InGame => BGMID.InGame,
-            _ => throw new InvalidOperationException()
-        };
-        SoundManager.Instance.Play_BGM(id, true);
-
-        onSceneLoaded?.Invoke();
-
-        loadingPanel.alpha = 0;
-        loadingPanel.blocksRaycasts = false;
-        onSceneChanged?.Invoke();
-    }
-
-    public void ToPlay(int stage)
-    {
-        void OnSceneLoaded()
-        {
-            GameManager.Instance.Stage = stage;
-            GameManager.Instance.SetDialog();
-            GameObject.FindWithTag("Player").GetComponent<Player>().IsMovable = false;
+            case SceneID.Title:
+                OnTitleSceneLoaded();
+                break;
+            case SceneID.InGame:
+                OnPlaySceneLoaded();
+                break;
+            default:
+                throw new ArgumentOutOfRangeException(nameof(scene), scene, null);
         }
 
-        void OnSceneChanged()
-        {
-            GameObject.FindWithTag("Player").GetComponent<Player>().IsMovable = true;
-        }
+        loadingPanel.ClosePanel();
+        OpenPanel.Clear();
 
-        StartCoroutine(LoadScene(SceneID.InGame, OnSceneLoaded, OnSceneChanged));
+        callback?.Invoke();
     }
 
-    public void ToTitle()
+    private void OnTitleSceneLoaded()
     {
-        StartCoroutine(LoadScene(SceneID.Title));
     }
+
+    private void OnPlaySceneLoaded()
+    {
+        GameManager.Instance.Init();
+    }
+
     #endregion
 }

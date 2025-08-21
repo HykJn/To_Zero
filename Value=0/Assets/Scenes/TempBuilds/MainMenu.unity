@@ -2160,14 +2160,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fc2f82eb9b5d54043b6a8f61d7fc69b5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SettingPanel: {fileID: 1956422666}
-  closeButton: {fileID: 1542253634}
-  fullScreenText: {fileID: 27078798}
-  resolutionText: {fileID: 638830721}
-  masterSlider: {fileID: 27841135}
-  bgmSlider: {fileID: 386552685}
-  sfxSlider: {fileID: 1075229174}
-  uiSlider: {fileID: 996857176}
 --- !u!114 &234999990
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4656,32 +4648,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f511053d49210b242b39e4cfa0bd2969, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bgmChannel: {fileID: 705654708}
-  sfxChannel: {fileID: 1939029300}
-  uiChannel: {fileID: 1039068683}
-  bgmClips:
-  - {fileID: 8300000, guid: 25b27de60e25b2b4693183c07e4350b1, type: 3}
-  - {fileID: 8300000, guid: 5bb911f883a5c6b469631aef8ea2083a, type: 3}
-  sfxClips:
-  - {fileID: 8300000, guid: f2c3dff7c880eb54a997b4c11ecab486, type: 3}
-  - {fileID: 8300000, guid: 9291519050fd5b84abc22ea5ffc90018, type: 3}
-  - {fileID: 8300000, guid: e4dbcca33953ee341ab21275dd7e71fc, type: 3}
-  - {fileID: 8300000, guid: 986183f893128bc4a83e2f66f8d1e489, type: 3}
-  - {fileID: 8300000, guid: 6506b1b3eb5929a4191935843d80e9c7, type: 3}
-  - {fileID: 8300000, guid: 0a20606b615218743b80e9cfefde5196, type: 3}
-  - {fileID: 8300000, guid: 285d0fee7837e2c489401eda472229bf, type: 3}
-  - {fileID: 8300000, guid: c17cee309b3066d46bffe2a43982c0ff, type: 3}
-  - {fileID: 8300000, guid: 7fb143179dcf68c498ecdc2afd08ea40, type: 3}
-  uiClips:
-  - {fileID: 8300000, guid: 25015f66ac1687049ae8d48f237e20b0, type: 3}
-  - {fileID: 8300000, guid: 668a21627806e1345a1038302dee01ec, type: 3}
-  - {fileID: 8300000, guid: d181c38b2409bcd479383e5634390466, type: 3}
-  - {fileID: 8300000, guid: cb04a89871fb73846bb6d7b3109bc09a, type: 3}
-  - {fileID: 8300000, guid: ae6fa5e8640d457409aa508e1af29ca5, type: 3}
-  masterVolume: 1
-  bgmVolume: 1
-  sfxVolume: 1
-  uiVolume: 1
 --- !u!4 &713793081
 Transform:
   m_ObjectHideFlags: 0
@@ -5957,10 +5923,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 89e9edada0cccc74ab5204ff8bc42ac6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  setting: {fileID: 234999989}
-  loadingPanel: {fileID: 1743939369}
-  loadingText: {fileID: 1609026428}
-  loadingFill: {fileID: 673082973}
 --- !u!224 &963378102
 RectTransform:
   m_ObjectHideFlags: 0
@@ -10118,7 +10080,6 @@ GameObject:
   - component: {fileID: 1743939368}
   - component: {fileID: 1743939367}
   - component: {fileID: 1743939366}
-  - component: {fileID: 1743939369}
   - component: {fileID: 1743939370}
   m_Layer: 5
   m_Name: Canvas_Loading
@@ -10126,7 +10087,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1743939366
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10194,18 +10155,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
---- !u!225 &1743939369
-CanvasGroup:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1743939363}
-  m_Enabled: 1
-  m_Alpha: 0
-  m_Interactable: 1
-  m_BlocksRaycasts: 0
-  m_IgnoreParentGroups: 0
 --- !u!114 &1743939370
 MonoBehaviour:
   m_ObjectHideFlags: 0

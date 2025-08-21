@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using UnityEngine;
+using static GlobalDefines;
 
 public class Player : MonoBehaviour
 {
@@ -82,7 +83,7 @@ public class Player : MonoBehaviour
         //Move Box
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            if (_onHold) UnHoldBox();
+            if (_onHold) ReleaseBox();
             else HoldBox();
         }
 
@@ -98,24 +99,13 @@ public class Player : MonoBehaviour
     private void Move(Vector3 dir)
     {
         if (!IsMovable) return;
-        if (Moves <= 0)
-        {
-            Die(EventID.PlayerDieByMoves);
-            return;
-        }
-
-        if (CheckBox(this.transform.position + dir) ||
-            !GameManager.Instance.CurrentStage.IsMovable(this.transform.position + dir)) return;
-
-        GameManager.Instance.CurrentStage.GetTile(this.transform.position).OnPlayer = false;
-
-        col.enabled = false;
-        StartCoroutine(Crtn_Move(this.transform.position, this.transform.position + dir));
+        
+        
     }
 
     private IEnumerator Crtn_Move(Vector3 from, Vector3 to)
     {
-        SoundManager.Instance.PlayOneShot_SFX(SFXID.PlayerMove);
+        SoundManager.Instance.PlayOneShot_SFX(SFX_ID.PlayerMove);
         animator.SetTrigger(Animator.StringToHash("Move"));
 
         IsMovable = false;
@@ -139,7 +129,7 @@ public class Player : MonoBehaviour
     {
         if (!_box) return;
 
-        SoundManager.Instance.Play_SFX(SFXID.PlayerHoldBox);
+        SoundManager.Instance.Play_SFX(SFX_ID.PlayerHoldBox);
         animator.SetBool(Animator.StringToHash("HoldBox"), true);
 
         IsMovable = false;
@@ -147,9 +137,9 @@ public class Player : MonoBehaviour
         _box.SetPreview(true);
     }
 
-    private void UnHoldBox()
+    private void ReleaseBox()
     {
-        SoundManager.Instance.Play_SFX(SFXID.PlayerUnholdBox);
+        SoundManager.Instance.Play_SFX(SFX_ID.PlayerReleaseBox);
         animator.SetBool(Animator.StringToHash("HoldBox"), false);
 
         IsMovable = true;
@@ -167,74 +157,17 @@ public class Player : MonoBehaviour
         else if (Input.GetKeyDown(KeyCode.S)) dir = Vector3.down;
         else if (Input.GetKeyDown(KeyCode.D)) dir = Vector3.right;
         if (dir == Vector3.zero) return;
-        
-        if(!_box.Move(dir)) return;
-        UnHoldBox();
+
+        if (!_box.Move(dir)) return;
+        ReleaseBox();
         _box = null;
-        
+
         Moves--;
         OnPlayerMove?.Invoke();
-        
+
         animator.SetTrigger(Animator.StringToHash("MoveBox"));
         animator.SetBool(Animator.StringToHash("HoldBox"), false);
     }
-
-    private void CheckTile()
-    {
-        Tile tile = GameManager.Instance.CurrentStage.GetTile(this.transform.position);
-        switch (tile.TileType)
-        {
-            case TileType.Portal:
-                if (Value == 0) GameManager.Instance.Transition(EventID.NextStage);
-                else Die(EventID.PlayerDieByMoves);
-                break;
-            case TileType.Add:
-                Value += tile.Value;
-                break;
-            case TileType.Sub:
-                Value -= tile.Value;
-                break;
-            case TileType.Mul:
-                Value *= tile.Value;
-                break;
-            case TileType.Div:
-                Value /= tile.Value;
-                break;
-            case TileType.Equal:
-                if (Value != tile.Value) Die(EventID.PlayerDieByMoves);
-                break;
-            case TileType.Not:
-                if (Value == tile.Value) Die(EventID.PlayerDieByMoves);
-                break;
-            case TileType.Greater:
-                if (Value <= tile.Value) Die(EventID.PlayerDieByMoves);
-                break;
-            case TileType.Less:
-                if (Value >= tile.Value) Die(EventID.PlayerDieByMoves);
-                break;
-        }
-
-        Moves--;
-        OnPlayerMove?.Invoke();
-        tile.OnPlayer = true;
-    }
-
-    private bool CheckBox(Vector3 pos)
-    {
-        RaycastHit2D hit = Physics2D.Raycast(pos + Vector3.back, Vector3.forward, 5f, LayerMask.GetMask("Box"));
-        if (hit)
-        {
-            if (_box) _box.Selected = false;
-            _box = hit.collider.GetComponentInParent<Box>();
-            _box.Selected = true;
-            return true;
-        }
-
-        if (_box) _box.Selected = false;
-        _box = null;
-        return false;
-    }
-
     public void Die(EventID diedBy)
     {
         GameManager.Instance.Transition(diedBy);
@@ -244,7 +177,7 @@ public class Player : MonoBehaviour
     {
         if (_onHold && !IsMovable)
         {
-            UnHoldBox();
+            ReleaseBox();
             if (_box) _box.SetPreview(false);
             _box = null;
             animator.SetBool(Animator.StringToHash("HoldBox"), false);

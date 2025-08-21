@@ -1,16 +1,10 @@
-using UnityEngine;
-
-public class DescriptionController : MonoBehaviour
+public class DescriptionPanel : Panel
 {
-    [SerializeField] private InGameUIController inGameUIController;
-
-
-
     #region ========== ButtonEvent =========
 
     public void OnClick_Exit()
     {
-        inGameUIController.SetActive_DescriptionPanel(false);
+        ClosePanel();
     }
 
     public void OnClick_LeftArrow()

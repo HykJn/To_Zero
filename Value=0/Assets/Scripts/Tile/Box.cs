@@ -1,19 +1,18 @@
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
+using static GlobalDefines;
 
 public class Box : MonoBehaviour
 {
     #region ==========Properties==========
 
-    public bool Selected
+    public bool IsSelected
     {
         get => _isSelected;
         set
         {
             _isSelected = value;
-            this.transform.localScale = value ? new Vector3(1.1f, 1.1f, 1) : Vector3.one;
-            spriteRenderer.sprite = _isSelected ? outline : @default;
+            spriteRenderer.sprite = value ? highlight : @default;
         }
     }
 
@@ -21,13 +20,13 @@ public class Box : MonoBehaviour
 
     #region ==========Fields==========
 
-    [SerializeField] private SpriteRenderer spriteRenderer;
-    [SerializeField] private Sprite @default, outline;
-    [SerializeField] private TMP_Text text;
-    [SerializeField] private GameObject[] previews;
+    [Header("Components"), SerializeField] private SpriteRenderer spriteRenderer;
+    [SerializeField] private TMP_Text text_Value;
+    [Header("References"), SerializeField] private GameObject[] previews;
+    [SerializeField] private Sprite @default, highlight;
 
-    private Vector3 _initPos;
-    private bool _isSelected = false;
+    private bool _isSelected;
+    private Vector3 _startPos;
 
     #endregion
 
@@ -35,76 +34,70 @@ public class Box : MonoBehaviour
 
     private void OnEnable()
     {
-        GameManager.Instance.OnRestart += Init;
-        Selected = false;
+        GameManager.Instance.OnRestart += Restart;
     }
 
     private void OnDisable()
     {
-        GameManager.Instance.OnRestart -= Init;
-        Selected = false;
+        GameManager.Instance.OnRestart -= Restart;
     }
 
     #endregion
 
     #region ==========Methods==========
 
-    public void Init(Vector3 initPos)
+    public void Init(Vector3 startPos)
     {
-        _initPos = initPos;
-        Selected = false;
-        UpdateValue();
+        _startPos = startPos;
+        UpdateValue(GameManager.Instance.Stage.GetTile(this.transform.position));
     }
 
-    private void Init()
+    private void Restart()
     {
-        this.transform.position = _initPos;
-        _isSelected = false;
-        UpdateValue();
+        this.transform.position = _startPos;
+        Tile belowTile = GameManager.Instance.Stage.GetTile(this.transform.position);
+        belowTile.Box = this;
+        UpdateValue(belowTile);
     }
 
-    public void UpdateValue()
+    private void UpdateValue(Tile belowTile)
     {
-        Tile tile = GameManager.Instance.CurrentStage.GetTile(this.transform.position);
-        text.text = tile ? tile.GetComponentInChildren<TMP_Text>().text : string.Empty;
+        text_Value.text = belowTile.GetValueToString();
     }
 
-    public void SetPreview(bool active)
+    public void OnHold(Vector3 playerPosition)
     {
-        if (!active)
+        Vector3[] dirs = { Vector3.up, Vector3.left, Vector3.down, Vector3.right };
+        for (int i = 0; i < 4; i++)
         {
-            foreach (GameObject preview in previews)
-                preview.SetActive(false);
-        }
-        else
-        {
-            Vector3[] directions = { Vector3.up, Vector3.left, Vector3.down, Vector3.right };
-            for (int i = 0; i < 4; i++)
-            {
-                previews[i].SetActive(
-                    GameManager.Instance.CurrentStage.IsMovable(this.transform.position + directions[i]) &&
-                    GameObject.FindWithTag("Player").transform.position != this.transform.position + directions[i] &&
-                    GameManager.Instance.CurrentStage.GetTile(this.transform.position + directions[i]).TileType !=
-                    TileType.Portal
-                );
-            }
+            previews[i].SetActive(IsMovableDirection(dirs[i], playerPosition));
         }
     }
 
-    public bool Move(Vector3 direction)
+    public void Release()
     {
-        if (!Selected) return false;
-        if (!GameManager.Instance.CurrentStage.IsMovable(this.transform.position + direction) ||
-            GameObject.FindWithTag("Player").transform.position == this.transform.position + direction ||
-            GameManager.Instance.CurrentStage.GetTile(this.transform.position + direction).TileType ==
-            TileType.Portal) return false;
+        foreach (GameObject obj in previews)
+            obj.SetActive(false);
+    }
 
-        GameManager.Instance.CurrentStage.GetTile(this.transform.position).GetComponent<Animator>().enabled = false;
+    public void Move(Vector3 direction, Vector3 playerPosition)
+    {
+        if (!IsMovableDirection(direction, playerPosition)) return;
+        GameManager.Instance.Stage.GetTile(this.transform.position).Box = null;
         this.transform.position += direction;
-        GameManager.Instance.CurrentStage.GetTile(this.transform.position).GetComponent<Animator>().enabled = true;
-        UpdateValue();
-        Selected = false;
-        return true;
+        Tile belowTile = GameManager.Instance.Stage.GetTile(this.transform.position);
+        belowTile.Box = this;
+        UpdateValue(belowTile);
+    }
+
+    private bool IsMovableDirection(Vector3 direction, Vector3 playerPosition)
+    {
+        Vector3 pos = this.transform.position + direction;
+        Stage stageInfo = GameManager.Instance.Stage;
+        Tile tile = stageInfo.GetTile(pos);
+        if (!tile) return false;
+        return !tile.Box && tile.TileType != TileType.None && tile.TileType != TileType.Portal &&
+               playerPosition != pos;
     }
 
     #endregion

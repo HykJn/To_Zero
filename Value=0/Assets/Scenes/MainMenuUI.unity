@@ -1617,7 +1617,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 759753041}
         m_TargetAssemblyTypeName: SoundManager, Assembly-CSharp
-        m_MethodName: set_BGMVolume
+        m_MethodName: set_BGM_Volume
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -4353,7 +4353,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 759753041}
         m_TargetAssemblyTypeName: SoundManager, Assembly-CSharp
-        m_MethodName: set_UIVolume
+        m_MethodName: set_UI_Volume
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -9094,7 +9094,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 759753041}
         m_TargetAssemblyTypeName: SoundManager, Assembly-CSharp
-        m_MethodName: set_SFXVolume
+        m_MethodName: set_SFX_Volume
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
