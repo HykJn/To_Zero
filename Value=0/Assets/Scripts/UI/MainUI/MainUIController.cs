@@ -20,9 +20,9 @@ public class MainUIController : MonoBehaviour
     {
         UIManager.Instance.MainUI = this;
 
-        stagePanel.ClosePanel();
+        stagePanel.gameObject.SetActive(false);
 
-        menuPanel.OpenPanel();
+        menuPanel.gameObject.SetActive(true);
     }
 
     #region =====ButtonEvent=====
@@ -36,16 +36,16 @@ public class MainUIController : MonoBehaviour
     {
         Debug.Log($"Stage{stageNum}로 이동");
 
-        UIManager.Instance.LoadScene(SceneID.InGame, () => GameManager.Instance.StageNumber = stageNum);
+        UIManager.Instance.ToPlay(stageNum);
 
         SoundManager.Instance.Play_UI_SFX(UI_SFX_ID.StartButtonClick);
     }
 
     public void OnClick_StagePanelExit()
     {
-        stagePanel.ClosePanel();
+        stagePanel.gameObject.SetActive(false);
 
-        menuPanel.OpenPanel();
+        menuPanel.gameObject.SetActive(true);
 
         SoundManager.Instance.Play_UI_SFX(UI_SFX_ID.ButtonClick);
     }

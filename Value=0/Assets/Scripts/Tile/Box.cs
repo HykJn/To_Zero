@@ -49,7 +49,6 @@ public class Box : MonoBehaviour
     public void Init(Vector3 startPos)
     {
         _startPos = startPos;
-        UpdateValue(GameManager.Instance.Stage.GetTile(this.transform.position));
     }
 
     private void Restart()
@@ -80,14 +79,15 @@ public class Box : MonoBehaviour
             obj.SetActive(false);
     }
 
-    public void Move(Vector3 direction, Vector3 playerPosition)
+    public bool Move(Vector3 direction, Vector3 playerPosition)
     {
-        if (!IsMovableDirection(direction, playerPosition)) return;
+        if (!IsMovableDirection(direction, playerPosition)) return false;
         GameManager.Instance.Stage.GetTile(this.transform.position).Box = null;
         this.transform.position += direction;
         Tile belowTile = GameManager.Instance.Stage.GetTile(this.transform.position);
         belowTile.Box = this;
         UpdateValue(belowTile);
+        return true;
     }
 
     private bool IsMovableDirection(Vector3 direction, Vector3 playerPosition)

@@ -13,7 +13,7 @@ public class Panel : MonoBehaviour
 
     public virtual void ClosePanel()
     {
-        if (UIManager.Instance.OpenPanel.Peek() == this)
+        if (UIManager.Instance.OpenPanel.TryPeek(out _) == this)
             UIManager.Instance.OpenPanel.Pop();
         this.gameObject.SetActive(false);
 

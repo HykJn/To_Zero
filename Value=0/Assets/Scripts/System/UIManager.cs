@@ -1,10 +1,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-
 using UnityEngine;
 using UnityEngine.SceneManagement;
-
 using static GlobalDefines;
 
 public class UIManager : MonoBehaviour
@@ -59,12 +57,17 @@ public class UIManager : MonoBehaviour
 
     #region ==========Methods==========
 
-    public void LoadScene(SceneID scene, Action callback = null)
+    public void ToTitle()
     {
-        StartCoroutine(Co_LoadScene(scene, callback));
+        StartCoroutine(LoadScene(SceneID.Title));
     }
 
-    private IEnumerator Co_LoadScene(SceneID scene, Action callback)
+    public void ToPlay(int stage = 1)
+    {
+        StartCoroutine(LoadScene(SceneID.InGame, () => GameManager.Instance.Init(stage)));
+    }
+
+    private IEnumerator LoadScene(SceneID scene, Action callback = null)
     {
         AsyncOperation operation = SceneManager.LoadSceneAsync((int)scene);
         operation!.allowSceneActivation = false;
@@ -80,35 +83,15 @@ public class UIManager : MonoBehaviour
             t += Time.deltaTime;
             yield return null;
         }
+        
 
         operation.allowSceneActivation = true;
         yield return new WaitForSeconds(0.5f);
 
-        switch (scene)
-        {
-            case SceneID.Title:
-                OnTitleSceneLoaded();
-                break;
-            case SceneID.InGame:
-                OnPlaySceneLoaded();
-                break;
-            default:
-                throw new ArgumentOutOfRangeException(nameof(scene), scene, null);
-        }
+        callback?.Invoke();
 
         loadingPanel.ClosePanel();
         OpenPanel.Clear();
-
-        callback?.Invoke();
-    }
-
-    private void OnTitleSceneLoaded()
-    {
-    }
-
-    private void OnPlaySceneLoaded()
-    {
-        GameManager.Instance.Init();
     }
 
     #endregion

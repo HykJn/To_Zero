@@ -1,3 +1,4 @@
+using System;
 using TMPro;
 using UnityEngine;
 
@@ -23,7 +24,7 @@ public class InGameUIController : MonoBehaviour
     {
         set
         {
-            text_Value.text = value.ToString();
+            text_Value.text = value > 0 ? "+" + value : value.ToString();
             text_Value.color = value switch
             {
                 > 0 => new Color(100 / 255f, 200 / 255f, 255 / 255f),
@@ -35,6 +36,8 @@ public class InGameUIController : MonoBehaviour
 
     #endregion
 
+    #region ==========Fields==========
+
     [Header("Panels")]
     [SerializeField] private PausePanel pausePanel;
     [SerializeField] private DescriptionPanel descriptionPanel;
@@ -44,6 +47,20 @@ public class InGameUIController : MonoBehaviour
     [SerializeField] private TMP_Text text_Stage;
     [SerializeField] private TMP_Text text_Moves;
     [SerializeField] private TMP_Text text_Value;
+
+    #endregion
+
+    #region ==========Unity Events==========
+
+    private void Start()
+    {
+        UIManager.Instance.InGameUI = this;
+        text_Stage.text = string.Empty;
+        text_Moves.text = string.Empty;
+        text_Value.text = string.Empty;
+    }
+
+    #endregion
 
     public void Init()
     {

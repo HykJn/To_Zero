@@ -3,8 +3,6 @@ using static GlobalDefines;
 
 public class PausePanel : Panel
 {
-    [SerializeField] private InGameUIController inGameUIController;
-
     private void OnEnable()
     {
         Time.timeScale = 0f;
@@ -31,7 +29,7 @@ public class PausePanel : Panel
 
     public void OnClick_Title()
     {
-        UIManager.Instance.LoadScene(SceneID.Title);
+        UIManager.Instance.ToTitle();
 
         SoundManager.Instance.Play_UI_SFX(UI_SFX_ID.ButtonClick);
     }
@@ -39,7 +37,7 @@ public class PausePanel : Panel
     public void OnClick_Exit()
     {
         SoundManager.Instance.Play_UI_SFX(UI_SFX_ID.ButtonClick);
-        
+
 #if UNITY_EDITOR
         UnityEditor.EditorApplication.ExitPlaymode();
 #else

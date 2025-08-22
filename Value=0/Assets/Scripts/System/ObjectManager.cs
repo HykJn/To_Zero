@@ -114,5 +114,23 @@ public class ObjectManager : MonoBehaviour
         return obj;
     }
 
+    public GameObject GetObject(ObjectID id, Transform parent) => GetObject(id, parent, Vector3.zero);
+
+    public GameObject GetObject(ObjectID id, Transform parent, Vector3 position, bool isLocal = true)
+    {
+        GameObject obj = GetObject(id);
+        obj.transform.SetParent(parent);
+        if (isLocal) obj.transform.localPosition = position;
+        else obj.transform.position = position;
+        return obj;
+    }
+
+    public void ReleaseObject(GameObject obj)
+    {
+        obj.SetActive(false);
+        obj.transform.SetParent(this.transform);
+        obj.transform.localPosition = Vector3.zero;
+    }
+
     #endregion
 }

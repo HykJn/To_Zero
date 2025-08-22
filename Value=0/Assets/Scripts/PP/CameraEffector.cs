@@ -4,8 +4,14 @@ using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 using static GlobalDefines;
 
-public class CameraEffect : MonoBehaviour
+public class CameraEffector : MonoBehaviour
 {
+    #region ==========Properties==========
+
+    public static CameraEffector Instance { get; private set; }
+
+    #endregion
+
     #region ==========Fields==========
 
     [Header("References")]
@@ -38,14 +44,16 @@ public class CameraEffect : MonoBehaviour
 
     private void Awake()
     {
+        if (Instance) Destroy(this.gameObject);
+        Instance = this;
+
         VolumeProfile profile = globalVolume.profile;
         profile.TryGet(out _lens);
         profile.TryGet(out _chroma);
         profile.TryGet(out _grain);
         profile.TryGet(out _vignette);
 
-        if (mainCamera == null)
-            mainCamera = Camera.main;
+        mainCamera ??= Camera.main;
     }
 
     #endregion
@@ -58,9 +66,8 @@ public class CameraEffect : MonoBehaviour
         switch (id)
         {
             case EventID.NextStage: StartCoroutine(NextStage()); break;
-            case EventID.PlayerDieByDrone:
-            case EventID.PlayerDieByMoves:
-            case EventID.PlayerDieBySystem: StartCoroutine(Restart(id)); break;
+            case EventID.PlayerDieByDrone or EventID.PlayerDieByMoves or EventID.PlayerDieBySystem:
+                StartCoroutine(Restart(id)); break;
             default:
                 return;
         }

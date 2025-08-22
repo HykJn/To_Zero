@@ -33,13 +33,12 @@ public class Stage : MonoBehaviour
 
     private void OnEnable()
     {
-        Restart();
-        GameManager.Instance.OnPlayerMove += OnPlayerMove;
+        GameManager.Instance.Player.OnPlayerMove += OnPlayerMove;
     }
 
     private void OnDisable()
     {
-        GameManager.Instance.OnPlayerMove -= OnPlayerMove;
+        GameManager.Instance.Player.OnPlayerMove -= OnPlayerMove;
     }
 
     #endregion
@@ -51,7 +50,7 @@ public class Stage : MonoBehaviour
         _tileMap = new();
         _drones = new();
         _objs = new();
-        LoadStage();
+        InitStage();
 
         foreach (Tile tile in _tileMap.Values)
             tile.Init();
@@ -61,10 +60,9 @@ public class Stage : MonoBehaviour
 
     public void Restart()
     {
-        Player player = GameObject.FindWithTag("Player").GetComponent<Player>();
-        player.transform.position = StartPos;
-        player.Moves = moves;
-        player.Value = startNumber;
+        GameManager.Instance.Player.transform.position = StartPos;
+        GameManager.Instance.Player.Moves = moves;
+        GameManager.Instance.Player.Value = startNumber;
 
         foreach (Tile tile in _tileMap.Values)
             tile.Restart();
@@ -80,7 +78,7 @@ public class Stage : MonoBehaviour
             drone.Move();
     }
 
-    private void LoadStage()
+    private void InitStage()
     {
         string[] rows = stageMap.Split('\n');
         int height = rows.Length, width = rows[0].Split(' ').Length;
@@ -97,12 +95,14 @@ public class Stage : MonoBehaviour
                 Vector3 position = new(left + x, top - y);
                 if (columns[x] == "S") StartPos = position;
 
-                Tile tile = ObjectManager.Instance.GetObject(ObjectID.Tile, position).GetComponent<Tile>();
+                Tile tile = ObjectManager.Instance.GetObject(ObjectID.Tile, this.transform, position)
+                    .GetComponent<Tile>();
                 _tileMap.Add(position, tile);
 
                 if (columns[x][0] == 'b')
                 {
-                    Box box = ObjectManager.Instance.GetObject(ObjectID.Box, position).GetComponent<Box>();
+                    Box box = ObjectManager.Instance.GetObject(ObjectID.Box, this.transform, position)
+                        .GetComponent<Box>();
                     tile.Box = box;
                     _objs.Add(box.gameObject);
                     box.Init(position);
@@ -116,25 +116,10 @@ public class Stage : MonoBehaviour
         //Load Drones
         foreach (DroneInfo info in droneInfo)
         {
-            Drone drone = ObjectManager.Instance.GetObject(ObjectID.Drone).GetComponent<Drone>();
+            Drone drone = ObjectManager.Instance.GetObject(ObjectID.Drone, this.transform).GetComponent<Drone>();
             drone.Init(info.start, info.direction, info.steps);
             _drones.Add(drone);
         }
-    }
-
-    private void UnloadStage()
-    {
-        foreach (Tile tile in _tileMap.Values)
-            tile.gameObject.SetActive(false);
-        _tileMap.Clear();
-        
-        foreach(Drone drone in _drones)
-            drone.gameObject.SetActive(false);
-        _drones.Clear();
-
-        foreach (GameObject obj in _objs)
-            obj.SetActive(false);
-        _objs.Clear();
     }
 
     public Tile GetTile(Vector3 position)
@@ -144,7 +129,7 @@ public class Stage : MonoBehaviour
 
     public Box GetBox(Vector3 position)
     {
-        Box box = GetTile(position).Box;
+        Box box = GetTile(position)?.Box;
         return box ? box : null;
     }
 

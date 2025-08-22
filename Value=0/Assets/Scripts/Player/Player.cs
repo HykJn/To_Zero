@@ -13,8 +13,26 @@ public class Player : MonoBehaviour
 
     #region ==========Properties==========
 
-    public int Value { get; set; }
-    public int Moves { get; set; }
+    public int Value
+    {
+        get => _value;
+        set
+        {
+            _value = value;
+            UIManager.Instance.InGameUI.Value = value;
+        }
+    }
+
+    public int Moves
+    {
+        get => _moves;
+        set
+        {
+            _moves = value;
+            UIManager.Instance.InGameUI.Moves = value;
+        }
+    }
+
     public bool IsMovable { get; set; } = true;
     public bool Controllable { get; set; } = true;
 
@@ -28,7 +46,9 @@ public class Player : MonoBehaviour
     [SerializeField] private Collider2D col;
 
     private Box _box;
-    private bool _onHold = false;
+    private bool _onHold;
+    private int _value;
+    private int _moves;
 
     #endregion
 
@@ -99,17 +119,22 @@ public class Player : MonoBehaviour
     private void Move(Vector3 dir)
     {
         if (!IsMovable) return;
-        
-        
+
+        Vector3 to = this.transform.position + dir;
+        if (TryGetBoxAt(to)) return;
+        if (!IsMovableTo(to)) return;
+
+        StartCoroutine(OnMove(this.transform.position, to));
     }
 
-    private IEnumerator Crtn_Move(Vector3 from, Vector3 to)
+    private IEnumerator OnMove(Vector3 from, Vector3 to)
     {
-        SoundManager.Instance.PlayOneShot_SFX(SFX_ID.PlayerMove);
-        animator.SetTrigger(Animator.StringToHash("Move"));
-
         IsMovable = false;
         float t = 0;
+
+        animator.SetTrigger(Animator.StringToHash("Move"));
+        SoundManager.Instance.PlayOneShot_SFX(SFX_ID.PlayerMove);
+
         while (Vector3.Distance(this.transform.position, to) >= 0.05f)
         {
             this.transform.position = Vector3.Lerp(from, to, easeOutCurve.Evaluate(t / 0.06f));
@@ -120,31 +145,92 @@ public class Player : MonoBehaviour
         this.transform.position = to;
         IsMovable = true;
 
-        CheckTile();
-        CheckBox(to + (to - from).normalized);
+        ApplyTileValueAt(to);
+        TryGetBoxAt(to + (to - from).normalized);
+
+        Moves--;
+        OnPlayerMove?.Invoke();
+
         col.enabled = true;
+    }
+
+    private void ApplyTileValueAt(Vector3 pos)
+    {
+        Tile tile = GameManager.Instance.Stage.GetTile(pos);
+        if (!tile) return;
+
+        switch (tile.TileType)
+        {
+            case TileType.None or TileType.Start:
+                break;
+            case TileType.Portal:
+                CameraEffector.Instance.Transition(Value == 0 ? EventID.NextStage : EventID.PlayerDieByMoves);
+                break;
+            case TileType.Add:
+                Value += tile.Value;
+                break;
+            case TileType.Sub:
+                Value -= tile.Value;
+                break;
+            case TileType.Mul:
+                Value *= tile.Value;
+                break;
+            case TileType.Div:
+                Value /= tile.Value;
+                break;
+            case TileType.Equal:
+                if (Value != tile.Value) Die(EventID.PlayerDieByMoves);
+                break;
+            case TileType.Not:
+                if (Value == tile.Value) Die(EventID.PlayerDieByMoves);
+                break;
+            case TileType.Greater:
+                if (Value <= tile.Value) Die(EventID.PlayerDieByMoves);
+                break;
+            case TileType.Less:
+                if (Value >= tile.Value) Die(EventID.PlayerDieByMoves);
+                break;
+            default:
+                throw new ArgumentOutOfRangeException();
+        }
+    }
+
+    private bool IsMovableTo(Vector3 pos)
+    {
+        Tile tile = GameManager.Instance.Stage.GetTile(pos);
+        if (!tile) return false;
+        return !GameManager.Instance.Stage.GetBox(pos) &&
+               tile.TileType != TileType.None;
+    }
+
+    private bool TryGetBoxAt(Vector3 pos)
+    {
+        if (_box) _box.IsSelected = false;
+        _box = GameManager.Instance.Stage.GetBox(pos);
+        if (_box) _box.IsSelected = true;
+        return _box;
     }
 
     private void HoldBox()
     {
         if (!_box) return;
 
-        SoundManager.Instance.Play_SFX(SFX_ID.PlayerHoldBox);
-        animator.SetBool(Animator.StringToHash("HoldBox"), true);
-
         IsMovable = false;
         _onHold = true;
-        _box.SetPreview(true);
+        _box.OnHold(this.transform.position);
+
+        animator.SetBool(Animator.StringToHash("HoldBox"), true);
+        SoundManager.Instance.Play_SFX(SFX_ID.PlayerHoldBox);
     }
 
     private void ReleaseBox()
     {
-        SoundManager.Instance.Play_SFX(SFX_ID.PlayerReleaseBox);
-        animator.SetBool(Animator.StringToHash("HoldBox"), false);
-
         IsMovable = true;
         _onHold = false;
-        if (_box) _box.SetPreview(false);
+        if (_box) _box.Release();
+
+        animator.SetBool(Animator.StringToHash("HoldBox"), false);
+        SoundManager.Instance.Play_SFX(SFX_ID.PlayerReleaseBox);
     }
 
     private void MoveBox()
@@ -158,8 +244,9 @@ public class Player : MonoBehaviour
         else if (Input.GetKeyDown(KeyCode.D)) dir = Vector3.right;
         if (dir == Vector3.zero) return;
 
-        if (!_box.Move(dir)) return;
+        if (!_box.Move(dir, this.transform.position)) return;
         ReleaseBox();
+        _box.IsSelected = false;
         _box = null;
 
         Moves--;
@@ -168,9 +255,10 @@ public class Player : MonoBehaviour
         animator.SetTrigger(Animator.StringToHash("MoveBox"));
         animator.SetBool(Animator.StringToHash("HoldBox"), false);
     }
+
     public void Die(EventID diedBy)
     {
-        GameManager.Instance.Transition(diedBy);
+        CameraEffector.Instance.Transition(diedBy);
     }
 
     private void Restart()
@@ -178,7 +266,7 @@ public class Player : MonoBehaviour
         if (_onHold && !IsMovable)
         {
             ReleaseBox();
-            if (_box) _box.SetPreview(false);
+            _box.IsSelected = false;
             _box = null;
             animator.SetBool(Animator.StringToHash("HoldBox"), false);
         }
@@ -192,9 +280,9 @@ public class Player : MonoBehaviour
 
     #region ==========For Animation Event==========
 
-    public void AnimationMoveLock()
+    public void AnimationMoveLock(int isLock)
     {
-        IsMovable = !IsMovable;
+        IsMovable = isLock != 1;
     }
 
     #endregion

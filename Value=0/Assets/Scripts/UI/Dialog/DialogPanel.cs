@@ -102,7 +102,7 @@ public class DialogPanel : Panel
     {
         DialogueData data = _dialogs[_dialogIdx];
 
-        //Set active current speaker
+        //Set an active current speaker
         Color inactive = new Color(0.6f, 0.6f, 0.6f);
 
         player_LD.rectTransform.localScale = new Vector3(0.9f, 0.9f, 1f);
@@ -137,6 +137,8 @@ public class DialogPanel : Panel
 
         textDialogue.text = string.Empty;
         // StartCoroutine(Typing(_dialogs[_dialogIdx].dialogue));
+
+        SoundManager.Instance.Play_UI_SFX(UI_SFX_ID.NextDialog);
         _onTyping = true;
     }
 

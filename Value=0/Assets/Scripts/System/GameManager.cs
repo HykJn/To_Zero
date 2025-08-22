@@ -8,7 +8,6 @@ public class GameManager : MonoBehaviour
     public event Action OnInit;
     public event Action OnStageLoad;
     public event Action OnRestart;
-    public event Action OnPlayerMove;
 
     #endregion
 
@@ -23,11 +22,14 @@ public class GameManager : MonoBehaviour
         get => _curStage;
         set
         {
-            stages[_curStage - 1].gameObject.SetActive(false);
             _curStage = value;
-            stages[_curStage - 1].gameObject.SetActive(true);
+            for (int i = 0; i < stages.Length; i++)
+                stages[i].gameObject.SetActive(i == value - 1);
 
+            UIManager.Instance.InGameUI.Stage = value;
+            
             OnStageLoad?.Invoke();
+            Restart();
         }
     }
 
@@ -36,7 +38,7 @@ public class GameManager : MonoBehaviour
     #endregion
 
     #region ==========Fields==========
-    
+
     [Header("Stage Configuration")]
     [SerializeField] private Player player;
     [SerializeField] private Stage[] stages;
@@ -58,20 +60,27 @@ public class GameManager : MonoBehaviour
 
     #region ==========Methods==========
 
-    public void Init()
+    public void Init(int stageNumber)
     {
+        foreach (Stage stage in stages)
+            stage.gameObject.SetActive(false);
+
+        _curStage = stageNumber;
+
         foreach (Stage stage in stages)
             stage.Init();
 
         OnInit?.Invoke();
 
-        UIManager.Instance.InGameUI.DialogPanel.SetDialog(Stage.Dialogs);
+        // Stage.gameObject.SetActive(true);
+        StageNumber = stageNumber;
     }
+
 
     public void Restart()
     {
-        foreach (Stage stage in stages)
-            stage.Restart();
+        Stage.Restart();
+
         OnRestart?.Invoke();
     }
 

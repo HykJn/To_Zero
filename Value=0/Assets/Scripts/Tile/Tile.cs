@@ -68,6 +68,7 @@ public class Tile : MonoBehaviour
     {
         Init();
         _box = null;
+        _idx = 0;
     }
 
     private void AnimatorValidate()
@@ -98,7 +99,7 @@ public class Tile : MonoBehaviour
                     break;
                 case "W":
                     _tileTypes[i] = TileType.None;
-                    ObjectManager.Instance.GetObject(ObjectID.Wall, this.transform.position);
+                    ObjectManager.Instance.GetObject(ObjectID.Wall, this.transform);
                     break;
                 default:
                     _tileTypes[i] = parts[i][0] switch

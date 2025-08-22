@@ -258,7 +258,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 827ad29377e60e24a917c7245b882d49, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  start: {x: 0, y: 0}
-  direction: 0
-  steps: 0
+  animator: {fileID: 6014487448332417009}
   scanner: {fileID: 3451588446345337323}

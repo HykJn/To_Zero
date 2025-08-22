@@ -617,20 +617,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8262970eedc73c24087af7c749d5af77, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  stageMap: '0 *2 -4 +4 w 0
+  stageMap: '0 *2 -4 +4 W 0
 
-    0 b-1 -2 /-2 +4 w
+    0 b-1 -2 /-2 +4 W
 
-    0 +3 /3 w *-2 b-1
+    0 +3 /3 W *-2 b-1
 
-    s-4,+1
-    /2 b*2 w b-3 *2
+    -4,+1
+    /2 b*2 W b-3 *2
 
-    b+3 s-4,+2 +1 w /-3 +2
+    b+3 -4,+2 +1 W /-3 +2
 
-    -1 +3 w w *-2 /-3
+    -1 +3 W W *-2 /-3
 
-    P w 0
+    P W 0
     0 0 S'
   startNumber: -3
   moves: 20
@@ -969,7 +969,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 02d7f2458d07b044eacec11daf68f016, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  inGameUIController: {fileID: 534789661}
 --- !u!114 &173404439
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1122,20 +1121,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   player_LD: {fileID: 1069080097}
   system_LD: {fileID: 1079420977}
-  dialogPanel: {fileID: 186277954}
   imageDialog: {fileID: 619682809}
   textName: {fileID: 1552215352}
   textDialogue: {fileID: 1617600407}
-  dialogs:
-  - character: 0
-    dialogue: testttttttttttttt
-  - character: 1
-    dialogue: test22222222222
-  - character: 0
-    dialogue: test33333333333
-  - character: 1
-    dialogue: test344444
-  dialogIdx: 0
   typingSpeed: 0.1
 --- !u!1 &221654144
 GameObject:
@@ -1243,7 +1231,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8262970eedc73c24087af7c749d5af77, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  stageMap: 'S *2 -3 +3 w
+  stageMap: 'S *2 -3 +3 W
 
     +3 +2 -1 /2 +1
 
@@ -1251,8 +1239,8 @@ MonoBehaviour:
 
     0 -2 +2 -1 -2
 
-    w
-    P -3 +1 w'
+    W
+    P -3 +1 W'
   startNumber: 2
   moves: 11
   droneInfo: []
@@ -1802,12 +1790,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 548ab0124e46e9b45a6d7e22f853a838, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pausePanel: {fileID: 173404437}
-  descriptionPanel: {fileID: 1794378967}
+  pausePanel: {fileID: 173404438}
+  descriptionPanel: {fileID: 1794378968}
   dialogPanel: {fileID: 186277958}
-  stageNum_T: {fileID: 1954210982}
-  value_T: {fileID: 26794895}
-  moveCount_T: {fileID: 646502702}
+  text_Stage: {fileID: 1954210982}
+  text_Moves: {fileID: 646502702}
+  text_Value: {fileID: 26794895}
 --- !u!114 &534789662
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1972,6 +1960,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6a2d7a1d20f9ce9419331538500d06bc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  player: {fileID: 1975691527}
   stages:
   - {fileID: 438444096}
   - {fileID: 425267528}
@@ -1982,9 +1971,7 @@ MonoBehaviour:
   - {fileID: 855168440}
   - {fileID: 747522468}
   - {fileID: 131294067}
-  curStage: 1
   demoCanvas: {fileID: 1972231308}
-  dialog: {fileID: 186277958}
 --- !u!4 &617727815
 Transform:
   m_ObjectHideFlags: 0
@@ -2613,10 +2600,10 @@ MonoBehaviour:
 
     0 *2 -1 b/-2 +1 /3 +1
 
-    0 w w +3 +2 -1 *2
+    0 W W +3 +2 -1 *2
 
     0
-    w w w s*-2,+4 +1 -3
+    W W W *-2,+4 +1 -3
 
     +1 -2 -1 /3 -1 *-2 /3
 
@@ -2909,16 +2896,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8262970eedc73c24087af7c749d5af77, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  stageMap: '0 S *-2 -4 w
+  stageMap: '0 S *-2 -4 W
 
-    0 +4 -2 b*-2 s/-2,+1
+    0 +4 -2 b*-2 /-2,+1
 
-    0 w w +2 +2
+    0 W W +2 +2
 
-    -2 -3 s*2,+3
+    -2 -3 *2,+3
     -1 /2
 
-    +3 w -2 b-1 +1
+    +3 W -2 b-1 +1
 
     P -1 +2 -2 0'
   startNumber: -3
@@ -3320,7 +3307,7 @@ MonoBehaviour:
   effectDuration: 1
   pinchScale: -1
   pinchIntensity: -2
-  pinchChorma: 3
+  pinchChroma: 3
   pinchVignette: 0.8
   glitchDuration: 0.7
   maxChroma: 2
@@ -3637,14 +3624,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   stageMap: 'P -2 *2 +3 +2 0
 
-    0 +2 w /2 +1 0
+    0 +2 W /2 +1 0
 
     -2 *2 b/2 /2 +2 0
 
     +2 *2
-    -2 b+3 w 0
+    -2 b+3 W 0
 
-    w -1 -1 +1 +1 S'
+    W -1 -1 +1 +1 S'
   startNumber: -4
   moves: 14
   droneInfo: []
@@ -4199,16 +4186,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8262970eedc73c24087af7c749d5af77, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  stageMap: 'w -2 +2 +4 w
+  stageMap: 'W -2 +2 +4 W
 
-    -4 -3 w +3 +4
+    -4 -3 W +3 +4
 
     -3 -4 0 b-4 b+3
 
     -2 -3 0 -3
     +4
 
-    S -4 0 w P'
+    S -4 0 W P 0'
   startNumber: -4
   moves: 14
   droneInfo: []
@@ -4276,11 +4263,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 634f6fa3621663148907b08990231448, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  prefabOperationTile: {fileID: 1030933736242688238, guid: b90fd50485c8b9e4c8f6a413f89fb40c, type: 3}
-  prefabSwapTile: {fileID: 1030933736242688238, guid: 6bd4ff02c4cd0624aa636d7a729075ac, type: 3}
-  prefabWall: {fileID: 1030933736242688238, guid: 7aab86b6c8e74d5468d7f2f4d0930bfd, type: 3}
-  prefabBox: {fileID: 2594196179184477090, guid: 45115e0054613564e963dae1dbf353a2, type: 3}
-  prefabDrone: {fileID: 7276949923402202544, guid: 9d90ea235f5ce5440a8840296106c3ac, type: 3}
+  prefab_Tile: {fileID: 1030933736242688238, guid: b90fd50485c8b9e4c8f6a413f89fb40c, type: 3}
+  prefab_Wall: {fileID: 1030933736242688238, guid: 7aab86b6c8e74d5468d7f2f4d0930bfd, type: 3}
+  prefab_Box: {fileID: 2594196179184477090, guid: 45115e0054613564e963dae1dbf353a2, type: 3}
+  prefab_Drone: {fileID: 7276949923402202544, guid: 9d90ea235f5ce5440a8840296106c3ac, type: 3}
 --- !u!4 &1290141055
 Transform:
   m_ObjectHideFlags: 0
@@ -4738,18 +4724,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8262970eedc73c24087af7c749d5af77, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  stageMap: 'S w w +2 P
+  stageMap: 'S W W +2 P
 
-    +1 w -2 b+2 -4
+    +1 W -2 b+2 -4
 
-    -1 w -2 +1 -3
+    -1 W -2 +1 -3
 
-    *2 w -2 s-1,*2
+    *2 W -2 -1,*2
     +2
 
     +2 -2 +1 -4 +3
 
-    /2 -1 +3 +1 w'
+    /2 -1 +3 +1 W'
   startNumber: 2
   moves: 15
   droneInfo: []
@@ -5229,7 +5215,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b94ad064493500a4492c2ec6556af645, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  inGameUIController: {fileID: 534789661}
 --- !u!114 &1794378969
 MonoBehaviour:
   m_ObjectHideFlags: 0
