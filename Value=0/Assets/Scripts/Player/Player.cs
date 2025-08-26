@@ -119,6 +119,11 @@ public class Player : MonoBehaviour
     private void Move(Vector3 dir)
     {
         if (!IsMovable) return;
+        if (_moves <= 0)
+        {
+            Die(EventID.PlayerDieByMoves);
+            return;
+        }
 
         Vector3 to = this.transform.position + dir;
         if (TryGetBoxAt(to)) return;
@@ -130,6 +135,7 @@ public class Player : MonoBehaviour
     private IEnumerator OnMove(Vector3 from, Vector3 to)
     {
         IsMovable = false;
+        col.enabled = false;
         float t = 0;
 
         animator.SetTrigger(Animator.StringToHash("Move"));
@@ -145,13 +151,13 @@ public class Player : MonoBehaviour
         this.transform.position = to;
         IsMovable = true;
 
-        ApplyTileValueAt(to);
-        TryGetBoxAt(to + (to - from).normalized);
-
         Moves--;
         OnPlayerMove?.Invoke();
 
         col.enabled = true;
+
+        ApplyTileValueAt(to);
+        TryGetBoxAt(to + (to - from).normalized);
     }
 
     private void ApplyTileValueAt(Vector3 pos)

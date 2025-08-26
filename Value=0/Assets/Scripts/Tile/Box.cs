@@ -54,6 +54,7 @@ public class Box : MonoBehaviour
     private void Restart()
     {
         this.transform.position = _startPos;
+        IsSelected = false;
         Tile belowTile = GameManager.Instance.Stage.GetTile(this.transform.position);
         belowTile.Box = this;
         UpdateValue(belowTile);

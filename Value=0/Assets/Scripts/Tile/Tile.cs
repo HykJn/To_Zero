@@ -69,6 +69,7 @@ public class Tile : MonoBehaviour
         Init();
         _box = null;
         _idx = 0;
+        UpdateText();
     }
 
     private void AnimatorValidate()

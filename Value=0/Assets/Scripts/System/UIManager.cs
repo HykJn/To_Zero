@@ -72,7 +72,7 @@ public class UIManager : MonoBehaviour
         AsyncOperation operation = SceneManager.LoadSceneAsync((int)scene);
         operation!.allowSceneActivation = false;
 
-        loadingPanel.OpenPanel();
+        loadingPanel.gameObject.SetActive(true);
 
         float t = 0f;
         while (t <= 1.5f)
@@ -83,14 +83,15 @@ public class UIManager : MonoBehaviour
             t += Time.deltaTime;
             yield return null;
         }
-        
 
+        
         operation.allowSceneActivation = true;
         yield return new WaitForSeconds(0.5f);
-
+        
+        GameManager.Instance.Player.Controllable = false;
         callback?.Invoke();
 
-        loadingPanel.ClosePanel();
+        loadingPanel.gameObject.SetActive(false);
         OpenPanel.Clear();
     }
 

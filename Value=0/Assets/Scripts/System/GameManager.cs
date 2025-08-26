@@ -23,11 +23,18 @@ public class GameManager : MonoBehaviour
         set
         {
             _curStage = value;
+            if (value > stages.Length)
+            {
+                demoCanvas.SetActive(true);
+                player.Controllable = false;
+                return;
+            }
+
             for (int i = 0; i < stages.Length; i++)
                 stages[i].gameObject.SetActive(i == value - 1);
 
             UIManager.Instance.InGameUI.Stage = value;
-            
+
             OnStageLoad?.Invoke();
             Restart();
         }
@@ -71,7 +78,7 @@ public class GameManager : MonoBehaviour
             stage.Init();
 
         OnInit?.Invoke();
-
+        OnStageLoad += () => UIManager.Instance.InGameUI.DialogPanel.SetDialog(Stage.Dialogs);
         // Stage.gameObject.SetActive(true);
         StageNumber = stageNumber;
     }

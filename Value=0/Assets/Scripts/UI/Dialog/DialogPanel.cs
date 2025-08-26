@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using TMPro;
 using UnityEngine;
@@ -44,6 +45,7 @@ public class DialogPanel : Panel
 
     public void SetDialog(DialogueData[] dialogs)
     {
+        if (dialogs == null || dialogs.Length == 0) return;
         //Init fields
         player_LD.enabled = false;
         system_LD.enabled = false;
@@ -72,13 +74,13 @@ public class DialogPanel : Panel
 
     public void UpdateDialog()
     {
-        if (Input.anyKeyDown && !Input.GetKeyDown(KeyCode.Escape) && !UIManager.Instance.AnyPanelActivated)
+        if (Input.anyKeyDown && !Input.GetKeyDown(KeyCode.Escape))
         {
             if (_onTyping)
             {
                 //타이핑 효과 중지하고, 현재 대사 전체 출력
                 _onTyping = false;
-                // StopAllCoroutines();
+                StopAllCoroutines();
                 textDialogue.text = _dialogs[_dialogIdx++].dialogue;
             }
             else if (_dialogIdx < _dialogs.Length)
@@ -89,12 +91,6 @@ public class DialogPanel : Panel
             {
                 EndDialogue();
             }
-        }
-
-        if (_onTyping)
-        {
-            //Do Something
-            Typing(_dialogs[_dialogIdx].dialogue).MoveNext();
         }
     }
 
@@ -136,15 +132,14 @@ public class DialogPanel : Panel
         };
 
         textDialogue.text = string.Empty;
-        // StartCoroutine(Typing(_dialogs[_dialogIdx].dialogue));
+        StartCoroutine(Typing(_dialogs[_dialogIdx].dialogue));
 
         SoundManager.Instance.Play_UI_SFX(UI_SFX_ID.NextDialog);
-        _onTyping = true;
     }
 
     private void EndDialogue()
     {
-        // this.StopAllCoroutines();
+        this.StopAllCoroutines();
         _onTyping = false;
         player_LD.enabled = false;
         system_LD.enabled = false;
@@ -157,16 +152,16 @@ public class DialogPanel : Panel
 
     private IEnumerator Typing(string dialog)
     {
-        // _onTyping = true;
+        _onTyping = true;
 
-        for (int i = 0; i < dialog.Length; i++)
+        foreach (char t in dialog)
         {
-            textDialogue.text += dialog[i];
+            textDialogue.text += t;
             yield return new WaitForSeconds(typingSpeed);
         }
 
         _dialogIdx++;
-        // _onTyping = false;
+        _onTyping = false;
     }
 
     #endregion

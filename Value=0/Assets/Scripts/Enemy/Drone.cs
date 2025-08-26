@@ -45,6 +45,7 @@ public class Drone : MonoBehaviour
         if (_curSteps == 0)
         {
             _curSteps--;
+            return;
         }
         else if (_curSteps == -1)
         {
