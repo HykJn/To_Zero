@@ -2,10 +2,10 @@ public static class GLOBAL
 {
     #region Constants
 
-    public const int MAX_TILE_COUNT = 1024;
-    public const int MAX_WALL_COUNT = 512;
-    public const int MAX_FIREWALL_COUNT = 512;
-    public const int MAX_OBSERVER_COUNT = 256;
+    public const int MAX_OPER_TILE_COUNT = 256;
+    public const int MAX_SWAP_TILE_COUNT = 256;
+    public const int MAX_FIREWALL_COUNT = 256;
+    public const int MAX_OBSERVER_COUNT = 128;
 
     #endregion
 
@@ -15,7 +15,7 @@ public static class GLOBAL
     {
         None,
         Zero, Pixel,
-        Parser
+        Parser,
     }
 
     public enum Operation
@@ -28,7 +28,8 @@ public static class GLOBAL
     public enum ObjectID
     {
         None,
-        Tile, Wall, Firewall, Observer,
+        OperationTile, SwapTile,
+        Firewall, Observer,
     }
 
     public enum SceneID
@@ -44,6 +45,12 @@ public static class GLOBAL
         NextStage
     }
 
+    public enum AudioChannel
+    {
+        None,
+        BGM, SFX, UI,
+    }
+
     public enum BGM_ID
     {
         None,
@@ -52,14 +59,23 @@ public static class GLOBAL
         Ending,
     }
 
+    public enum LoopType
+    {
+        None, All, Single,
+    }
+
+    public enum TraverseType
+    {
+        None, Linear, Random,
+    }
+
     public enum SFX_ID
     {
         None,
-        PlayerMove, PlayerRespawn, PlayerHoldBox, PlayerReleaseBox, 
+        PlayerMove, PlayerRespawn, PlayerHoldBox, PlayerReleaseBox,
         ObserverDetect,
         ParserAttack, LaserExplosion,
         EnterPortal, OutPortal,
-        
     }
 
     public enum UI_SFX_ID
@@ -68,8 +84,7 @@ public static class GLOBAL
         StartButtonClick, ButtonClick,
         PanelOpen, PanelClose,
         DialogTyping,
-        
     }
-    
+
     #endregion
 }

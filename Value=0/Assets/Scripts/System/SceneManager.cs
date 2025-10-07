@@ -1,26 +1,25 @@
 using System;
+using System.Collections;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using static GLOBAL;
 
 public static class SceneManager
 {
-    public static void LoadScene(SceneID scene, Action onBeforeLoad = null, Action onAfterLoad = null)
+    public static IEnumerator LoadScene(SceneID sceneID, Action beforeLoad = null, Action afterLoad = null)
     {
-        AsyncOperation loading = UnityEngine.SceneManagement.SceneManager.LoadSceneAsync((int)scene);
-        loading!.allowSceneActivation = false;
+        AsyncOperation process = UnityEngine.SceneManagement.SceneManager.LoadSceneAsync((int)sceneID);
+        process!.allowSceneActivation = false;
 
-        onBeforeLoad?.Invoke();
-
-        while (loading.progress < 0.9f)
+        beforeLoad?.Invoke();
+        
+        while (process.progress < 0.9f)
         {
-            //TODO: Do Something
+            yield return null;
         }
 
-        float t = 0;
-        while (t <= 1) t += Time.deltaTime;
+        afterLoad?.Invoke();
 
-        onAfterLoad?.Invoke();
-
-        loading.allowSceneActivation = true;
+        process.allowSceneActivation = true;
     }
 }
