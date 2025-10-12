@@ -2,7 +2,7 @@ public static class GLOBAL
 {
     #region Constants
 
-    public const int MAX_OPER_TILE_COUNT = 256;
+    public const int MAX_TILE_COUNT = 256;
     public const int MAX_SWAP_TILE_COUNT = 256;
     public const int MAX_FIREWALL_COUNT = 256;
     public const int MAX_OBSERVER_COUNT = 128;
@@ -22,13 +22,14 @@ public static class GLOBAL
     {
         None,
         Add, Subtract, Multiply, Divide,
-        Equal, NotEqual, Greater, Less
+        Equal, NotEqual, Greater, Less,
+        Portal
     }
 
     public enum ObjectID
     {
         None,
-        OperationTile, SwapTile,
+        Tile,
         Firewall, Observer,
     }
 
