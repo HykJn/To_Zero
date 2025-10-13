@@ -21,6 +21,7 @@ public abstract class Tile : MonoBehaviour
     protected virtual void OnDisable()
     {
         GameManager.Instance.OnRestart -= OnRestart;
+        this.enabled = false;
     }
 
     #endregion

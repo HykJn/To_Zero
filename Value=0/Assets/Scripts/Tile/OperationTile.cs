@@ -10,6 +10,7 @@ public class OperationTile : Tile
 
     public Operation Operator { get; protected set; }
     public int Value { get; protected set; }
+    public string Text => text_Value.text;
 
     public bool AnyObjectAbove
     {
@@ -21,13 +22,13 @@ public class OperationTile : Tile
         }
     }
 
-    public bool Warning
+    public int WarningCount
     {
-        get => _warning;
+        get => _warningCount;
         set
         {
-            _warning = value;
-            spriteRenderer.sprite = value ? sprite_Warning : sprite_Default;
+            _warningCount = Mathf.Clamp(value, 0, int.MaxValue);
+            spriteRenderer.sprite = value > 0 ? sprite_Warning : sprite_Default;
         }
     }
 
@@ -43,22 +44,12 @@ public class OperationTile : Tile
     [SerializeField] private Sprite sprite_Default;
     [SerializeField] private Sprite sprite_Warning;
 
-    private bool _anyObjectAbove = false;
-    private bool _warning = false;
+    private bool _anyObjectAbove;
+    private int _warningCount;
 
     #endregion
 
     #region =====Unity Events=====
-
-    protected override void OnEnable()
-    {
-        return;
-    }
-
-    protected override void OnDisable()
-    {
-        this.enabled = false;
-    }
 
     #endregion
 
@@ -66,7 +57,7 @@ public class OperationTile : Tile
 
     public override void Init(string value)
     {
-        spriteRenderer.sprite = sprite_Default;
+        WarningCount = 0;
 
         if (value is "P" or "N" or "S")
         {
@@ -108,7 +99,7 @@ public class OperationTile : Tile
 
     protected override void OnRestart()
     {
-        //Nothing
+        WarningCount = 0;
     }
 
     #endregion

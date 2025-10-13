@@ -19,7 +19,7 @@ public class Stage : MonoBehaviour
     [SerializeField] private EnemyInfo[] enemyInfo;
 
     private Dictionary<Vector2, Tile> _tileMap;
-    private Dictionary<Vector2, Firewall> _firewalls;
+    private List<Firewall> _firewalls;
     private List<Enemy> _enemies;
     private Vector2 _startPos;
 
@@ -30,7 +30,6 @@ public class Stage : MonoBehaviour
     private void OnEnable()
     {
         LoadStage();
-        Init();
         GameManager.Instance.OnRestart += OnRestart;
     }
 
@@ -88,7 +87,7 @@ public class Stage : MonoBehaviour
                 if (!firewall) continue;
                 firewall.transform.position = pos;
                 firewall.Init(pos);
-                _firewalls.Add(pos, firewall);
+                _firewalls.Add(firewall);
             }
         }
 
@@ -108,8 +107,8 @@ public class Stage : MonoBehaviour
         foreach (Enemy enemy in _enemies)
             enemy.gameObject.SetActive(false);
 
-        foreach (KeyValuePair<Vector2, Firewall> firewall in _firewalls)
-            firewall.Value.gameObject.SetActive(false);
+        foreach (Firewall firewall in _firewalls)
+            firewall.gameObject.SetActive(false);
 
         foreach (KeyValuePair<Vector2, Tile> tile in _tileMap)
             tile.Value.gameObject.SetActive(false);
@@ -120,15 +119,13 @@ public class Stage : MonoBehaviour
         Player player = GameManager.Instance.Player;
         player.Moves = moveCount;
         player.Value = startValue;
+        player.transform.position = _startPos;
+
+        UIManager.Instance.MatrixUI.Moves = moveCount;
+        UIManager.Instance.MatrixUI.Value = startValue;
     }
 
-    private void OnRestart()
-    {
-        Player player = GameManager.Instance.Player;
-        player.Moves = moveCount;
-        player.Value = startValue;
-        player.transform.position = _startPos;
-    }
+    private void OnRestart() => Init();
 
     public T GetTile<T>(Vector2 pos) where T : Tile =>
         _tileMap.TryGetValue(pos, out Tile tile) ? tile as T : throw new ArgumentException();
@@ -137,10 +134,13 @@ public class Stage : MonoBehaviour
         _tileMap.TryGetValue(pos, out tile);
 
     public Firewall GetFirewall(Vector2 pos) =>
-        _firewalls.TryGetValue(pos, out Firewall firewall) ? firewall : throw new ArgumentException();
+        _firewalls.FirstOrDefault(firewall => firewall.Position == pos);
 
-    public bool TryGetFirewall(Vector2 pos, out Firewall firewall) =>
-        _firewalls.TryGetValue(pos, out firewall);
+    public bool TryGetFirewall(Vector2 pos, out Firewall firewall)
+    {
+        firewall = GetFirewall(pos);
+        return firewall;
+    }
 
     #endregion
 }
@@ -150,9 +150,9 @@ public struct EnemyInfo
 {
     public ObjectID enemyType;
     public Vector2 startPoint;
-    public Vector2? endPoint;
+    public Vector2 endPoint;
 
-    public EnemyInfo(ObjectID enemyType, Vector2 startPoint, Vector2? endPoint = null)
+    public EnemyInfo(ObjectID enemyType, Vector2 startPoint, Vector2 endPoint)
     {
         this.enemyType = enemyType;
         this.startPoint = startPoint;

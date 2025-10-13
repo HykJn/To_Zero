@@ -8,8 +8,9 @@ public abstract class Enemy : MonoBehaviour
 
     #region =====Fields=====
 
-    private Vector2 _startPoint;
-    private Vector2? _endPoint;
+    [Header("Configuration")]
+    [SerializeField] protected Vector2 startPoint;
+    [SerializeField] protected Vector2 endPoint;
 
     #endregion
 
@@ -19,10 +20,10 @@ public abstract class Enemy : MonoBehaviour
 
     #region =====Methods=====
 
-    public virtual void Init(Vector2 startPoint, Vector2? endPoint = null)
+    public virtual void Init(Vector2 startPoint, Vector2 endPoint)
     {
-        _startPoint = startPoint;
-        _endPoint = endPoint;
+        this.startPoint = startPoint;
+        this.endPoint = endPoint;
     }
 
     #endregion

@@ -18,12 +18,6 @@ public class SwapTile : OperationTile
 
     #region =====Unity Events=====
 
-    protected override void OnDisable()
-    {
-        base.OnDisable();
-        this.enabled = false;
-    }
-
     #endregion
 
     #region =====Methods=====

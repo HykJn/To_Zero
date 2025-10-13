@@ -1,4 +1,5 @@
 using System;
+using TMPro;
 using UnityEngine;
 
 public class Firewall : MonoBehaviour
@@ -27,6 +28,7 @@ public class Firewall : MonoBehaviour
     [SerializeField] private SpriteRenderer spriteRenderer;
     [SerializeField] private Sprite defaultSprite;
     [SerializeField] private Sprite highlightedSprite;
+    [SerializeField] private TMP_Text text_Value;
     [SerializeField] private GameObject[] previews; //0: Up, 1: Left, 2: Down, 3: Right
 
     private bool _isSelected;
@@ -59,14 +61,18 @@ public class Firewall : MonoBehaviour
         IsSelected = false;
         IsHeld = false;
         OnRelease();
-        GameManager.Instance.Stage.GetTile<OperationTile>(Position).AnyObjectAbove = true;
+
+        OperationTile tile = GameManager.Instance.Stage.GetTile<OperationTile>(Position);
+        tile.AnyObjectAbove = true;
+        text_Value.text = tile.Text;
     }
 
-    public void Move(Vector2 pos)
+    public bool Move(Vector2 dir)
     {
-        if (!CheckIsMovable(pos)) return;
+        Vector2 pos = (Vector2)this.transform.position + dir;
+        if (!CheckIsMovable(pos)) return false;
 
-        OperationTile below = GameManager.Instance.Stage.GetTile<OperationTile>(Position) as OperationTile;
+        OperationTile below = GameManager.Instance.Stage.GetTile<OperationTile>(Position);
         below!.AnyObjectAbove = false;
 
         this.transform.position = pos;
@@ -74,14 +80,19 @@ public class Firewall : MonoBehaviour
         IsSelected = false;
         OnRelease();
 
-        below = GameManager.Instance.Stage.GetTile<OperationTile>(Position) as OperationTile;
+        below = GameManager.Instance.Stage.GetTile<OperationTile>(Position);
         below!.AnyObjectAbove = true;
+        text_Value.text = below.Text;
+
+        return true;
     }
 
     private bool CheckIsMovable(Vector2 pos)
     {
         Stage stage = GameManager.Instance.Stage;
-        return !stage.TryGetFirewall(pos, out Firewall firewall) && stage.TryGetTile<Tile>(pos, out _);
+        return !stage.TryGetFirewall(pos, out Firewall firewall) && stage.TryGetTile<Tile>(pos, out _)
+                                                                 && (Vector2)GameManager.Instance.Player.transform
+                                                                     .position != pos;
     }
 
     public void OnHeld()
@@ -106,10 +117,15 @@ public class Firewall : MonoBehaviour
         IsSelected = false;
         OnRelease();
 
+        OperationTile tile = GameManager.Instance.Stage.GetTile<OperationTile>(Position);
+        tile.AnyObjectAbove = false;
+
         this.transform.position = _startPos;
         Position = _startPos;
 
-        GameManager.Instance.Stage.GetTile<OperationTile>(Position).AnyObjectAbove = true;
+        tile = GameManager.Instance.Stage.GetTile<OperationTile>(Position);
+        tile.AnyObjectAbove = true;
+        text_Value.text = tile.Text;
     }
 
     #endregion

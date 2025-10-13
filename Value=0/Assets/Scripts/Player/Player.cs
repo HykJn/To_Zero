@@ -10,8 +10,25 @@ public class Player : MonoBehaviour
 
     #region =====Properties=====
 
-    public int Moves { get; set; }
-    public int Value { get; set; }
+    public int Moves
+    {
+        get => _moves;
+        set
+        {
+            _moves = value;
+            UIManager.Instance.MatrixUI.Moves = _moves;
+        }
+    }
+
+    public int Value
+    {
+        get => _value;
+        set
+        {
+            _value = value;
+            UIManager.Instance.MatrixUI.Value = _value;
+        }
+    }
 
     #endregion
 
@@ -19,6 +36,8 @@ public class Player : MonoBehaviour
 
     private bool _isMovable = true;
     private Firewall _firewall;
+
+    private int _moves, _value;
 
     #endregion
 
@@ -48,7 +67,7 @@ public class Player : MonoBehaviour
         else if (Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow)) dir = Vector2.right;
         if (dir != Vector2.zero)
         {
-            if (_firewall && !_isMovable) MoveBox(dir);
+            if (_firewall && _firewall.IsHeld) MoveBox(dir);
             else if (_isMovable) Move((Vector2)this.transform.position + dir);
         }
 
@@ -82,11 +101,11 @@ public class Player : MonoBehaviour
         Stage stage = GameManager.Instance.Stage;
         if (!stage.TryGetFirewall(pos, out Firewall firewall))
             return stage.TryGetTile<Tile>(pos, out _);
-        
-        if(_firewall) _firewall.IsSelected = false;
+
+        if (_firewall) _firewall.IsSelected = false;
         _firewall = firewall;
         _firewall.IsSelected = true;
-        
+
         return false;
     }
 
@@ -95,10 +114,10 @@ public class Player : MonoBehaviour
         Vector2 next = pos - (Vector2)this.transform.position;
 
         this.transform.position = pos;
+        if (_firewall) _firewall.IsSelected = false;
 
-        if (GameManager.Instance.Stage.TryGetFirewall(next, out Firewall firewall))
+        if (GameManager.Instance.Stage.TryGetFirewall((Vector2)this.transform.position + next, out Firewall firewall))
         {
-            if (_firewall) _firewall.IsSelected = false;
             _firewall = firewall;
             _firewall.IsSelected = true;
         }
@@ -134,14 +153,19 @@ public class Player : MonoBehaviour
                 break;
             case Operation.Portal:
                 if (Value != 0) print("Die");
-                else GameManager.Instance.StageNumber++;
+                else
+                {
+                    GameManager.Instance.StageNumber++;
+                    yield break;
+                }
+
                 break;
         }
 
-        print(Value);
-
         Moves--;
         OnPlayerMove?.Invoke();
+        
+        if(GameManager.Instance.Stage.GetTile<OperationTile>(pos).WarningCount > 0) print("Die");
 
         yield return null;
     }
@@ -162,11 +186,10 @@ public class Player : MonoBehaviour
 
     private void MoveBox(Vector2 dir)
     {
-        if (!CheckIsMovable((Vector2)_firewall.transform.position + dir)) return;
-        _firewall.Move(dir);
+        if (!_firewall.Move(dir)) return;
 
         Moves--;
-        _firewall = null;
+        ReleaseFirewall();
         OnPlayerMove?.Invoke();
     }
 

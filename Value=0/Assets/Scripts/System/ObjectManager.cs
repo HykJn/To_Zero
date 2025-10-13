@@ -61,11 +61,11 @@ public class ObjectManager : MonoBehaviour
             _pool_Firewall[i].SetActive(false);
         }
         
-        // for (int i = 0; i < MAX_OBSERVER_COUNT; i++)
-        // {
-        //     _pool_Observer[i] = Instantiate(prefab_Observer);
-        //     _pool_Observer[i].SetActive(false);
-        // }
+        for (int i = 0; i < MAX_OBSERVER_COUNT; i++)
+        {
+            _pool_Observer[i] = Instantiate(prefab_Observer);
+            _pool_Observer[i].SetActive(false);
+        }
     }
 
     public GameObject GetObject(ObjectID objID, bool active = true)

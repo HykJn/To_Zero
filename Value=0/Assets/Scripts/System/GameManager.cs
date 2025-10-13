@@ -20,7 +20,9 @@ public class GameManager : MonoBehaviour
             stages[_stageNumber].gameObject.SetActive(false);
             _stageNumber = value - 1;
             stages[_stageNumber].gameObject.SetActive(true);
+            stages[_stageNumber].Init();
             OnStageLoaded?.Invoke();
+            UIManager.Instance.MatrixUI.Stage = _stageNumber + 1;
         }
     }
 
@@ -47,6 +49,7 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         Player = GameObject.FindWithTag("Player").GetComponent<Player>();
+        StageNumber = 1;
     }
 
     #endregion

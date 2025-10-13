@@ -4,8 +4,8 @@ public static class GLOBAL
 
     public const int MAX_TILE_COUNT = 256;
     public const int MAX_SWAP_TILE_COUNT = 256;
-    public const int MAX_FIREWALL_COUNT = 256;
-    public const int MAX_OBSERVER_COUNT = 128;
+    public const int MAX_FIREWALL_COUNT = 16;
+    public const int MAX_OBSERVER_COUNT = 16;
 
     #endregion
 
@@ -35,8 +35,8 @@ public static class GLOBAL
 
     public enum SceneID
     {
-        None,
         Title, Office, Matrix,
+        None,
     }
 
     public enum EventID

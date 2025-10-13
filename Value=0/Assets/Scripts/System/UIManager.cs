@@ -9,18 +9,20 @@ public class UIManager : MonoBehaviour
 
     public static UIManager Instance { get; private set; }
 
-    public TitleUI TitleUI => titleUI;
-    public OfficeUI OfficeUI => officeUI;
-    public MatrixUI MatrixUI => matrixUI;
+    public TitleUI TitleUI { get; set; }
+    public OfficeUI OfficeUI { get; set; }
+    public MatrixUI MatrixUI { get; set; }
+
+    public OptionUI OptionPanel => optionPanel;
+    public PauseUI PausePanel => pausePanel;
 
     #endregion
 
     #region =====Fields=====
 
-    [SerializeField] private TitleUI titleUI;
-    [SerializeField] private OfficeUI officeUI;
-    [SerializeField] private MatrixUI matrixUI;
-
+    [Header("Global Canvas")]
+    [SerializeField] private OptionUI optionPanel;
+    [SerializeField] private PauseUI pausePanel;
 
     private Stack<IPanel> _openPanels = new();
 
@@ -36,6 +38,15 @@ public class UIManager : MonoBehaviour
             DontDestroyOnLoad(this.gameObject);
         }
         else Destroy(this.gameObject);
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            if (_openPanels.Count > 0) ClosePanel();
+            else PausePanel.Open();
+        }
     }
 
     #endregion
