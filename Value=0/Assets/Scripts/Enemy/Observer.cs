@@ -9,6 +9,9 @@ public class Observer : Enemy
 
     #region =====Fields=====
 
+    [Header("Components")]
+    [SerializeField] private Animator animator;
+    
     private bool _waiting;
     private Vector2 _destination;
 
@@ -54,6 +57,10 @@ public class Observer : Enemy
             SwitchWarning(false);
             _destination = _destination == startPoint ? endPoint : startPoint;
             _waiting = true;
+            
+            Vector2 dir = (_destination - (Vector2)this.transform.position).normalized;
+            animator.SetFloat(Animator.StringToHash("X"), dir.x);
+            animator.SetFloat(Animator.StringToHash("Y"), dir.y);
         }
 
         SwitchWarning(true);
@@ -96,10 +103,12 @@ public class Observer : Enemy
 
     private void OnRestart()
     {
-        // SwitchWarning(false);
         this.transform.position = startPoint;
         _destination = endPoint;
         _waiting = true;
+        Vector2 dir = (endPoint - startPoint).normalized;
+        animator.SetFloat(Animator.StringToHash("X"), dir.x);
+        animator.SetFloat(Animator.StringToHash("Y"), dir.y);
         SwitchWarning(true);
     }
 

@@ -1,7 +1,9 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
-using JetBrains.Annotations;
 using UnityEngine;
+using UnityEngine.UI;
+using static GLOBAL;
 
 public class UIManager : MonoBehaviour
 {
@@ -20,9 +22,11 @@ public class UIManager : MonoBehaviour
 
     #region =====Fields=====
 
-    [Header("Global Canvas")]
+    [Header("Global UI")]
     [SerializeField] private OptionUI optionPanel;
     [SerializeField] private PauseUI pausePanel;
+    [SerializeField] private GameObject loadingPanel;
+    [SerializeField] private Image loadingBar; 
 
     private Stack<IPanel> _openPanels = new();
 
@@ -65,6 +69,28 @@ public class UIManager : MonoBehaviour
     public void CloseAllPanels()
     {
         while (_openPanels.Count > 0) _openPanels.Pop().Close();
+    }
+    
+    public IEnumerator LoadScene(SceneID sceneID, Action beforeLoad = null, Action afterLoad = null)
+    {
+        AsyncOperation process = UnityEngine.SceneManagement.SceneManager.LoadSceneAsync((int)sceneID);
+        process!.allowSceneActivation = false;
+
+        beforeLoad?.Invoke();
+        loadingPanel.SetActive(true);
+        
+        while (process.progress < 0.9f)
+        {
+            loadingBar.fillAmount = process.progress;
+            yield return new WaitForEndOfFrame();
+        }
+        loadingBar.fillAmount = 1f;
+        yield return new WaitForSeconds(0.25f);
+        
+        afterLoad?.Invoke();
+        loadingPanel.SetActive(false);
+        
+        process.allowSceneActivation = true;
     }
 
     #endregion

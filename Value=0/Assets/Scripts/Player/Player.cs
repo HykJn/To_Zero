@@ -34,6 +34,9 @@ public class Player : MonoBehaviour
 
     #region =====Fields=====
 
+    [Header("Components")]
+    [SerializeField] private Animator animator;
+
     private bool _isMovable = true;
     private Firewall _firewall;
 
@@ -60,27 +63,36 @@ public class Player : MonoBehaviour
     private void InputHandler()
     {
         //Move
-        Vector2 dir = Vector2.zero;
-        if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow)) dir = Vector2.up;
-        else if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow)) dir = Vector2.left;
-        else if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow)) dir = Vector2.down;
-        else if (Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow)) dir = Vector2.right;
-        if (dir != Vector2.zero)
+        if (_isMovable)
         {
-            if (_firewall && _firewall.IsHeld) MoveBox(dir);
-            else if (_isMovable) Move((Vector2)this.transform.position + dir);
-        }
+            Vector2 dir = Vector2.zero;
+            if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow)) dir = Vector2.up;
+            else if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow)) dir = Vector2.left;
+            else if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow)) dir = Vector2.down;
+            else if (Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow)) dir = Vector2.right;
+            if (dir != Vector2.zero)
+            {
+                if (_firewall && _firewall.IsHeld) MoveBox(dir);
+                else Move((Vector2)this.transform.position + dir);
+            }
 
-        //Hold & Release firewall
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            if (!_firewall) return;
-            if (!_firewall.IsHeld) HoldFirewall();
-            else ReleaseFirewall();
+            //Hold & Release firewall
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                if (!_firewall) return;
+                if (!_firewall.IsHeld) HoldFirewall();
+                else ReleaseFirewall();
+            }
         }
 
         //Restart
         if (Input.GetKeyDown(KeyCode.R)) GameManager.Instance.Restart();
+    }
+
+    public void Animation_SetMovable(int value)
+    {
+        if (value == 1) _isMovable = true;
+        else _isMovable = false;
     }
 
     private void Move(Vector2 pos)
@@ -89,7 +101,7 @@ public class Player : MonoBehaviour
 
         if (Moves <= 0)
         {
-            print("Die");
+            Die();
             return;
         }
 
@@ -140,19 +152,19 @@ public class Player : MonoBehaviour
                 Value /= tile.Value;
                 break;
             case Operation.Equal:
-                if (Value != tile.Value) print("Die");
+                if (Value != tile.Value) Die();
                 break;
             case Operation.NotEqual:
-                if (Value == tile.Value) print("Die");
+                if (Value == tile.Value) Die();
                 break;
             case Operation.Greater:
-                if (Value <= tile.Value) print("Die");
+                if (Value <= tile.Value) Die();
                 break;
             case Operation.Less:
-                if (Value >= tile.Value) print("Die");
+                if (Value >= tile.Value) Die();
                 break;
             case Operation.Portal:
-                if (Value != 0) print("Die");
+                if (Value != 0) Die();
                 else
                 {
                     GameManager.Instance.StageNumber++;
@@ -164,8 +176,8 @@ public class Player : MonoBehaviour
 
         Moves--;
         OnPlayerMove?.Invoke();
-        
-        if(GameManager.Instance.Stage.GetTile<OperationTile>(pos).WarningCount > 0) print("Die");
+
+        if (GameManager.Instance.Stage.GetTile<OperationTile>(pos).WarningCount > 0) Die();
 
         yield return null;
     }
@@ -197,6 +209,11 @@ public class Player : MonoBehaviour
     {
         _firewall = null;
         _isMovable = true;
+    }
+
+    private void Die()
+    {
+        animator.SetTrigger(Animator.StringToHash("Die"));
     }
 
     #endregion

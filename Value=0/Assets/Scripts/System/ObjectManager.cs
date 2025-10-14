@@ -13,12 +13,13 @@ public class ObjectManager : MonoBehaviour
     #region =====Fields=====
 
     [Header("Prefabs")]
-    [SerializeField] private GameObject prefab_Tile;
+    [SerializeField] private GameObject prefab_OperationTile;
+    [SerializeField] private GameObject prefab_SwapTile;
     [SerializeField] private GameObject prefab_Firewall;
     [SerializeField] private GameObject prefab_Observer;
 
     //Pools
-    private GameObject[] _pool_Tile, _pool_Firewall, _pool_Observer;
+    private GameObject[] _pool_OperationTile, _pool_SwapTile, _pool_Firewall, _pool_Observer;
 
     #endregion
 
@@ -26,33 +27,32 @@ public class ObjectManager : MonoBehaviour
 
     private void Awake()
     {
-        if (!Instance)
-        {
-            Instance = this;
-            DontDestroyOnLoad(this.gameObject);
-        }
-        else
-        {
-            Destroy(this.gameObject);
-        }
+        Instance = this;
 
-        _pool_Tile = new GameObject[MAX_TILE_COUNT];
+        _pool_OperationTile = new GameObject[MAX_OPER_TILE_COUNT];
+        _pool_SwapTile = new GameObject[MAX_SWAP_TILE_COUNT];
         _pool_Firewall = new GameObject[MAX_FIREWALL_COUNT];
         _pool_Observer = new GameObject[MAX_OBSERVER_COUNT];
-        
+
         InitPool();
     }
-    
+
     #endregion
 
     #region =====Methods=====
 
     private void InitPool()
     {
-        for (int i = 0; i < MAX_TILE_COUNT; i++)
+        for (int i = 0; i < MAX_OPER_TILE_COUNT; i++)
         {
-            _pool_Tile[i] = Instantiate(prefab_Tile);
-            _pool_Tile[i].SetActive(false);
+            _pool_OperationTile[i] = Instantiate(prefab_OperationTile);
+            _pool_OperationTile[i].SetActive(false);
+        }
+
+        for (int i = 0; i < MAX_SWAP_TILE_COUNT; i++)
+        {
+            _pool_SwapTile[i] = Instantiate(prefab_SwapTile);
+            _pool_SwapTile[i].SetActive(false);
         }
 
         for (int i = 0; i < MAX_FIREWALL_COUNT; i++)
@@ -60,7 +60,7 @@ public class ObjectManager : MonoBehaviour
             _pool_Firewall[i] = Instantiate(prefab_Firewall);
             _pool_Firewall[i].SetActive(false);
         }
-        
+
         for (int i = 0; i < MAX_OBSERVER_COUNT; i++)
         {
             _pool_Observer[i] = Instantiate(prefab_Observer);
@@ -72,7 +72,8 @@ public class ObjectManager : MonoBehaviour
     {
         GameObject[] pool = objID switch
         {
-            ObjectID.Tile => _pool_Tile,
+            ObjectID.OperationTile => _pool_OperationTile,
+            ObjectID.SwapTile => _pool_SwapTile,
             ObjectID.Firewall => _pool_Firewall,
             ObjectID.Observer => _pool_Observer,
             _ => null

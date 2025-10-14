@@ -46,7 +46,8 @@ public class PauseUI : MonoBehaviour, IPanel
 
     public void OnClick_Title()
     {
-        StartCoroutine(SceneManager.LoadScene(SceneID.Title));
+        StartCoroutine(UIManager.Instance.LoadScene(SceneID.Title));
+        Close();
     }
 
     public void OnClick_Exit()

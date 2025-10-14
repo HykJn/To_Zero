@@ -76,9 +76,8 @@ public class Stage : MonoBehaviour
                     part = part[1..];
                 }
 
-                Type tileType = part.Contains(",") ? typeof(SwapTile) : typeof(OperationTile);
-                Tile tile = ObjectManager.Instance.GetObject(ObjectID.Tile).GetComponent(tileType) as Tile;
-                tile!.enabled = true;
+                Tile tile = ObjectManager.Instance.GetObject(part.Contains(',') ? ObjectID.SwapTile : ObjectID.OperationTile)
+                    .GetComponent<Tile>();
                 tile!.transform.position = pos;
                 tile!.Init(part);
 
