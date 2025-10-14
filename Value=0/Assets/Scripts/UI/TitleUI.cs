@@ -19,7 +19,7 @@ public class TitleUI : MonoBehaviour
 
     public void OnClick_Start()
     {
-        StartCoroutine(UIManager.Instance.LoadScene(SceneID.Matrix));
+        UIManager.Instance.LoadScene(SceneID.Office);
     }
 
     public void OnClick_CreativeMode()

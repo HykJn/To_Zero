@@ -17,6 +17,7 @@ public class UIManager : MonoBehaviour
 
     public OptionUI OptionPanel => optionPanel;
     public PauseUI PausePanel => pausePanel;
+    public bool AnyPanelOpen => _openPanels.Count > 0;
 
     #endregion
 
@@ -26,7 +27,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] private OptionUI optionPanel;
     [SerializeField] private PauseUI pausePanel;
     [SerializeField] private GameObject loadingPanel;
-    [SerializeField] private Image loadingBar; 
+    [SerializeField] private Image loadingBar;
 
     private Stack<IPanel> _openPanels = new();
 
@@ -49,7 +50,7 @@ public class UIManager : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             if (_openPanels.Count > 0) ClosePanel();
-            else PausePanel.Open();
+            else if(SequanceManager.SceneID != SceneID.Title) PausePanel.Open();
         }
     }
 
@@ -70,27 +71,33 @@ public class UIManager : MonoBehaviour
     {
         while (_openPanels.Count > 0) _openPanels.Pop().Close();
     }
-    
-    public IEnumerator LoadScene(SceneID sceneID, Action beforeLoad = null, Action afterLoad = null)
+
+    public void LoadScene(SceneID sceneID, Action beforeLoad = null, Action afterLoad = null) =>
+        StartCoroutine(Crtn_LoadScene(sceneID, beforeLoad, afterLoad));
+
+    private IEnumerator Crtn_LoadScene(SceneID sceneID, Action beforeLoad = null, Action afterLoad = null)
     {
         AsyncOperation process = UnityEngine.SceneManagement.SceneManager.LoadSceneAsync((int)sceneID);
         process!.allowSceneActivation = false;
 
         beforeLoad?.Invoke();
         loadingPanel.SetActive(true);
-        
+
         while (process.progress < 0.9f)
         {
             loadingBar.fillAmount = process.progress;
             yield return new WaitForEndOfFrame();
         }
+
         loadingBar.fillAmount = 1f;
         yield return new WaitForSeconds(0.25f);
-        
+
         afterLoad?.Invoke();
         loadingPanel.SetActive(false);
-        
+
         process.allowSceneActivation = true;
+
+        SequanceManager.SceneID = sceneID;
     }
 
     #endregion

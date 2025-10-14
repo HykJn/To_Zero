@@ -74,9 +74,11 @@ public class Stage : MonoBehaviour
                 {
                     firewall = ObjectManager.Instance.GetObject(ObjectID.Firewall).GetComponent<Firewall>();
                     part = part[1..];
+                    firewall.gameObject.SetActive(false);
                 }
 
-                Tile tile = ObjectManager.Instance.GetObject(part.Contains(',') ? ObjectID.SwapTile : ObjectID.OperationTile)
+                Tile tile = ObjectManager.Instance
+                    .GetObject(part.Contains(',') ? ObjectID.SwapTile : ObjectID.OperationTile)
                     .GetComponent<Tile>();
                 tile!.transform.position = pos;
                 tile!.Init(part);
@@ -85,6 +87,7 @@ public class Stage : MonoBehaviour
 
                 if (!firewall) continue;
                 firewall.transform.position = pos;
+                firewall.gameObject.SetActive(true);
                 firewall.Init(pos);
                 _firewalls.Add(firewall);
             }
@@ -122,6 +125,8 @@ public class Stage : MonoBehaviour
 
         UIManager.Instance.MatrixUI.Moves = moveCount;
         UIManager.Instance.MatrixUI.Value = startValue;
+
+        GetTile<OperationTile>(_startPos).AnyObjectAbove = true;
     }
 
     private void OnRestart() => Init();

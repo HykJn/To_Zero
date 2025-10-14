@@ -1,9 +1,12 @@
 using System;
 using UnityEngine;
+using static GLOBAL;
 
-public class SequanceManager : MonoBehaviour
+public static class SequanceManager
 {
     #region =====Properties=====
+
+    public static SceneID SceneID { get; set; } = SceneID.Title;
 
     #endregion
 
@@ -12,7 +15,7 @@ public class SequanceManager : MonoBehaviour
     #endregion
 
     #region =====Unity Events=====
-    
+
     #endregion
 
     #region =====Methods=====

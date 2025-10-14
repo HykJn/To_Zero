@@ -19,6 +19,11 @@ public class OperationTile : Tile
         {
             _anyObjectAbove = value;
             text_Value.enabled = !value;
+            animator.enabled = !value;
+            if (animator.enabled)
+            {
+                animator.Play(Animator.StringToHash("Float"), 0, Random.Range(0, 1f));
+            }
         }
     }
 
@@ -28,7 +33,8 @@ public class OperationTile : Tile
         set
         {
             _warningCount = Mathf.Clamp(value, 0, int.MaxValue);
-            spriteRenderer.sprite = value > 0 ? sprite_Warning : sprite_Default;
+            if (value > 0) spriteRenderer.sprite = sprite_Warning;
+            else spriteRenderer.sprite = Operator == Operation.Portal ? sprite_Portal : sprite_Default;
         }
     }
 
@@ -37,12 +43,14 @@ public class OperationTile : Tile
     #region =====Fields=====
 
     [Header("References")]
+    [SerializeField] private Animator animator;
     [SerializeField] private SpriteRenderer spriteRenderer;
     [SerializeField] protected TMP_Text text_Value;
 
     [Header("Sprites")]
     [SerializeField] private Sprite sprite_Default;
     [SerializeField] private Sprite sprite_Warning;
+    [SerializeField] private Sprite sprite_Portal;
 
     private bool _anyObjectAbove;
     private int _warningCount;
@@ -57,11 +65,12 @@ public class OperationTile : Tile
 
     public override void Init(string value)
     {
-        WarningCount = 0;
+        OnRestart();
 
         if (value is "P" or "N" or "S")
         {
             Operator = value is "P" ? Operation.Portal : Operation.None;
+            spriteRenderer.sprite = value is "P" ? sprite_Portal : sprite_Default;
             Value = 0;
             text_Value.text = string.Empty;
             return;
@@ -100,6 +109,7 @@ public class OperationTile : Tile
     protected override void OnRestart()
     {
         WarningCount = 0;
+        AnyObjectAbove = false;
     }
 
     #endregion

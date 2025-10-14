@@ -62,27 +62,25 @@ public class Player : MonoBehaviour
 
     private void InputHandler()
     {
+        if (UIManager.Instance.AnyPanelOpen) return;
         //Move
-        if (_isMovable)
+        Vector2 dir = Vector2.zero;
+        if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow)) dir = Vector2.up;
+        else if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow)) dir = Vector2.left;
+        else if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow)) dir = Vector2.down;
+        else if (Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow)) dir = Vector2.right;
+        if (dir != Vector2.zero)
         {
-            Vector2 dir = Vector2.zero;
-            if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow)) dir = Vector2.up;
-            else if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow)) dir = Vector2.left;
-            else if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow)) dir = Vector2.down;
-            else if (Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow)) dir = Vector2.right;
-            if (dir != Vector2.zero)
-            {
-                if (_firewall && _firewall.IsHeld) MoveBox(dir);
-                else Move((Vector2)this.transform.position + dir);
-            }
+            if (_firewall && _firewall.IsHeld) MoveBox(dir);
+            else if (_isMovable) Move((Vector2)this.transform.position + dir);
+        }
 
-            //Hold & Release firewall
-            if (Input.GetKeyDown(KeyCode.Space))
-            {
-                if (!_firewall) return;
-                if (!_firewall.IsHeld) HoldFirewall();
-                else ReleaseFirewall();
-            }
+        //Hold & Release firewall
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            if (!_firewall) return;
+            if (!_firewall.IsHeld) HoldFirewall();
+            else ReleaseFirewall();
         }
 
         //Restart
@@ -123,10 +121,12 @@ public class Player : MonoBehaviour
 
     private IEnumerator Crtn_Move(Vector2 pos)
     {
+        GameManager.Instance.Stage.GetTile<OperationTile>(this.transform.position).AnyObjectAbove = false;
         Vector2 next = pos - (Vector2)this.transform.position;
 
         this.transform.position = pos;
         if (_firewall) _firewall.IsSelected = false;
+        GameManager.Instance.Stage.GetTile<OperationTile>(this.transform.position).AnyObjectAbove = true;
 
         if (GameManager.Instance.Stage.TryGetFirewall((Vector2)this.transform.position + next, out Firewall firewall))
         {

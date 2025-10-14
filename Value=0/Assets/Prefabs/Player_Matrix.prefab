@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 5254931711087623545}
   - component: {fileID: 889642246088101683}
   m_Layer: 0
-  m_Name: Player
+  m_Name: Player_Matrix
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -46,6 +46,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b3db7dbe36bf50f49805cc92b38a29d1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  animator: {fileID: 889642246088101683}
 --- !u!212 &5254931711087623545
 SpriteRenderer:
   m_ObjectHideFlags: 0
