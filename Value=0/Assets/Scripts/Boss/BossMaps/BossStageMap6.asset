@@ -15,11 +15,11 @@ MonoBehaviour:
   phase: 1
   stageMap: 'N N /2 +4 N
 
-    *3 N -1 N N
+    *2 N -1 N N
 
     N S +5 N -2
 
     /2 N +3 -1 N'
-  startValue: 4
+  startValue: 0
   moveCount: 5
-  bossTargetValue: 8
+  bossTargetValue: 4

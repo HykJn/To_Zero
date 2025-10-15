@@ -20,6 +20,6 @@ MonoBehaviour:
     -4 N N +4 N
 
     N +1 +3 -5 N'
-  startValue: -10
-  moveCount: 8
+  startValue: -4
+  moveCount: 6
   bossTargetValue: 3

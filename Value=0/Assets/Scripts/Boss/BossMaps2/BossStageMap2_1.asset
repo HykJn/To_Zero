@@ -23,5 +23,5 @@ MonoBehaviour:
 
 '
   startValue: -1
-  moveCount: 21
+  moveCount: 4
   bossTargetValue: -3

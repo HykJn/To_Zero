@@ -13,13 +13,13 @@ MonoBehaviour:
   m_Name: BossStageMap1
   m_EditorClassIdentifier: 
   phase: 1
-  stageMap: 'N -5 +3 N *2
+  stageMap: 'N -1 +3 N *2
 
     N N -3 N +4
 
     -1 +2 N -2 N
 
-    -6 N -4 S N'
-  startValue: 10
-  moveCount: 8
-  bossTargetValue: 0
+    -2 N -4 S N'
+  startValue: 4
+  moveCount: 7
+  bossTargetValue: -2

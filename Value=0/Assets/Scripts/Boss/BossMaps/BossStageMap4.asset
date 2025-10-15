@@ -17,9 +17,9 @@ MonoBehaviour:
 
     N -4 N +4 N
 
-    /2 *3 -5 /2 +5
+    /2 *2 -5 /2 +5
 
-    N N +6 -1 N'
+    N N +3 -1 N'
   startValue: 1
-  moveCount: 6
+  moveCount: 7
   bossTargetValue: 2

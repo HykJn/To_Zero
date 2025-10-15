@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: BossStageMap10
   m_EditorClassIdentifier: 
   phase: 1
-  stageMap: "N N -1 N /4\nN +7 N N S\n*3 N N +2 N \n/6 N -5 N N"
-  startValue: 8
-  moveCount: 10
-  bossTargetValue: 3
+  stageMap: "N N -1 N /2\nN +2 N N S\n*3 N N +2 N \n/2 N -5 N N"
+  startValue: 1
+  moveCount: 7
+  bossTargetValue: -2
