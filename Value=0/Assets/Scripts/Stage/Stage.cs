@@ -119,6 +119,7 @@ public class Stage : MonoBehaviour
     public void Init()
     {
         Player player = GameManager.Instance.Player;
+        player.IsMovable = true;
         player.Moves = moveCount;
         player.Value = startValue;
         player.transform.position = _startPos;

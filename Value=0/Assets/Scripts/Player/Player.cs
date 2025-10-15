@@ -30,14 +30,18 @@ public class Player : MonoBehaviour
         }
     }
 
+    public bool IsMovable { get; set; } = true;
+
     #endregion
 
     #region =====Fields=====
 
     [Header("Components")]
+    [SerializeField] private SpriteRenderer spriteRenderer;
     [SerializeField] private Animator animator;
 
-    private bool _isMovable = true;
+    [SerializeField] private AnimationCurve easeOut;
+
     private Firewall _firewall;
 
     private int _moves, _value;
@@ -72,7 +76,12 @@ public class Player : MonoBehaviour
         if (dir != Vector2.zero)
         {
             if (_firewall && _firewall.IsHeld) MoveBox(dir);
-            else if (_isMovable) Move((Vector2)this.transform.position + dir);
+            else if (IsMovable)
+            {
+                Move((Vector2)this.transform.position + dir);
+                if (dir == Vector2.right) spriteRenderer.flipX = true;
+                else if (dir == Vector2.left) spriteRenderer.flipX = false;
+            }
         }
 
         //Hold & Release firewall
@@ -84,13 +93,13 @@ public class Player : MonoBehaviour
         }
 
         //Restart
-        if (Input.GetKeyDown(KeyCode.R)) GameManager.Instance.Restart();
+        if (Input.GetKeyDown(KeyCode.R) && IsMovable) GameManager.Instance.Restart();
     }
 
     public void Animation_SetMovable(int value)
     {
-        if (value == 1) _isMovable = true;
-        else _isMovable = false;
+        if (value == 1) IsMovable = true;
+        else IsMovable = false;
     }
 
     private void Move(Vector2 pos)
@@ -100,9 +109,11 @@ public class Player : MonoBehaviour
         if (Moves <= 0)
         {
             Die();
+            SoundManager.Instance.PlayOneShot(SFX_ID.PlayerRespawn);
             return;
         }
 
+        IsMovable = false;
         StartCoroutine(Crtn_Move(pos));
     }
 
@@ -124,8 +135,22 @@ public class Player : MonoBehaviour
         GameManager.Instance.Stage.GetTile<OperationTile>(this.transform.position).AnyObjectAbove = false;
         Vector2 next = pos - (Vector2)this.transform.position;
 
-        this.transform.position = pos;
+        Vector2 startPos = this.transform.position;
+        float t = 0f;
+        animator.SetTrigger(Animator.StringToHash("Move"));
+
         if (_firewall) _firewall.IsSelected = false;
+        _firewall = null;
+
+        SoundManager.Instance.PlayOneShot(SFX_ID.PlayerMove);
+        while ((Vector2)this.transform.position != pos)
+        {
+            this.transform.position = Vector2.Lerp(startPos, pos, Mathf.Clamp01(easeOut.Evaluate(t / 0.05f)));
+            t += Time.deltaTime;
+            yield return new WaitForEndOfFrame();
+        }
+
+        this.transform.position = pos;
         GameManager.Instance.Stage.GetTile<OperationTile>(this.transform.position).AnyObjectAbove = true;
 
         if (GameManager.Instance.Stage.TryGetFirewall((Vector2)this.transform.position + next, out Firewall firewall))
@@ -152,48 +177,81 @@ public class Player : MonoBehaviour
                 Value /= tile.Value;
                 break;
             case Operation.Equal:
-                if (Value != tile.Value) Die();
-                break;
-            case Operation.NotEqual:
-                if (Value == tile.Value) Die();
-                break;
-            case Operation.Greater:
-                if (Value <= tile.Value) Die();
-                break;
-            case Operation.Less:
-                if (Value >= tile.Value) Die();
-                break;
-            case Operation.Portal:
-                if (Value != 0) Die();
-                else
+                if (Value != tile.Value)
                 {
-                    GameManager.Instance.StageNumber++;
+                    Die();
+                    SoundManager.Instance.PlayOneShot(SFX_ID.PlayerRespawn);
                     yield break;
                 }
 
                 break;
+            case Operation.NotEqual:
+                if (Value == tile.Value)
+                {
+                    Die();
+                    SoundManager.Instance.PlayOneShot(SFX_ID.PlayerRespawn);
+                    yield break;
+                }
+
+                break;
+            case Operation.Greater:
+                if (Value <= tile.Value)
+                {
+                    Die();
+                    SoundManager.Instance.PlayOneShot(SFX_ID.PlayerRespawn);
+                    yield break;
+                }
+
+                break;
+            case Operation.Less:
+                if (Value >= tile.Value)
+                {
+                    Die();
+                    SoundManager.Instance.PlayOneShot(SFX_ID.PlayerRespawn);
+                    yield break;
+                }
+
+                break;
+            case Operation.Portal:
+                if (Value != 0)
+                {
+                    Die();
+                    SoundManager.Instance.PlayOneShot(SFX_ID.PlayerRespawn);
+                }
+                else GameManager.Instance.StageNumber++;
+
+                yield break;
         }
 
         Moves--;
         OnPlayerMove?.Invoke();
 
-        if (GameManager.Instance.Stage.GetTile<OperationTile>(pos).WarningCount > 0) Die();
+        if (GameManager.Instance.Stage.GetTile<OperationTile>(pos).WarningCount > 0)
+        {
+            Die();
+            SoundManager.Instance.PlayOneShot(SFX_ID.ObserverDetect);
+            yield break;
+        }
 
-        yield return null;
+        IsMovable = true;
     }
 
     private void HoldFirewall()
     {
         if (!_firewall) return;
+        SoundManager.Instance.Play(SFX_ID.PlayerHoldBox);
+        animator.SetTrigger(Animator.StringToHash("Hold"));
         _firewall.OnHeld();
-        _isMovable = false;
+        IsMovable = false;
     }
 
     private void ReleaseFirewall()
     {
         if (!_firewall) return;
+        SoundManager.Instance.Play(SFX_ID.PlayerReleaseBox);
+        animator.SetTrigger(Animator.StringToHash("Release"));
         _firewall.OnRelease();
-        _isMovable = true;
+        IsMovable = true;
     }
 
     private void MoveBox(Vector2 dir)
@@ -202,17 +260,19 @@ public class Player : MonoBehaviour
 
         Moves--;
         ReleaseFirewall();
+        _firewall = null;
         OnPlayerMove?.Invoke();
     }
 
     private void OnRestart()
     {
         _firewall = null;
-        _isMovable = true;
+        IsMovable = true;
     }
 
     private void Die()
     {
+        IsMovable = false;
         animator.SetTrigger(Animator.StringToHash("Die"));
     }
 

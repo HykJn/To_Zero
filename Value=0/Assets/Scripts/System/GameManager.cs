@@ -49,7 +49,7 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         Player = GameObject.FindWithTag("Player").GetComponent<Player>();
-        StageNumber = 1;
+        StageNumber = 15;
     }
 
     #endregion

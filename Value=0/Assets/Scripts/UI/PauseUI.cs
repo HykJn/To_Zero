@@ -36,22 +36,26 @@ public class PauseUI : MonoBehaviour, IPanel
 
     public void OnClick_Resume()
     {
+        SoundManager.Instance.Play(UI_SFX_ID.ButtonClick);
         Close();
     }
 
     public void OnClick_Options()
     {
+        SoundManager.Instance.Play(UI_SFX_ID.ButtonClick);
         UIManager.Instance.OptionPanel.Open();
     }
 
     public void OnClick_Title()
     {
+        SoundManager.Instance.Play(UI_SFX_ID.ButtonClick);
         UIManager.Instance.LoadScene(SceneID.Title);
         Close();
     }
 
     public void OnClick_Exit()
     {
+        SoundManager.Instance.Play(UI_SFX_ID.ButtonClick);
         //TODO: Saving before exit
 #if UNITY_EDITOR
         UnityEditor.EditorApplication.isPlaying = false;

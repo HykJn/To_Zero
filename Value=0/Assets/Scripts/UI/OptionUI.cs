@@ -1,6 +1,7 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using static GLOBAL;
 
 public class OptionUI : MonoBehaviour, IPanel
 {
@@ -70,12 +71,14 @@ public class OptionUI : MonoBehaviour, IPanel
 
     public void OnClick_WindowMode()
     {
+        SoundManager.Instance.Play(UI_SFX_ID.ButtonClick);   
         Screen.fullScreen = !Screen.fullScreen;
         text_WindowMode.text = Screen.fullScreen ? "전체 화면" : "창 모드";
     }
 
     public void OnClick_Resolution(int direction)
     {
+        SoundManager.Instance.Play(UI_SFX_ID.ButtonClick);
         resIdx = Mathf.Clamp(resIdx + direction, 0, Screen.resolutions.Length - 1);
         int width = Screen.resolutions[resIdx].width;
         int height = Screen.resolutions[resIdx].height;
@@ -91,18 +94,21 @@ public class OptionUI : MonoBehaviour, IPanel
 
     public void OnValueChange_BGM(float value)
     {
+        SoundManager.Instance.Play(UI_SFX_ID.ButtonClick);
         SoundManager.Instance.BGMVolume = value;
         text_BGM.text = ((int)(value * 100)) + "%";
     }
 
     public void OnValueChange_SFX(float value)
     {
+        SoundManager.Instance.Play(UI_SFX_ID.ButtonClick);
         SoundManager.Instance.SFXVolume = value;
         text_SFX.text = ((int)(value * 100)) + "%";
     }
 
     public void OnValueChange_UI(float value)
     {
+        SoundManager.Instance.Play(UI_SFX_ID.ButtonClick);
         SoundManager.Instance.UIVolume = value;
         text_UI.text = ((int)(value * 100)) + "%";
     }

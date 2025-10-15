@@ -13,14 +13,14 @@ public static class GLOBAL
 
     public enum Character
     {
-        None,
+        None = -1,
         Zero, Pixel,
         Parser,
     }
 
     public enum Operation
     {
-        None,
+        None = -1,
         Add, Subtract, Multiply, Divide,
         Equal, NotEqual, Greater, Less,
         Portal
@@ -28,36 +28,34 @@ public static class GLOBAL
 
     public enum ObjectID
     {
-        None,
+        None = -1,
         OperationTile, SwapTile,
         Firewall, Observer,
     }
 
     public enum SceneID
     {
+        None = -1,
         Title, Office, Matrix,
-        None,
     }
 
     public enum EventID
     {
-        None,
+        None = -1,
         PlayerMove, PlayerDie,
         NextStage
     }
 
     public enum AudioChannel
     {
-        None,
+        None = -1,
         BGM, SFX, UI,
     }
 
     public enum BGM_ID
     {
-        None,
-        Title, Office, Matrix,
-        BattleParser,
-        Ending,
+        None = -1,
+        Title, Matrix,
     }
 
     public enum LoopType
@@ -72,16 +70,16 @@ public static class GLOBAL
 
     public enum SFX_ID
     {
-        None,
+        None = -1,
         PlayerMove, PlayerRespawn, PlayerHoldBox, PlayerReleaseBox,
         ObserverDetect,
-        ParserAttack, LaserExplosion,
         EnterPortal, OutPortal,
+        ParserAttack, LaserExplosion,
     }
 
     public enum UI_SFX_ID
     {
-        None,
+        None = -1,
         StartButtonClick, ButtonClick,
         PanelOpen, PanelClose,
         DialogTyping,

@@ -251,6 +251,199 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 20927830}
   m_CullTransparentMesh: 1
+--- !u!1 &36564177
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 36564179}
+  - component: {fileID: 36564178}
+  m_Layer: 0
+  m_Name: Stage_14
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!114 &36564178
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 36564177}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5403ae0378efef9488f414bfb42c3e0b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  moveCount: 22
+  startValue: 4
+  tileInfo: '0 -1 N +4 0 0
+
+    0 FN N N +1 0
+
+    0 N -4,+2 0 N FN
+
+    N /2 FN
+    0 FN N
+
+    FN N +1 0 N /-2
+
+    -1 +3 0 0 -1 N
+
+    P N 0 0 N S'
+  enemyInfo:
+  - enemyType: 3
+    startPoint: {x: -2.5, y: 1.5}
+    endPoint: {x: 3.5, y: 1.5}
+--- !u!4 &36564179
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 36564177}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &176649867
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 176649869}
+  - component: {fileID: 176649868}
+  m_Layer: 0
+  m_Name: Stage_16
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!114 &176649868
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 176649867}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5403ae0378efef9488f414bfb42c3e0b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  moveCount: 18
+  startValue: 1
+  tileInfo: '0 0 N -2 P 0
+
+    N FN /3 N +2 0
+
+    +4 N F-2 +1 N 0
+
+    FN -2 N FN
+    0 0
+
+    N F+1 0 0 0 0
+
+    -3 F*3 N N N 0
+
+    0 N -2 N N S'
+  enemyInfo:
+  - enemyType: 3
+    startPoint: {x: 0, y: 4}
+    endPoint: {x: 0, y: -4}
+  - enemyType: 3
+    startPoint: {x: 2.5, y: -1.5}
+    endPoint: {x: -3.5, y: -1.5}
+--- !u!4 &176649869
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 176649867}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &204786867
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 204786869}
+  - component: {fileID: 204786868}
+  m_Layer: 0
+  m_Name: Stage_13
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!114 &204786868
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 204786867}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5403ae0378efef9488f414bfb42c3e0b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  moveCount: 15
+  startValue: 1
+  tileInfo: 'S N F*-2 N N 0
+
+    -3 FN N +1 N 0
+
+    FN +1 FN N +2 0
+
+    N -1 N
+    +3 FN *2
+
+    0 0 /-2 FN N +1
+
+    0 0 0 N -2 P'
+  enemyInfo:
+  - enemyType: 3
+    startPoint: {x: 0, y: -3.5}
+    endPoint: {x: 0, y: 3.5}
+--- !u!4 &204786869
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 204786867}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &207263799
 GameObject:
   m_ObjectHideFlags: 0
@@ -415,7 +608,7 @@ MonoBehaviour:
     N F+2 N 0 +1
 
     -1
-    0 FN -1 P'
+    N FN -1 P'
   enemyInfo: []
 --- !u!4 &240031413
 Transform:
@@ -1626,6 +1819,16 @@ MonoBehaviour:
   - {fileID: 240031412}
   - {fileID: 1066905456}
   - {fileID: 1238561904}
+  - {fileID: 981391220}
+  - {fileID: 1977253960}
+  - {fileID: 2128866652}
+  - {fileID: 1410921024}
+  - {fileID: 968809150}
+  - {fileID: 1035391121}
+  - {fileID: 204786868}
+  - {fileID: 36564178}
+  - {fileID: 579125515}
+  - {fileID: 176649868}
 --- !u!4 &501648558
 Transform:
   m_ObjectHideFlags: 0
@@ -1798,6 +2001,71 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 537867069}
   m_CullTransparentMesh: 1
+--- !u!1 &579125514
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 579125516}
+  - component: {fileID: 579125515}
+  m_Layer: 0
+  m_Name: Stage_15
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!114 &579125515
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 579125514}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5403ae0378efef9488f414bfb42c3e0b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  moveCount: 23
+  startValue: -2
+  tileInfo: '0 S +1 N N 0 0
+
+    0 *2 N FN N *3 N
+
+    0 0 0 +3,-2 FN F-1 +1
+
+    0
+    0 0 0 N +1 N
+
+    +1 N -1 FN -1 FN +4
+
+    P -1 FN +1 N /2,*-2 N'
+  enemyInfo:
+  - enemyType: 3
+    startPoint: {x: -4, y: 1}
+    endPoint: {x: 4, y: 1}
+  - enemyType: 3
+    startPoint: {x: -4, y: -2}
+    endPoint: {x: 4, y: -2}
+--- !u!4 &579125516
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 579125514}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &590653204
 GameObject:
   m_ObjectHideFlags: 0
@@ -2436,6 +2704,122 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 947401665}
   m_CullTransparentMesh: 1
+--- !u!1 &968809149
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 968809151}
+  - component: {fileID: 968809150}
+  m_Layer: 0
+  m_Name: Stage_11
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!114 &968809150
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 968809149}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5403ae0378efef9488f414bfb42c3e0b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  moveCount: 18
+  startValue: 3
+  tileInfo: 'P N -1,*2 FN +2 N
+
+    -2 N N -1 FN +1
+
+    0 0 F/2 FN +1,/-2 0
+
+    0
+    0 FN N N 0
+
+    0 0 N +3 N 0
+
+    0 0 -1 N -2 S'
+  enemyInfo: []
+--- !u!4 &968809151
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 968809149}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &981391219
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 981391221}
+  - component: {fileID: 981391220}
+  m_Layer: 0
+  m_Name: Stage_7
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!114 &981391220
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 981391219}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5403ae0378efef9488f414bfb42c3e0b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  moveCount: 14
+  startValue: 1
+  tileInfo: '0 N N N /2 N
+
+    0 -1 N F-2 N FN
+
+    F-2 N -1 N F*2 N
+
+    N +1 N
+    0 -2 N
+
+    S N 0 0 0 P'
+  enemyInfo: []
+--- !u!4 &981391221
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 981391219}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1013346569
 GameObject:
   m_ObjectHideFlags: 0
@@ -2648,6 +3032,65 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1029245027}
   m_CullTransparentMesh: 1
+--- !u!1 &1035391120
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1035391122}
+  - component: {fileID: 1035391121}
+  m_Layer: 0
+  m_Name: Stage_12
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!114 &1035391121
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1035391120}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5403ae0378efef9488f414bfb42c3e0b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  moveCount: 16
+  startValue: -3
+  tileInfo: '0 +2 -1 0 P
+
+    N N N *2,-1 FN
+
+    -1 -1 F+2 N N
+
+    N+3 *-2,-1 -3
+    F+1 N
+
+    +1 +1 FN +3 -2
+
+    N S N 0 0'
+  enemyInfo: []
+--- !u!4 &1035391122
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1035391120}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1045349327
 GameObject:
   m_ObjectHideFlags: 0
@@ -3248,7 +3691,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveCount: 18
   startValue: 2
-  tileInfo: "0 N N -2 0\nF-2 FN -1 N N\nN N FN +3\tF+1\n+1 N 0 FN N\nS +2 0 F P"
+  tileInfo: '0 N N -2 0
+
+    F-2 FN -1 N N
+
+    N N FN +3 F+1
+
+    +1 N 0 FN N
+
+    S
+    +2 0 FN P'
   enemyInfo: []
 --- !u!4 &1238561905
 Transform:
@@ -3257,6 +3709,65 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1238561903}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1410921023
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1410921025}
+  - component: {fileID: 1410921024}
+  m_Layer: 0
+  m_Name: Stage_10
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!114 &1410921024
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1410921023}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5403ae0378efef9488f414bfb42c3e0b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  moveCount: 15
+  startValue: -4
+  tileInfo: '0 S N -1 0
+
+    0 N *2 FN N
+
+    0 0 0 N FN
+
+    N FN /2 +2,-3 N
+
+    -1
+    +2 FN N +1
+
+    P N FN -2 0'
+  enemyInfo: []
+--- !u!4 &1410921025
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1410921023}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
@@ -4876,7 +5387,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 3
+  orthographic size: 5
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -5450,6 +5961,65 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1948957801}
   m_CullTransparentMesh: 1
+--- !u!1 &1977253959
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1977253961}
+  - component: {fileID: 1977253960}
+  m_Layer: 0
+  m_Name: Stage_8
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!114 &1977253960
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1977253959}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5403ae0378efef9488f414bfb42c3e0b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  moveCount: 20
+  startValue: -2
+  tileInfo: '0 0 0 0 +1 P
+
+    S 0 0 0 N -3
+
+    N 0 0 0 +1 N
+
+    +1 N F+3 N F+2
+    FN
+
+    N N FN *2 N /-2
+
+    N -2 FN N 0 0'
+  enemyInfo: []
+--- !u!4 &1977253961
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1977253959}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2106569425
 GameObject:
   m_ObjectHideFlags: 0
@@ -5586,6 +6156,63 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2106569425}
   m_CullTransparentMesh: 1
+--- !u!1 &2128866651
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2128866653}
+  - component: {fileID: 2128866652}
+  m_Layer: 0
+  m_Name: Stage_9
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!114 &2128866652
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2128866651}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5403ae0378efef9488f414bfb42c3e0b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  moveCount: 17
+  startValue: -3
+  tileInfo: 'P +2 N +3 0 0
+
+    -1 N *2 FN 0 0
+
+    N FN FN -1 N N
+
+    FN /-2 N
+    0 0 S
+
+    -1 N F+2 0 0 0'
+  enemyInfo: []
+--- !u!4 &2128866653
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2128866651}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -5598,6 +6225,16 @@ SceneRoots:
   - {fileID: 240031413}
   - {fileID: 1066905457}
   - {fileID: 1238561905}
+  - {fileID: 981391221}
+  - {fileID: 1977253961}
+  - {fileID: 2128866653}
+  - {fileID: 1410921025}
+  - {fileID: 968809151}
+  - {fileID: 1035391122}
+  - {fileID: 204786869}
+  - {fileID: 36564179}
+  - {fileID: 579125516}
+  - {fileID: 176649869}
   - {fileID: 219293127}
   - {fileID: 1494305202}
   - {fileID: 501648558}

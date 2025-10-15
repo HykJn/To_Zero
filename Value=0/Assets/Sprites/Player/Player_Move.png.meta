@@ -96,7 +96,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 1250
+  spritePixelsToUnits: 1600
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -145,7 +145,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Tele_1_0
+      name: Player_Move_0
       rect:
         serializedVersion: 2
         x: 0
@@ -153,21 +153,21 @@ TextureImporter:
         width: 1008
         height: 1540
       alignment: 9
-      pivot: {x: 0.5, y: 0.25}
+      pivot: {x: 0.5, y: 0.35}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: b312f8ae1e9ba1560800000000000000
-      internalID: 7285339727179227451
+      spriteID: eea049e4e612599489b42c94f8351f1b
+      internalID: -900204017
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Tele_1_1
+      name: Player_Move_1
       rect:
         serializedVersion: 2
         x: 1008
@@ -175,21 +175,21 @@ TextureImporter:
         width: 1008
         height: 1540
       alignment: 9
-      pivot: {x: 0.5, y: 0.25}
+      pivot: {x: 0.5, y: 0.35}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: ae4fb1510a08d87f0800000000000000
-      internalID: -608688949587872534
+      spriteID: c67cd424a7b2836499a3c2b8edcc2026
+      internalID: -445895243
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Tele_1_2
+      name: Player_Move_2
       rect:
         serializedVersion: 2
         x: 2016
@@ -197,21 +197,21 @@ TextureImporter:
         width: 1008
         height: 1540
       alignment: 9
-      pivot: {x: 0.5, y: 0.25}
+      pivot: {x: 0.5, y: 0.35}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: 5ffed33e52ade0f00800000000000000
-      internalID: 1085044416504000501
+      spriteID: 18419def835d6f04abe0101f3b12322a
+      internalID: 974437692
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Tele_1_3
+      name: Player_Move_3
       rect:
         serializedVersion: 2
         x: 3024
@@ -219,21 +219,21 @@ TextureImporter:
         width: 1008
         height: 1540
       alignment: 9
-      pivot: {x: 0.5, y: 0.25}
+      pivot: {x: 0.5, y: 0.35}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: 381d06babc37d88f0800000000000000
-      internalID: -536645461996416637
+      spriteID: 70c286e9a2407874a94c50f3d0608ca8
+      internalID: 580930934
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Tele_1_4
+      name: Player_Move_4
       rect:
         serializedVersion: 2
         x: 4032
@@ -241,15 +241,15 @@ TextureImporter:
         width: 1008
         height: 1540
       alignment: 9
-      pivot: {x: 0.5, y: 0.25}
+      pivot: {x: 0.5, y: 0.35}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: 837cb380a9f4829c0800000000000000
-      internalID: -3951821150035917000
+      spriteID: f9b4d431a3be10a4fa7ebd5df4ce1a7f
+      internalID: -286297283
       vertices: []
       indices: 
       edges: []
@@ -268,11 +268,11 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Tele_1_0: 7285339727179227451
-      Tele_1_1: -608688949587872534
-      Tele_1_2: 1085044416504000501
-      Tele_1_3: -536645461996416637
-      Tele_1_4: -3951821150035917000
+      Player_Move_0: -900204017
+      Player_Move_1: -445895243
+      Player_Move_2: 974437692
+      Player_Move_3: 580930934
+      Player_Move_4: -286297283
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
