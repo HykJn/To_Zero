@@ -7,6 +7,8 @@ using static GLOBAL;
 public class Player : MonoBehaviour
 {
     public event Action OnPlayerMove;
+    //보스 폭탄
+    public event Action<int> OnBombExplode;
 
     #region =====Properties=====
 
@@ -30,6 +32,10 @@ public class Player : MonoBehaviour
         }
     }
 
+    //보스
+    public bool IsMovable { get; set; } = true;
+    public bool Controllable { get; set; } = true;
+
     #endregion
 
     #region =====Fields=====
@@ -37,10 +43,15 @@ public class Player : MonoBehaviour
     [Header("Components")]
     [SerializeField] private Animator animator;
 
-    private bool _isMovable = true;
+    //보스 게임오버 움직이면안됨
+    public bool _isMovable = true;
     private Firewall _firewall;
 
     private int _moves, _value;
+
+    //보스 스테이지 폭탄 오브젝트
+    [SerializeField] private GameObject bombObj;
+    private Dictionary<Vector3, GameObject> bombPositions = new Dictionary<Vector3, GameObject>();
 
     #endregion
 
@@ -48,13 +59,31 @@ public class Player : MonoBehaviour
 
     private void Start()
     {
-        GameManager.Instance.OnRestart += OnRestart;
+        if (GameManager.Instance != null)
+        {
+            GameManager.Instance.OnRestart += OnRestart;
+        }
+        //보스
+        if (GameManager.Instance.CurrentBossStage)
+        {
+            RegisterBossEvents();
+        }
     }
 
     private void Update()
     {
         InputHandler();
     }
+
+    //보스
+    private void OnDisable()
+    {
+        if (GameManager.Instance?.CurrentBossStage == true)
+        {
+            UnregisterBossEvents();
+        }
+    }
+
 
     #endregion
 
@@ -78,13 +107,23 @@ public class Player : MonoBehaviour
         //Hold & Release firewall
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            if (!_firewall) return;
-            if (!_firewall.IsHeld) HoldFirewall();
-            else ReleaseFirewall();
+            if (GameManager.Instance.CurrentBossStage)
+            {
+                // 보스 스테이지 
+                ExplodeAllBombs();
+            }
+            else
+            {
+         
+                if (!_firewall) return;
+                if (!_firewall.IsHeld) HoldFirewall();
+                else ReleaseFirewall();
+            }
         }
 
-        //Restart
-        if (Input.GetKeyDown(KeyCode.R)) GameManager.Instance.Restart();
+        //Restart //보스
+        if (!GameManager.Instance.CurrentBossStage)
+            if (Input.GetKeyDown(KeyCode.R)) GameManager.Instance.Restart();
     }
 
     public void Animation_SetMovable(int value)
@@ -99,8 +138,18 @@ public class Player : MonoBehaviour
 
         if (Moves <= 0)
         {
-            Die();
-            return;
+            if (GameManager.Instance.CurrentBossStage)
+            {
+                //Die();
+                ExplodeAllBombs();
+                return;
+
+            }
+            else
+            {
+                Die();
+                return;
+            }
         }
 
         StartCoroutine(Crtn_Move(pos));
@@ -119,9 +168,14 @@ public class Player : MonoBehaviour
         return false;
     }
 
+    //보스스테이지 조건추가
     private IEnumerator Crtn_Move(Vector2 pos)
     {
-        GameManager.Instance.Stage.GetTile<OperationTile>(this.transform.position).AnyObjectAbove = false;
+        if (GameManager.Instance.Stage.TryGetTile<OperationTile>(this.transform.position, out Tile currentTile))
+        {
+            (currentTile as OperationTile).AnyObjectAbove = false;
+        }
+
         Vector2 next = pos - (Vector2)this.transform.position;
 
         this.transform.position = pos;
@@ -135,49 +189,67 @@ public class Player : MonoBehaviour
         }
 
         OperationTile tile = GameManager.Instance.Stage.GetTile<OperationTile>(pos);
-        switch (tile.Operator)
-        {
-            case Operation.None:
-                break;
-            case Operation.Add:
-                Value += tile.Value;
-                break;
-            case Operation.Subtract:
-                Value -= tile.Value;
-                break;
-            case Operation.Multiply:
-                Value *= tile.Value;
-                break;
-            case Operation.Divide:
-                Value /= tile.Value;
-                break;
-            case Operation.Equal:
-                if (Value != tile.Value) Die();
-                break;
-            case Operation.NotEqual:
-                if (Value == tile.Value) Die();
-                break;
-            case Operation.Greater:
-                if (Value <= tile.Value) Die();
-                break;
-            case Operation.Less:
-                if (Value >= tile.Value) Die();
-                break;
-            case Operation.Portal:
-                if (Value != 0) Die();
-                else
-                {
-                    GameManager.Instance.StageNumber++;
-                    yield break;
-                }
 
-                break;
+        if (GameManager.Instance.CurrentBossStage)
+        {
+            // 보스 스테이지용 타일 처리
+            ApplyTileValueBoss(pos);
+        }
+        else
+        {
+            switch (tile.Operator)
+            {
+                case Operation.None:
+                    break;
+                case Operation.Add:
+                    Value += tile.Value;
+                    break;
+                case Operation.Subtract:
+                    Value -= tile.Value;
+                    break;
+                case Operation.Multiply:
+                    Value *= tile.Value;
+                    break;
+                case Operation.Divide:
+                    Value /= tile.Value;
+                    break;
+                case Operation.Equal:
+                    if (Value != tile.Value) Die();
+                    break;
+                case Operation.NotEqual:
+                    if (Value == tile.Value) Die();
+                    break;
+                case Operation.Greater:
+                    if (Value <= tile.Value) Die();
+                    break;
+                case Operation.Less:
+                    if (Value >= tile.Value) Die();
+                    break;
+                case Operation.Portal:
+                    if (Value != 0) Die();
+                    else
+                    {
+                        GameManager.Instance.StageNumber++;
+                        yield break;
+                    }
+
+                    break;
+            }
         }
 
         Moves--;
         OnPlayerMove?.Invoke();
 
-        if (GameManager.Instance.Stage.GetTile<OperationTile>(pos).WarningCount > 0) Die();
+        if (!GameManager.Instance.CurrentBossStage)
+        {
+            if (GameManager.Instance.Stage.TryGetTile<OperationTile>(pos, out Tile checkTile))
+            {
+                if ((checkTile as OperationTile).WarningCount > 0)
+                {
+                    Die();
+                }
+            }
+        }
 
         yield return null;
     }
@@ -209,11 +281,126 @@ public class Player : MonoBehaviour
     {
         _firewall = null;
         _isMovable = true;
+
+        //보스
+        if (GameManager.Instance.CurrentBossStage)
+        {
+            ClearBombs();
+        }
     }
 
     private void Die()
     {
         animator.SetTrigger(Animator.StringToHash("Die"));
+    }
+
+    private void ApplyTileValueBoss(Vector3 pos)
+    {
+        OperationTile tile = GameManager.Instance.Stage.GetTile<OperationTile>(pos);
+        if (!tile) return;
+
+        // 보스 스테이지에서는 연산 타일에 폭탄 생성
+        switch (tile.Operator)
+        {
+            case Operation.None:
+            case Operation.Portal:
+                // 포탈은 Value가 0일 때만 다음 스테이지
+                if (tile.Operator == Operation.Portal && Value == 0)
+                {
+                    // 보스 스테이지 클리어 처리
+                    GameManager.Instance.StageNumber++;
+                }
+                break;
+            case Operation.Add:
+                if (!bombPositions.ContainsKey(pos))
+                {
+                    CheckAndSpawnBomb(bombObj, pos);
+                    Value += tile.Value;
+                }
+                break;
+            case Operation.Subtract:
+                if (!bombPositions.ContainsKey(pos))
+                {
+                    CheckAndSpawnBomb(bombObj, pos);
+                    Value -= tile.Value;
+                }
+                break;
+            case Operation.Multiply:
+                if (!bombPositions.ContainsKey(pos))
+                {
+                    CheckAndSpawnBomb(bombObj, pos);
+                    Value *= tile.Value;
+                }
+                break;
+            case Operation.Divide:
+                if (!bombPositions.ContainsKey(pos))
+                {
+                    CheckAndSpawnBomb(bombObj, pos);
+                    Value /= tile.Value;
+                }
+                break;
+            case Operation.Equal:
+            case Operation.NotEqual:
+            case Operation.Greater:
+            case Operation.Less:
+                
+                break;
+        }
+    }
+
+    private void CheckAndSpawnBomb(GameObject bomb, Vector3 pos)
+    {
+        if (bombPositions.ContainsKey(pos)) return;
+
+        GameObject newBomb = Instantiate(bomb, pos, Quaternion.identity);
+        bombPositions.Add(pos, newBomb);
+    }
+
+    private void ExplodeAllBombs()
+    {
+        if (bombPositions.Count == 0) return;
+
+        foreach (var bomb in bombPositions.Values)
+        {
+            if (bomb != null) Destroy(bomb);
+        }
+        bombPositions.Clear();
+
+        // 보스에게 현재 Value 전달
+        OnBombExplode?.Invoke(Value);
+    }
+
+    public void ClearBombs()
+    {
+        foreach (var bomb in bombPositions.Values)
+        {
+            if (bomb != null) Destroy(bomb);
+        }
+        bombPositions.Clear();
+    }
+
+    public void RegisterBossEvents()
+    {
+        if (BossManager.Instance != null)
+        {
+            BossManager.Instance.OnPlayerLose += HandleGameOver;
+            BossManager.Instance.OnPlayerWin += HandleGameOver;
+        }
+    }
+
+    public void UnregisterBossEvents()
+    {
+        if (BossManager.Instance != null)
+        {
+            BossManager.Instance.OnPlayerLose -= HandleGameOver;
+            BossManager.Instance.OnPlayerWin -= HandleGameOver;
+        }
+    }
+
+    private void HandleGameOver()
+    {
+        IsMovable = false;
+        Controllable = false;
     }
 
     #endregion

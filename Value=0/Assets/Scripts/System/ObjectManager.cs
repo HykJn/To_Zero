@@ -18,8 +18,11 @@ public class ObjectManager : MonoBehaviour
     [SerializeField] private GameObject prefab_Firewall;
     [SerializeField] private GameObject prefab_Observer;
 
+    //보스
+    [SerializeField] private GameObject prefab_BossLaser;
+
     //Pools
-    private GameObject[] _pool_OperationTile, _pool_SwapTile, _pool_Firewall, _pool_Observer;
+    private GameObject[] _pool_OperationTile, _pool_SwapTile, _pool_Firewall, _pool_Observer, _obj_BossLasers;
 
     #endregion
 
@@ -33,6 +36,7 @@ public class ObjectManager : MonoBehaviour
         _pool_SwapTile = new GameObject[MAX_SWAP_TILE_COUNT];
         _pool_Firewall = new GameObject[MAX_FIREWALL_COUNT];
         _pool_Observer = new GameObject[MAX_OBSERVER_COUNT];
+        _obj_BossLasers = new GameObject[MAX_BOSSLASER_COUNT];
 
         InitPool();
     }
@@ -66,6 +70,13 @@ public class ObjectManager : MonoBehaviour
             _pool_Observer[i] = Instantiate(prefab_Observer);
             _pool_Observer[i].SetActive(false);
         }
+
+        //bossLaser
+        for (int i = 0; i < _obj_BossLasers.Length; i++)
+        {
+            _obj_BossLasers[i] = Instantiate(prefab_BossLaser, this.transform);
+            _obj_BossLasers[i].SetActive(false);
+        }
     }
 
     public GameObject GetObject(ObjectID objID, bool active = true)
@@ -76,6 +87,8 @@ public class ObjectManager : MonoBehaviour
             ObjectID.SwapTile => _pool_SwapTile,
             ObjectID.Firewall => _pool_Firewall,
             ObjectID.Observer => _pool_Observer,
+            //BOSSlASER
+            ObjectID.BossLaser => _obj_BossLasers,
             _ => null
         };
 
@@ -89,6 +102,14 @@ public class ObjectManager : MonoBehaviour
         }
 
         return null;
+    }
+
+    //보스
+    public void ReleaseObject(GameObject obj)
+    {
+        obj.SetActive(false);
+        obj.transform.SetParent(this.transform);
+        obj.transform.localPosition = Vector3.zero;
     }
 
     #endregion

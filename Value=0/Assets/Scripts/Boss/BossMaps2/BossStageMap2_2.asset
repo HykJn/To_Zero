@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 133c71efe61c60c4bbbb9d1bb0b89009, type: 3}
+  m_Name: BossStageMap2_2
+  m_EditorClassIdentifier: 
+  phase: 2
+  stageMap: 'N N N -2 S N
+
+    N +2 N N +2 N
+
+    -1 N +1 N N N
+
+    N N N -2 N N'
+  startValue: -1
+  moveCount: 22
+  bossTargetValue: -3

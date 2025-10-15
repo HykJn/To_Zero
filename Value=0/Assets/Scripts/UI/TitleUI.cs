@@ -22,6 +22,12 @@ public class TitleUI : MonoBehaviour
         UIManager.Instance.LoadScene(SceneID.Office);
     }
 
+    //º¸½ºÀü
+    public void OnClick_Boss()
+    {
+        UIManager.Instance.LoadScene(SceneID.Boss);
+    }
+
     public void OnClick_CreativeMode()
     {
         print("Creative Mode");
