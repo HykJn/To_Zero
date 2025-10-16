@@ -56,7 +56,7 @@ public class SwapTile : OperationTile
 
         _values = values.Select(s => int.Parse(s[1..])).ToArray();
 
-        Swap(0);
+        OnRestart();
     }
 
     protected override void OnRestart()
@@ -99,6 +99,10 @@ public class SwapTile : OperationTile
             Operation.Less => "<",
             _ => null
         } + _values[(_idx + 1) % 2];
+
+        if (!AnyObjectAbove) return;
+        if (GameManager.Instance.Stage.TryGetFirewall(this.transform.position, out Firewall firewall))
+            firewall.Value = text_Value.text;
     }
 
     #endregion

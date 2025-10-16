@@ -1901,7 +1901,7 @@ MonoBehaviour:
   - {fileID: 240031412}
   - {fileID: 1066905456}
   - {fileID: 1238561904}
-  bossStageNumber: 1
+  bossStageNumber: 7
 --- !u!4 &501648558
 Transform:
   m_ObjectHideFlags: 0
@@ -2881,7 +2881,7 @@ Transform:
   m_GameObject: {fileID: 975892977}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.2675087, y: 1.8450643, z: 0.04757401}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
