@@ -1,4 +1,3 @@
-using Mono.Cecil.Cil;
 using System.Collections;
 using UnityEngine;
 
@@ -24,14 +23,14 @@ public class BossHitEffect : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.V))
         {
             StartCoroutine(HitCoroutine());
-            Debug.Log("º¸½º ÀÌÆåÆ® È£ÃâµÊ");
+            Debug.Log("ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Æ® È£ï¿½ï¿½ï¿½");
         }
     }
 
     public void PlayerHitEffect()
     {
          StartCoroutine(HitCoroutine());
-         Debug.Log("º¸½º ÀÌÆåÆ® È£ÃâµÊ");  
+         Debug.Log("ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Æ® È£ï¿½ï¿½ï¿½");  
         
     }
 
