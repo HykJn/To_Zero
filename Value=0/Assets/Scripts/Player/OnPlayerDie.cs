@@ -18,6 +18,7 @@ public class OnPlayerDie : StateMachineBehaviour
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         GameManager.Instance.Restart();
+        animator.GetComponent<Player>().IsMovable = false;
     }
 
     // OnStateMove is called right after Animator.OnAnimatorMove()

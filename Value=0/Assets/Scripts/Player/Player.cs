@@ -7,7 +7,7 @@ using static GLOBAL;
 public class Player : MonoBehaviour
 {
     public event Action OnPlayerMove;
-    //º¸½º ÆøÅº
+    //ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Åº
     public event Action<int> OnBombExplode;
 
     #region =====Properties=====
@@ -32,7 +32,7 @@ public class Player : MonoBehaviour
         }
     }
 
-    //º¸½º
+    //ï¿½ï¿½ï¿½ï¿½
     public bool IsMovable { get; set; } = true;
     public bool Controllable { get; set; } = true;
 
@@ -41,15 +41,16 @@ public class Player : MonoBehaviour
     #region =====Fields=====
 
     [Header("Components")]
+    [SerializeField] private SpriteRenderer spriteRenderer;
     [SerializeField] private Animator animator;
 
-    //º¸½º °ÔÀÓ¿À¹ö ¿òÁ÷ÀÌ¸é¾ÈµÊ
-    public bool _isMovable = true;
+    [SerializeField] private AnimationCurve easeOut;
+
     private Firewall _firewall;
 
     private int _moves, _value;
 
-    //º¸½º ½ºÅ×ÀÌÁö ÆøÅº ¿ÀºêÁ§Æ®
+    //ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Åº ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®
     [SerializeField] private GameObject bombObj;
     private Dictionary<Vector3, GameObject> bombPositions = new Dictionary<Vector3, GameObject>();
 
@@ -63,7 +64,7 @@ public class Player : MonoBehaviour
         {
             GameManager.Instance.OnRestart += OnRestart;
         }
-        //º¸½º
+        //ï¿½ï¿½ï¿½ï¿½
         if (GameManager.Instance.CurrentBossStage)
         {
             RegisterBossEvents();
@@ -75,7 +76,7 @@ public class Player : MonoBehaviour
         InputHandler();
     }
 
-    //º¸½º
+    //ï¿½ï¿½ï¿½ï¿½
     private void OnDisable()
     {
         if (GameManager.Instance?.CurrentBossStage == true)
@@ -101,7 +102,12 @@ public class Player : MonoBehaviour
         if (dir != Vector2.zero)
         {
             if (_firewall && _firewall.IsHeld) MoveBox(dir);
-            else if (_isMovable) Move((Vector2)this.transform.position + dir);
+            else if (IsMovable)
+            {
+                Move((Vector2)this.transform.position + dir);
+                if (dir == Vector2.right) spriteRenderer.flipX = true;
+                else if (dir == Vector2.left) spriteRenderer.flipX = false;
+            }
         }
 
         //Hold & Release firewall
@@ -109,7 +115,7 @@ public class Player : MonoBehaviour
         {
             if (GameManager.Instance.CurrentBossStage)
             {
-                // º¸½º ½ºÅ×ÀÌÁö 
+                // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 
                 ExplodeAllBombs();
             }
             else
@@ -121,15 +127,15 @@ public class Player : MonoBehaviour
             }
         }
 
-        //Restart //º¸½º
+        //Restart //ï¿½ï¿½ï¿½ï¿½
         if (!GameManager.Instance.CurrentBossStage)
-            if (Input.GetKeyDown(KeyCode.R)) GameManager.Instance.Restart();
+            if (Input.GetKeyDown(KeyCode.R) && IsMovable) GameManager.Instance.Restart();
     }
 
     public void Animation_SetMovable(int value)
     {
-        if (value == 1) _isMovable = true;
-        else _isMovable = false;
+        if (value == 1) IsMovable = true;
+        else IsMovable = false;
     }
 
     private void Move(Vector2 pos)
@@ -148,10 +154,13 @@ public class Player : MonoBehaviour
             else
             {
                 Die();
+                SoundManager.Instance.PlayOneShot(SFX_ID.PlayerRespawn);
                 return;
             }
+            return;
         }
 
+        IsMovable = false;
         StartCoroutine(Crtn_Move(pos));
     }
 
@@ -168,7 +177,7 @@ public class Player : MonoBehaviour
         return false;
     }
 
-    //º¸½º½ºÅ×ÀÌÁö Á¶°ÇÃß°¡
+    //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ß°ï¿½
     private IEnumerator Crtn_Move(Vector2 pos)
     {
         if (GameManager.Instance.Stage.TryGetTile<OperationTile>(this.transform.position, out Tile currentTile))
@@ -178,8 +187,22 @@ public class Player : MonoBehaviour
 
         Vector2 next = pos - (Vector2)this.transform.position;
 
-        this.transform.position = pos;
+        Vector2 startPos = this.transform.position;
+        float t = 0f;
+        animator.SetTrigger(Animator.StringToHash("Move"));
+
         if (_firewall) _firewall.IsSelected = false;
+        _firewall = null;
+
+        SoundManager.Instance.PlayOneShot(SFX_ID.PlayerMove);
+        while ((Vector2)this.transform.position != pos)
+        {
+            this.transform.position = Vector2.Lerp(startPos, pos, Mathf.Clamp01(easeOut.Evaluate(t / 0.05f)));
+            t += Time.deltaTime;
+            yield return new WaitForEndOfFrame();
+        }
+
+        this.transform.position = pos;
         GameManager.Instance.Stage.GetTile<OperationTile>(this.transform.position).AnyObjectAbove = true;
 
         if (GameManager.Instance.Stage.TryGetFirewall((Vector2)this.transform.position + next, out Firewall firewall))
@@ -192,7 +215,7 @@ public class Player : MonoBehaviour
 
         if (GameManager.Instance.CurrentBossStage)
         {
-            // º¸½º ½ºÅ×ÀÌÁö¿ë Å¸ÀÏ Ã³¸®
+            // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Å¸ï¿½ï¿½ Ã³ï¿½ï¿½
             ApplyTileValueBoss(pos);
         }
         else
@@ -214,58 +237,86 @@ public class Player : MonoBehaviour
                     Value /= tile.Value;
                     break;
                 case Operation.Equal:
-                    if (Value != tile.Value) Die();
-                    break;
-                case Operation.NotEqual:
-                    if (Value == tile.Value) Die();
-                    break;
-                case Operation.Greater:
-                    if (Value <= tile.Value) Die();
-                    break;
-                case Operation.Less:
-                    if (Value >= tile.Value) Die();
-                    break;
-                case Operation.Portal:
-                    if (Value != 0) Die();
-                    else
+                    if (Value != tile.Value)
                     {
-                        GameManager.Instance.StageNumber++;
+                        Die();
+                        SoundManager.Instance.PlayOneShot(SFX_ID.PlayerRespawn);
                         yield break;
                     }
 
                     break;
-            }
+                case Operation.NotEqual:
+                    if (Value == tile.Value)
+                    {
+                        Die();
+                        SoundManager.Instance.PlayOneShot(SFX_ID.PlayerRespawn);
+                        yield break;
+                    }
+
+                    break;
+                case Operation.Greater:
+                    if (Value <= tile.Value)
+                    {
+                        Die();
+                        SoundManager.Instance.PlayOneShot(SFX_ID.PlayerRespawn);
+                        yield break;
+                    }
+
+                    break;
+                case Operation.Less:
+                    if (Value >= tile.Value)
+                    {
+                        Die();
+                        SoundManager.Instance.PlayOneShot(SFX_ID.PlayerRespawn);
+                        yield break;
+                    }
+
+                    break;
+                case Operation.Portal:
+                    if (Value != 0)
+                    {
+                        Die();
+                        SoundManager.Instance.PlayOneShot(SFX_ID.PlayerRespawn);
+                    }
+                    else GameManager.Instance.StageNumber++;
+
+                    yield break;
+            } 
         }
 
+       
         Moves--;
         OnPlayerMove?.Invoke();
 
         if (!GameManager.Instance.CurrentBossStage)
         {
-            if (GameManager.Instance.Stage.TryGetTile<OperationTile>(pos, out Tile checkTile))
+            if (GameManager.Instance.Stage.GetTile<OperationTile>(pos).WarningCount > 0)
             {
-                if ((checkTile as OperationTile).WarningCount > 0)
-                {
-                    Die();
-                }
+                Die();
+                SoundManager.Instance.PlayOneShot(SFX_ID.ObserverDetect);
+                yield break;
             }
         }
-
-        yield return null;
+  
+        IsMovable = true;
     }
 
     private void HoldFirewall()
     {
         if (!_firewall) return;
+        SoundManager.Instance.Play(SFX_ID.PlayerHoldBox);
+        animator.SetTrigger(Animator.StringToHash("Hold"));
         _firewall.OnHeld();
-        _isMovable = false;
+        IsMovable = false;
     }
 
     private void ReleaseFirewall()
     {
         if (!_firewall) return;
+        SoundManager.Instance.Play(SFX_ID.PlayerReleaseBox);
+        animator.SetTrigger(Animator.StringToHash("Release"));
         _firewall.OnRelease();
-        _isMovable = true;
+        IsMovable = true;
     }
 
     private void MoveBox(Vector2 dir)
@@ -274,15 +325,16 @@ public class Player : MonoBehaviour
 
         Moves--;
         ReleaseFirewall();
+        _firewall = null;
         OnPlayerMove?.Invoke();
     }
 
     private void OnRestart()
     {
         _firewall = null;
-        _isMovable = true;
+        IsMovable = true;
 
-        //º¸½º
+        //ï¿½ï¿½ï¿½ï¿½
         if (GameManager.Instance.CurrentBossStage)
         {
             ClearBombs();
@@ -291,6 +343,7 @@ public class Player : MonoBehaviour
 
     private void Die()
     {
+        IsMovable = false;
         animator.SetTrigger(Animator.StringToHash("Die"));
     }
 
@@ -299,15 +352,15 @@ public class Player : MonoBehaviour
         OperationTile tile = GameManager.Instance.Stage.GetTile<OperationTile>(pos);
         if (!tile) return;
 
-        // º¸½º ½ºÅ×ÀÌÁö¿¡¼­´Â ¿¬»ê Å¸ÀÏ¿¡ ÆøÅº »ý¼º
+        // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ Å¸ï¿½Ï¿ï¿½ ï¿½ï¿½Åº ï¿½ï¿½ï¿½ï¿½
         switch (tile.Operator)
         {
             case Operation.None:
             case Operation.Portal:
-                // Æ÷Å»Àº Value°¡ 0ÀÏ ¶§¸¸ ´ÙÀ½ ½ºÅ×ÀÌÁö
+                // ï¿½ï¿½Å»ï¿½ï¿½ Valueï¿½ï¿½ 0ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
                 if (tile.Operator == Operation.Portal && Value == 0)
                 {
-                    // º¸½º ½ºÅ×ÀÌÁö Å¬¸®¾î Ã³¸®
+                    // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Å¬ï¿½ï¿½ï¿½ï¿½ Ã³ï¿½ï¿½
                     GameManager.Instance.StageNumber++;
                 }
                 break;
@@ -366,7 +419,7 @@ public class Player : MonoBehaviour
         }
         bombPositions.Clear();
 
-        // º¸½º¿¡°Ô ÇöÀç Value Àü´Þ
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ Value ï¿½ï¿½ï¿½ï¿½
         OnBombExplode?.Invoke(Value);
     }
 

@@ -4770,7 +4770,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
-  m_Resource: {fileID: 0}
+  m_Resource: {fileID: 8300000, guid: 25b27de60e25b2b4693183c07e4350b1, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
@@ -4906,13 +4906,27 @@ MonoBehaviour:
   masterVolume: 0
   bgmChannel: {fileID: 705654708}
   bgmVolume: 0
-  bgmClips: []
+  bgmClips:
+  - {fileID: 8300000, guid: 25b27de60e25b2b4693183c07e4350b1, type: 3}
+  - {fileID: 8300000, guid: 5bb911f883a5c6b469631aef8ea2083a, type: 3}
   sfxChannel: {fileID: 1939029300}
   sfxVolume: 0
-  sfxClips: []
+  sfxClips:
+  - {fileID: 8300000, guid: f2c3dff7c880eb54a997b4c11ecab486, type: 3}
+  - {fileID: 8300000, guid: 9291519050fd5b84abc22ea5ffc90018, type: 3}
+  - {fileID: 8300000, guid: e4dbcca33953ee341ab21275dd7e71fc, type: 3}
+  - {fileID: 8300000, guid: 986183f893128bc4a83e2f66f8d1e489, type: 3}
+  - {fileID: 8300000, guid: 6506b1b3eb5929a4191935843d80e9c7, type: 3}
+  - {fileID: 8300000, guid: c17cee309b3066d46bffe2a43982c0ff, type: 3}
+  - {fileID: 8300000, guid: 7fb143179dcf68c498ecdc2afd08ea40, type: 3}
   uiChannel: {fileID: 1039068683}
   uiVolume: 0
-  uiClips: []
+  uiClips:
+  - {fileID: 8300000, guid: 25015f66ac1687049ae8d48f237e20b0, type: 3}
+  - {fileID: 8300000, guid: 668a21627806e1345a1038302dee01ec, type: 3}
+  - {fileID: 8300000, guid: d181c38b2409bcd479383e5634390466, type: 3}
+  - {fileID: 8300000, guid: cb04a89871fb73846bb6d7b3109bc09a, type: 3}
+  - {fileID: 8300000, guid: ae6fa5e8640d457409aa508e1af29ca5, type: 3}
 --- !u!1 &725437135
 GameObject:
   m_ObjectHideFlags: 0

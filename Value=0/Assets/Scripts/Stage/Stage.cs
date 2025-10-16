@@ -6,13 +6,13 @@ using static GLOBAL;
 
 public class Stage : MonoBehaviour
 {
-    //º¸½º ½ºÅ×ÀÌÁö °ª Àü´Þ  event
+    //ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½  event
     #region ==========Events==========
     public event Action<int, int, Vector3> OnBossStageLoaded;
     #endregion
 
     #region =====Properties=====
-    //º¸½º ½ºÅ×ÀÌÁö
+    //ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     public int StartValue => GameManager.Instance.CurrentBossStage ? bossStageMaps[currentBossMapIndex].startValue : startValue;
     public int MoveCount => GameManager.Instance.CurrentBossStage ? bossStageMaps[currentBossMapIndex].moveCount : moveCount;
     public Vector3 StartPos => _startPos;
@@ -26,7 +26,7 @@ public class Stage : MonoBehaviour
     [SerializeField, TextArea(5, 20)] private string tileInfo;
     [SerializeField] private EnemyInfo[] enemyInfo;
 
-    //º¸½º ½ºÅ×ÀÌÁö
+    //ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     [Header("Boss Stage Configuration")]
     [SerializeField] private BossStageMap[] bossStageMaps;
     private int currentBossMapIndex = 0;
@@ -145,7 +145,7 @@ public class Stage : MonoBehaviour
             _enemies.Add(enemy);
         }
     }
-    //º¸½º ½ºÅ×ÀÌÁö NULL Ãß°¡
+    //ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ NULL ï¿½ß°ï¿½
     private void UnloadStage()
     {
         if (GameManager.Instance?.CurrentBossStage == true)
@@ -196,10 +196,11 @@ public class Stage : MonoBehaviour
 
         if (GameManager.Instance.CurrentBossStage)
         {
-            // º¸½º ½ºÅ×ÀÌÁö´Â OnBossStageLoaded ÀÌº¥Æ®¿¡¼­ ÃÊ±âÈ­µÊ
+            // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ OnBossStageLoaded ï¿½Ìºï¿½Æ®ï¿½ï¿½ï¿½ï¿½ ï¿½Ê±ï¿½È­ï¿½ï¿½
             return;
         }
 
+        player.IsMovable = true;
         player.Moves = moveCount;
         player.Value = startValue;
         player.transform.position = _startPos;
@@ -230,7 +231,7 @@ public class Stage : MonoBehaviour
         return firewall;
     }
 
-    //º¸½º ½ºÅ×ÀÌÁö ¸Þ¼­µå Ãß°¡
+    //ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Þ¼ï¿½ï¿½ï¿½ ï¿½ß°ï¿½
     public void LoadBossStage()
     {
     
@@ -273,7 +274,7 @@ public class Stage : MonoBehaviour
             BossManager.Instance.InitBossBattle(currentStage.bossTargetValue);
         }
 
-        Debug.Log($"º¸½º ½ºÅ×ÀÌÁö ·Îµå ÀÎµ¦½º: {currentBossMapIndex}");
+        Debug.Log($"ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Îµï¿½ ï¿½Îµï¿½ï¿½ï¿½: {currentBossMapIndex}");
 
     }
 
@@ -355,7 +356,7 @@ public class Stage : MonoBehaviour
         //_objs = new List<GameObject>();
 
         string[] lines = stageMapData.Split('\n');
-        //º¸½º
+        //ï¿½ï¿½ï¿½ï¿½
         lines = lines.Where(line => !string.IsNullOrWhiteSpace(line)).ToArray();
 
         int width = lines[0].Split(' ').Length;
@@ -364,7 +365,7 @@ public class Stage : MonoBehaviour
         float x = -(width / 2) + (width % 2 == 0 ? 0.5f : 0);
         float y = (height / 2) - (height % 2 == 0 ? 0.5f : 0);
 
-        // º¸½º ½ºÅ×ÀÌÁö ¿ÀÇÁ¼Â Àû¿ë
+        // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         y += bossStageOffset;
 
         for (int i = 0; i < lines.Length; i++)
@@ -378,7 +379,7 @@ public class Stage : MonoBehaviour
                 if (part.Equals("0")) continue;
                 if (part.Equals("S")) _startPos = pos;
 
-                // Å¸ÀÏ »ý¼º
+                // Å¸ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
                 Tile tile = ObjectManager.Instance
                     .GetObject(part.Contains(',') ? ObjectID.SwapTile : ObjectID.OperationTile)
                     .GetComponent<Tile>();

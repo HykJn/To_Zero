@@ -105,7 +105,7 @@ public class SoundManager : MonoBehaviour
 
     public void PlayOneShot(BGM_ID bgmID) => bgmChannel.PlayOneShot(bgmClips[(int)bgmID]);
     public void PlayOneShot(SFX_ID sfxID) => sfxChannel.PlayOneShot(sfxClips[(int)sfxID]);
-    public void PlayOneShot(UI_SFX_ID uiSfxID) => uiChannel.PlayOneShot(sfxClips[(int)uiSfxID]);
+    public void PlayOneShot(UI_SFX_ID uiSfxID) => uiChannel.PlayOneShot(uiClips[(int)uiSfxID]);
 
     public void Stop(AudioChannel channel)
     {

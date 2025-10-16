@@ -50,7 +50,7 @@ public class UIManager : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             if (_openPanels.Count > 0) ClosePanel();
-            else if(SequanceManager.SceneID != SceneID.Title) PausePanel.Open();
+            else if (SequanceManager.SceneID != SceneID.Title) PausePanel.Open();
         }
     }
 

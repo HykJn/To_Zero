@@ -19,7 +19,10 @@ public class TitleUI : MonoBehaviour
 
     public void OnClick_Start()
     {
-        UIManager.Instance.LoadScene(SceneID.Office);
+        SoundManager.Instance.Play(UI_SFX_ID.StartButtonClick);
+        SoundManager.Instance.Stop(AudioChannel.BGM);
+        UIManager.Instance.LoadScene(SceneID.Office, afterLoad: () => SoundManager.Instance.Play(BGM_ID.Matrix));
+        return;
     }
 
     //º¸½ºÀü
@@ -30,16 +33,19 @@ public class TitleUI : MonoBehaviour
 
     public void OnClick_CreativeMode()
     {
+        SoundManager.Instance.Play(UI_SFX_ID.ButtonClick);
         print("Creative Mode");
     }
 
     public void OnClick_Options()
     {
+        SoundManager.Instance.Play(UI_SFX_ID.ButtonClick);
         UIManager.Instance.OptionPanel.Open();
     }
 
     public void OnClick_Quit()
     {
+        SoundManager.Instance.Play(UI_SFX_ID.ButtonClick);
 #if UNITY_EDITOR
         UnityEditor.EditorApplication.isPlaying = false;
 #else

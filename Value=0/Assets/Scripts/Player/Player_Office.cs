@@ -1,5 +1,7 @@
 using System;
+using System.Collections;
 using UnityEngine;
+using static GLOBAL;
 
 public class Player_Office : MonoBehaviour
 {
@@ -9,10 +11,15 @@ public class Player_Office : MonoBehaviour
 
     #region =====Fields=====
 
-    [Header("Configuration")]
-    [SerializeField] private float speed = 1.5f;
+    [Header("Components")]
+    [SerializeField] private SpriteRenderer spriteRenderer;
+    [SerializeField] private Animator animator;
 
-    [SerializeField] private IInteractable interactable;
+    [Header("Configuration")]
+    [SerializeField] private AnimationCurve easeOut;
+
+    private bool _isMovable = true;
+    private IInteractable interactable;
 
     #endregion
 
@@ -44,14 +51,44 @@ public class Player_Office : MonoBehaviour
     private void InputHandler()
     {
         if (UIManager.Instance.AnyPanelOpen) return;
-        Move(new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical")).normalized);
+        Vector2 dir = Vector2.zero;
+        if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow)) dir = Vector2.up;
+        else if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow)) dir = Vector2.left;
+        else if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow)) dir = Vector2.down;
+        else if (Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow)) dir = Vector2.right;
+        if (dir != Vector2.zero) Move(dir);
 
         if (interactable != null && Input.GetKeyDown(KeyCode.Space)) interactable.Interact();
     }
 
     private void Move(Vector2 dir)
     {
-        this.transform.Translate(speed * Time.deltaTime * dir);
+        if (!_isMovable) return;
+
+        _isMovable = false;
+        Vector2 pos = (Vector2)this.transform.position + dir;
+        
+        if (dir == Vector2.right) spriteRenderer.flipX = true;
+        else if (dir == Vector2.left) spriteRenderer.flipX = false;
+        StartCoroutine(Crtn_Move(pos));
+    }
+
+    private IEnumerator Crtn_Move(Vector2 pos)
+    {
+        Vector2 startPos = this.transform.position;
+        float t = 0f;
+        animator.SetTrigger(Animator.StringToHash("Move"));
+
+        SoundManager.Instance.PlayOneShot(SFX_ID.PlayerMove);
+        while ((Vector2)this.transform.position != pos)
+        {
+            this.transform.position = Vector2.Lerp(startPos, pos, Mathf.Clamp01(easeOut.Evaluate(t / 0.05f)));
+            t += Time.deltaTime;
+            yield return new WaitForEndOfFrame();
+        }
+
+        this.transform.position = pos;
+        _isMovable = true;
     }
 
     #endregion
