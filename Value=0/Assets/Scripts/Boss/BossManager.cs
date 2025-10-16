@@ -78,11 +78,16 @@ public class BossManager : MonoBehaviour
     private int _playerMoveCount = 0;
     private List<BossLaser> _currentLasers;
     private bool _isPhaseChanging = false;
+    public bool _isBossStagePlay = false;
 
     [SerializeField] private GameObject bossObject;
     [SerializeField] private BossHitEffect bossHitEffect;
-    [SerializeField] private List<GameObject> healthObj = new List<GameObject>();
-    private int healthObjCount = 4;
+
+    [SerializeField] private List<GameObject> bosshealthObj = new List<GameObject>();
+    private int bosshealthObjCount = 4;
+
+    [SerializeField] private List<GameObject> playerhealthObj = new List<GameObject>();
+    private int playerhealthObjCount = 3;
 
     [SerializeField] private TMP_Text text_BossTartgetValue;
 
@@ -111,8 +116,21 @@ public class BossManager : MonoBehaviour
 
     public void InitBossBattle(int bossTargetValue)
     {
+
         bossObject.SetActive(true);
         UpdateTargetText(bossTargetValue);
+
+        bosshealthObjCount = 4;
+        foreach (var BosshealthObj in bosshealthObj)
+        {
+            BosshealthObj.SetActive(false);
+        }
+
+        playerhealthObjCount = 3;
+        foreach (var PlayerhealthObj in playerhealthObj)
+        {
+            PlayerhealthObj.SetActive(true);
+        }
 
         GameManager.Instance.Player?.ClearBombs();
         if (!_isBombSubscribed && GameManager.Instance?.Player != null)
@@ -159,15 +177,15 @@ public class BossManager : MonoBehaviour
         {
             BossHealth--;
 
-            
-            healthObj[healthObjCount-1].SetActive(false);
-            healthObjCount--;
-            if (healthObjCount == 0 && !(BossHealth == 0))
+
+            bosshealthObj[bosshealthObjCount - 1].SetActive(true);
+            bosshealthObjCount--;
+            if (bosshealthObjCount == 0 && !(BossHealth == 0))
             {
-                healthObjCount = 4;
-                foreach (var healthObj in healthObj)
+                bosshealthObjCount = 4;
+                foreach (var healthObj in bosshealthObj)
                 {
-                    healthObj.SetActive(true);
+                    healthObj.SetActive(false);
                 }
             }
 
@@ -177,6 +195,8 @@ public class BossManager : MonoBehaviour
         else
         {
             PlayerHealth--;
+            playerhealthObj[playerhealthObjCount - 1].SetActive(false);
+            playerhealthObjCount--;
             Debug.Log($"패배! 플레이어 체력: {PlayerHealth}");
         }
     }
@@ -319,6 +339,8 @@ public class BossManager : MonoBehaviour
     public void DamagePlayer()
     {
         PlayerHealth--;
+        playerhealthObj[playerhealthObjCount - 1].SetActive(false);
+        playerhealthObjCount--;
     }
 
     private void ClearLaser()

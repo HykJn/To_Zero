@@ -8,15 +8,17 @@ public class BossLaser : MonoBehaviour
     [SerializeField] private SpriteRenderer spriteRenderer;
     //[SerializeField] private Collider2D col;
     [SerializeField] private Color warningColor = new Color(1f, 0f, 0f, 0.3f);
-    [SerializeField] private Color attackColor = new Color(1f, 0f, 0f, 1f);
     [SerializeField] private float attackEffectDuration = 0.3f;
+
+    [Header("Attack Effect")]
+    [SerializeField] private GameObject attackEffectPrefab;
 
     //private bool _isActive = false;
     #endregion\
 
     #region ==========Unity Methods==========
 
-  
+
     #endregion
 
     #region ==========Methods==========
@@ -38,7 +40,13 @@ public class BossLaser : MonoBehaviour
         if (!gameObject.activeSelf) return;
 
         StopAllCoroutines();
-        spriteRenderer.color = attackColor;
+        spriteRenderer.enabled = false;
+
+        if (attackEffectPrefab != null)
+        {
+            GameObject effect = Instantiate(attackEffectPrefab, transform.position, Quaternion.identity);
+            Destroy(effect, attackEffectDuration); 
+        }
         //col.enabled = true;
         //_isActive |= col.enabled;
 
@@ -64,6 +72,7 @@ public class BossLaser : MonoBehaviour
     private IEnumerator DestroyDelay(float delay)
     {
         yield return new WaitForSeconds(delay);
+        spriteRenderer.enabled = true;
         ObjectManager.Instance.ReleaseObject(gameObject);
     }
 

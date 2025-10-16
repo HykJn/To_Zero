@@ -12,7 +12,7 @@ public class BossUI : MonoBehaviour
     [SerializeField] private GameObject bossUI;
 
     [SerializeField] private GameObject gameOverPanel;
-    [SerializeField] private TMP_Text text_GameOver;
+    [SerializeField] private Image image_GameOver;
     [SerializeField] private Button button_Retry;
     [SerializeField] private TMP_Text text_Retry;
 
@@ -97,12 +97,12 @@ public class BossUI : MonoBehaviour
 
     private void UpdatePlayerHealth(int health)
     {
-        text_PlayerHealth.text = $"Player HP: {health}";
+        //text_PlayerHealth.text = $"Player HP: {health}";
     }
 
     private void UpdateBossHealth(int health)
     {
-        text_BossHealth.text = $" Boss HP: {health}";
+       // text_BossHealth.text = $" Boss HP: {health}";
     }
 
     //private void UpdateBossTargetValue(int value)
@@ -116,14 +116,13 @@ public class BossUI : MonoBehaviour
     private void ShowGameOver()
     {
         gameOverPanel.SetActive(true);
-        text_GameOver.text = "GAME OVER";
         GameManager.Instance.Player.IsMovable = false;
     }
 
     private void ReStartStage()
     {
         if (gameOverPanel != null) gameOverPanel.SetActive(false);
-        GameManager.Instance.Player.ClearBombs();
+        GameManager.Instance.Player.ClearBombsWithoutEffect();
         GameManager.Instance?.Restart();
     }
 }

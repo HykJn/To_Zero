@@ -447,6 +447,15 @@ public class Player : MonoBehaviour
         bombPositions.Clear();
     }
 
+    public void ClearBombsWithoutEffect()
+    {
+        foreach (var bomb in bombPositions.Values)
+        {
+            if (bomb != null) Destroy(bomb);
+        }
+        bombPositions.Clear();
+    }
+
     public void RegisterBossEvents()
     {
         if (BossManager.Instance != null)
