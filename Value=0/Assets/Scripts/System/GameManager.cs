@@ -29,16 +29,18 @@ public class GameManager : MonoBehaviour
             OnStageLoaded?.Invoke();
             UIManager.Instance.MatrixUI.Stage = _stageNumber + 1;
             SequanceManager.Stage = value;
-            LoadDialog(value);
+            // LoadDialog(value);
         }
     }
 
-    public Player Player { get; private set; }
+    public Player Player => player;
 
     #endregion
 
     #region =====Fields=====
 
+    [SerializeField] private Player player;
+    
     [Header("Stages")]
     [SerializeField] private Stage[] stages;
 
@@ -59,7 +61,7 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        Player = GameObject.FindWithTag("Player").GetComponent<Player>();
+        // Player = GameObject.FindWithTag("Player").GetComponent<Player>();
     }
 
     #endregion
@@ -105,7 +107,7 @@ public class GameManager : MonoBehaviour
         Player.transform.position = startPos;
     }
 
-    private void LoadDialog(int stage)
+    public void LoadDialog(int stage)
     {
         if (stage == 1)
         {
@@ -142,6 +144,8 @@ public class GameManager : MonoBehaviour
             UIManager.Instance.DialogPanel.StartDialog();
         }
     }
+    
+    public void LoadDialog() => LoadDialog(StageNumber);
 
     #endregion
 }

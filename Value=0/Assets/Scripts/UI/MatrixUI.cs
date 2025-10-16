@@ -11,7 +11,7 @@ public class MatrixUI : MonoBehaviour
     {
         set
         {
-            if(GameManager.Instance.CurrentBossStage)
+            if (GameManager.Instance.CurrentBossStage)
             {
                 text_Stage.gameObject.SetActive(false);
             }
@@ -33,11 +33,15 @@ public class MatrixUI : MonoBehaviour
         set => text_Value.text = value.ToString();
     }
 
+    public BossUI BossUI => bossUI;
+
     #endregion
 
     #region =====Fields=====
 
     [Header("References")]
+    [SerializeField] private BossUI bossUI;
+
     [SerializeField] private TMP_Text text_Stage;
     [SerializeField] private TMP_Text text_Moves;
     [SerializeField] private TMP_Text text_Value;

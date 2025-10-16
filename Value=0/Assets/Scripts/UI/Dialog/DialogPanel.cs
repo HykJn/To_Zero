@@ -43,6 +43,7 @@ public class DialogPanel : MonoBehaviour, IPanel
     private void Update()
     {
         if (!panel.activeSelf) return;
+        if (UIManager.Instance.PausePanel.gameObject.activeSelf) return;
         if (Input.GetKeyDown(KeyCode.Space))
         {
             if (_onTyping) StopTyping();

@@ -321,7 +321,8 @@ public class Player : MonoBehaviour
                         Die();
                         SoundManager.Instance.PlayOneShot(SFX_ID.PlayerRespawn);
                     }
-                    else GameManager.Instance.StageNumber++;
+                    else CameraEffector.Instance.NextStage();
+                    // else GameManager.Instance.StageNumber++;
 
                     yield break;
             }
@@ -389,6 +390,7 @@ public class Player : MonoBehaviour
     {
         IsMovable = false;
         animator.SetTrigger(Animator.StringToHash("Die"));
+        CameraEffector.Instance.Restart();
     }
 
     private void ApplyTileValueBoss(Vector3 pos)
@@ -405,7 +407,8 @@ public class Player : MonoBehaviour
                 if (tile.Operator == Operation.Portal && Value == 0)
                 {
                     // ���� �������� Ŭ���� ó��
-                    GameManager.Instance.StageNumber++;
+                    // GameManager.Instance.StageNumber++;
+                    CameraEffector.Instance.NextStage();
                 }
 
                 break;
@@ -469,11 +472,10 @@ public class Player : MonoBehaviour
                 Bomb bombScript = bomb.GetComponent<Bomb>();
                 if (bombScript != null)
                 {
-                    bombScript.Explode(); 
+                    bombScript.Explode();
                 }
             }
             else Destroy(bomb);
-
         }
 
         bombPositions.Clear();
@@ -490,7 +492,7 @@ public class Player : MonoBehaviour
                 Bomb bombScript = bomb.GetComponent<Bomb>();
                 if (bombScript != null)
                 {
-                    bombScript.Explode(); 
+                    bombScript.Explode();
                 }
             }
             else Destroy(bomb);

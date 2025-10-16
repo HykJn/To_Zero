@@ -7,15 +7,25 @@ using static GLOBAL;
 public class Stage : MonoBehaviour
 {
     //���� �������� �� ����  event
+
     #region ==========Events==========
+
     public event Action<int, int, Vector3> OnBossStageLoaded;
+
     #endregion
 
     #region =====Properties=====
+
     //���� ��������
-    public int StartValue => GameManager.Instance.CurrentBossStage ? bossStageMaps[currentBossMapIndex].startValue : startValue;
-    public int MoveCount => GameManager.Instance.CurrentBossStage ? bossStageMaps[currentBossMapIndex].moveCount : moveCount;
+    public int StartValue => GameManager.Instance.CurrentBossStage
+        ? bossStageMaps[currentBossMapIndex].startValue
+        : startValue;
+
+    public int MoveCount =>
+        GameManager.Instance.CurrentBossStage ? bossStageMaps[currentBossMapIndex].moveCount : moveCount;
+
     public Vector3 StartPos => _startPos;
+
     #endregion
 
     #region =====Fields=====
@@ -45,8 +55,6 @@ public class Stage : MonoBehaviour
     private List<Enemy> _enemies;
     private Vector2 _startPos;
 
-
-
     #endregion
 
     #region =====Unity Events=====
@@ -57,6 +65,7 @@ public class Stage : MonoBehaviour
         {
             LoadStage();
         }
+
         if (GameManager.Instance != null)
         {
             GameManager.Instance.OnRestart += OnRestart;
@@ -69,6 +78,7 @@ public class Stage : MonoBehaviour
         {
             UnloadStage();
         }
+
         if (GameManager.Instance != null)
         {
             GameManager.Instance.OnRestart -= OnRestart;
@@ -145,6 +155,7 @@ public class Stage : MonoBehaviour
             _enemies.Add(enemy);
         }
     }
+
     //���� �������� NULL �߰�
     private void UnloadStage()
     {
@@ -157,7 +168,6 @@ public class Stage : MonoBehaviour
         {
             foreach (Enemy enemy in _enemies)
             {
-               
                 if (enemy != null && enemy.gameObject != null)
                 {
                     enemy.gameObject.SetActive(false);
@@ -169,7 +179,6 @@ public class Stage : MonoBehaviour
         {
             foreach (Firewall firewall in _firewalls)
             {
-              
                 if (firewall != null && firewall.gameObject != null)
                 {
                     firewall.gameObject.SetActive(false);
@@ -179,7 +188,6 @@ public class Stage : MonoBehaviour
 
         if (_tileMap != null)
         {
-            
             foreach (var kvp in _tileMap.ToList())
             {
                 if (kvp.Value != null && kvp.Value.gameObject != null)
@@ -238,7 +246,7 @@ public class Stage : MonoBehaviour
     //���� �������� �޼��� �߰�
     public void LoadBossStage()
     {
-    
+        UIManager.Instance.MatrixUI.BossUI.gameObject.SetActive(true);
         _phase1Map = new List<int>();
         for (int i = 0; i < bossStageMaps.Length; i++)
         {
@@ -247,6 +255,7 @@ public class Stage : MonoBehaviour
                 _phase1Map.Add(i);
             }
         }
+
         ShuffleBossMaps(_phase1Map);
 
         _phase2Map = new List<int>();
@@ -257,6 +266,7 @@ public class Stage : MonoBehaviour
                 _phase2Map.Add(i);
             }
         }
+
         ShuffleBossMaps(_phase2Map);
 
 
@@ -277,7 +287,6 @@ public class Stage : MonoBehaviour
         {
             BossManager.Instance.InitBossBattle(currentStage.bossTargetValue);
         }
-
     }
 
     public void LoadNextBossStage()
@@ -351,10 +360,9 @@ public class Stage : MonoBehaviour
 
     private void InitStage(string stageMapData)
     {
-       
         _tileMap = new Dictionary<Vector2, Tile>();
-        _firewalls = new List<Firewall>();  
-        _enemies = new List<Enemy>();        
+        _firewalls = new List<Firewall>();
+        _enemies = new List<Enemy>();
         //_objs = new List<GameObject>();
 
         string[] lines = stageMapData.Split('\n');
@@ -410,6 +418,7 @@ public class Stage : MonoBehaviour
         {
             if (tile != null) ObjectManager.Instance.ReleaseObject(tile.gameObject);
         }
+
         _tileMap.Clear();
     }
 
@@ -429,6 +438,7 @@ public class Stage : MonoBehaviour
                 columePosition.Add(pos);
             }
         }
+
         return columePosition;
     }
 
@@ -442,8 +452,8 @@ public class Stage : MonoBehaviour
             {
                 rowPosition.Add(pos);
             }
-
         }
+
         return rowPosition;
     }
 
@@ -464,4 +474,3 @@ public struct EnemyInfo
         this.endPoint = endPoint;
     }
 }
-

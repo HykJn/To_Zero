@@ -14,12 +14,13 @@ public class OnPlayerDie : StateMachineBehaviour
     //    
     //}
 
-     // OnStateExit is called when a transition ends and the state machine finishes evaluating this state
-    override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
-    {
-        GameManager.Instance.Restart();
-        animator.GetComponent<Player>().IsMovable = false;
-    }
+    // OnStateExit is called when a transition ends and the state machine finishes evaluating this state
+    // override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
+    // {
+    //     // CameraEffector.Instance.Restart();
+    //     // GameManager.Instance.Restart();
+    //     // animator.GetComponent<Player>().IsMovable = false;
+    // }
 
     // OnStateMove is called right after Animator.OnAnimatorMove()
     //override public void OnStateMove(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)

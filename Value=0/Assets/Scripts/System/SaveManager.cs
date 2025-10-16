@@ -60,6 +60,7 @@ public static class SaveManager
             {
                 SequanceManager.Chapter = 0;
                 SequanceManager.Stage = 1;
+                SequanceManager.LastDialog = 0;
                 return false;
             }
 

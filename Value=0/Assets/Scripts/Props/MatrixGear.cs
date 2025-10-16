@@ -33,8 +33,14 @@ public class MatrixGear : MonoBehaviour, IInteractable
     public void Interact()
     {
         if (SequanceManager.LastDialog is 14 or 23 or 33) return;
-        UIManager.Instance.LoadScene(SceneID.Matrix,
-            afterLoad: () => GameManager.Instance.StageNumber = SequanceManager.Stage);
+        UIManager.Instance.LoadScene(SceneID.Matrix, afterLoad: AfterLoad);
+        return;
+
+        void AfterLoad()
+        {
+            GameManager.Instance.StageNumber = SequanceManager.Stage;
+            GameManager.Instance.LoadDialog();
+        }
     }
 
     #endregion
