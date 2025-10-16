@@ -48,8 +48,6 @@ public class OperationTile : Tile
     [SerializeField] private SpriteRenderer spriteRenderer;
     [SerializeField] protected TMP_Text text_Value;
     [SerializeField] private GameObject portal;
-    [SerializeField] private GameObject cube;
-
 
     [Header("Sprites")]
     [SerializeField] private Sprite sprite_Default;
@@ -75,17 +73,9 @@ public class OperationTile : Tile
         Value = 0;
         text_Value.text = string.Empty;
         portal.SetActive(value.Equals("P"));
-        cube.SetActive(value.Equals("C"));
         if (value is "P")
         {
             Operator = Operation.Portal;
-            return;
-        }
-
-        if (value is "C")
-        {
-            Operator = Operation.Cube;
-            AnyObjectAbove = true;
             return;
         }
 

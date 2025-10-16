@@ -1,7 +1,6 @@
 using System;
 using UnityEngine;
 using System.Collections;
-using Unity.VisualScripting;
 
 public class GameManager : MonoBehaviour
 {
@@ -14,7 +13,7 @@ public class GameManager : MonoBehaviour
     public Stage Stage => stages[_stageNumber];
 
     //���� ��������
-    public bool CurrentBossStage => StageNumber == bossStageNumber;
+    public bool CurrentBossStage => (_stageNumber+1) == bossStageNumber;
 
     public int StageNumber
     {
@@ -28,8 +27,6 @@ public class GameManager : MonoBehaviour
             stages[_stageNumber].Init();
             OnStageLoaded?.Invoke();
             UIManager.Instance.MatrixUI.Stage = _stageNumber + 1;
-            SequanceManager.Stage = value;
-            LoadDialog(value);
         }
     }
 
@@ -60,6 +57,7 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         Player = GameObject.FindWithTag("Player").GetComponent<Player>();
+        StageNumber = 1;
     }
 
     #endregion
@@ -77,7 +75,6 @@ public class GameManager : MonoBehaviour
                 Stage.LoadBossStage();
             }
         }
-
         OnRestart?.Invoke();
     }
 
@@ -89,7 +86,6 @@ public class GameManager : MonoBehaviour
             stage.OnBossStageLoaded += HandleBossStage;
         }
     }
-
     private void OnDisable()
     {
         foreach (Stage stage in stages)
@@ -97,50 +93,12 @@ public class GameManager : MonoBehaviour
             stage.OnBossStageLoaded -= HandleBossStage;
         }
     }
-
     private void HandleBossStage(int startnumber, int moves, Vector3 startPos)
     {
         Player.Value = startnumber;
         Player.Moves = moves;
         Player.transform.position = startPos;
-    }
 
-    private void LoadDialog(int stage)
-    {
-        if (stage == 1)
-        {
-            UIManager.Instance.DialogPanel.SetDialog(10);
-            UIManager.Instance.DialogPanel.StartDialog();
-        }
-        else if (stage == 2)
-        {
-            SequanceManager.Chapter = 1;
-        }
-        else if (stage == 4)
-        {
-            UIManager.Instance.DialogPanel.SetDialog(11);
-            UIManager.Instance.DialogPanel.StartDialog();
-        }
-        else if (stage == 6)
-        {
-            UIManager.Instance.DialogPanel.SetDialog(12);
-            UIManager.Instance.DialogPanel.StartDialog();
-        }
-        else if (stage == 10)
-        {
-            UIManager.Instance.DialogPanel.SetDialog(21);
-            UIManager.Instance.DialogPanel.StartDialog();
-        }
-        else if (stage == 13)
-        {
-            UIManager.Instance.DialogPanel.SetDialog(31);
-            UIManager.Instance.DialogPanel.StartDialog();
-        }
-        else if (stage == 17)
-        {
-            UIManager.Instance.DialogPanel.SetDialog(41);
-            UIManager.Instance.DialogPanel.StartDialog();
-        }
     }
 
     #endregion

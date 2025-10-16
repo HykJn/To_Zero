@@ -58,24 +58,18 @@ public class Player_Office : MonoBehaviour
         else if (Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow)) dir = Vector2.right;
         if (dir != Vector2.zero) Move(dir);
 
-        if (interactable != null && Input.GetKeyDown(KeyCode.Space))
-        {
-            interactable.Interact();
-            interactable = null;
-        }
+        if (interactable != null && Input.GetKeyDown(KeyCode.Space)) interactable.Interact();
     }
 
     private void Move(Vector2 dir)
     {
         if (!_isMovable) return;
 
+        _isMovable = false;
         Vector2 pos = (Vector2)this.transform.position + dir;
-
+        
         if (dir == Vector2.right) spriteRenderer.flipX = true;
         else if (dir == Vector2.left) spriteRenderer.flipX = false;
-
-        if (!IsMovablePlace(pos)) return;
-        _isMovable = false;
         StartCoroutine(Crtn_Move(pos));
     }
 
@@ -95,11 +89,6 @@ public class Player_Office : MonoBehaviour
 
         this.transform.position = pos;
         _isMovable = true;
-    }
-
-    private bool IsMovablePlace(Vector2 pos)
-    {
-        return !Physics2D.Raycast(pos, Vector3.forward, 5f);
     }
 
     #endregion

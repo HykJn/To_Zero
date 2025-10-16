@@ -20,12 +20,6 @@ public class Firewall : MonoBehaviour
 
     public bool IsHeld { get; private set; }
 
-    public string Value
-    {
-        get => text_Value.text;
-        set => text_Value.text = value;
-    }
-
     #endregion
 
     #region =====Fields=====
@@ -96,8 +90,7 @@ public class Firewall : MonoBehaviour
     private bool CheckIsMovable(Vector2 pos)
     {
         Stage stage = GameManager.Instance.Stage;
-        return !stage.TryGetFirewall(pos, out Firewall firewall) && stage.TryGetTile<Tile>(pos, out Tile tile)
-                                                                 && (tile as OperationTile).Operator != GLOBAL.Operation.Cube
+        return !stage.TryGetFirewall(pos, out Firewall firewall) && stage.TryGetTile<Tile>(pos, out _)
                                                                  && (Vector2)GameManager.Instance.Player.transform
                                                                      .position != pos;
     }

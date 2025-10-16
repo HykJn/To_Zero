@@ -15,9 +15,8 @@ public static class GLOBAL
     public enum Character
     {
         None = -1,
-        Zero, Pix,
-        Panos,
-        Anchor,
+        Zero, Pixel,
+        Parser,
     }
 
     public enum Operation
@@ -25,7 +24,7 @@ public static class GLOBAL
         None = -1,
         Add, Subtract, Multiply, Divide,
         Equal, NotEqual, Greater, Less,
-        Portal, Cube
+        Portal
     }
 
     //�������߰�
@@ -60,7 +59,7 @@ public static class GLOBAL
     public enum BGM_ID
     {
         None = -1,
-        Title, Office, Matrix, Boss,
+        Title, Matrix,
     }
 
     public enum LoopType

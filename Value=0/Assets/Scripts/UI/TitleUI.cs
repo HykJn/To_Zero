@@ -21,21 +21,11 @@ public class TitleUI : MonoBehaviour
     {
         SoundManager.Instance.Play(UI_SFX_ID.StartButtonClick);
         SoundManager.Instance.Stop(AudioChannel.BGM);
-        UIManager.Instance.LoadScene(SceneID.Office, afterLoad: AfterLoad);
+        UIManager.Instance.LoadScene(SceneID.Office, afterLoad: () => SoundManager.Instance.Play(BGM_ID.Matrix));
         return;
-
-        void AfterLoad()
-        {
-            SoundManager.Instance.Play(BGM_ID.Matrix);
-            if (SequanceManager.Chapter == 0)
-            {
-                UIManager.Instance.DialogPanel.SetDialog(0);
-                UIManager.Instance.DialogPanel.StartDialog();
-            }
-        }
     }
 
-    //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+    //º¸½ºÀü
     public void OnClick_Boss()
     {
         UIManager.Instance.LoadScene(SceneID.Boss);
@@ -61,12 +51,6 @@ public class TitleUI : MonoBehaviour
 #else
 		Application.Quit();
 #endif
-    }
-
-    public void OnClick_Remove()
-    {
-        SequanceManager.Chapter = 0;
-        SequanceManager.Stage = 1;
     }
 
     #endregion

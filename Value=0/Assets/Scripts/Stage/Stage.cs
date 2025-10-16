@@ -188,10 +188,6 @@ public class Stage : MonoBehaviour
                 }
             }
         }
-
-        _tileMap = null;
-        _firewalls = null;
-        _enemies = null;
     }
 
     public void Init()

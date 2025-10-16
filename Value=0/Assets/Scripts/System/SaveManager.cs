@@ -7,13 +7,12 @@ using UnityEngine;
 [Serializable]
 public struct SaveData
 {
-    public int chapter, stage, lastDialog;
+    public int chapter, stage;
 
-    public SaveData(int chapter, int stage, int lastDialog)
+    public SaveData(int chapter, int stage)
     {
         this.chapter = chapter;
         this.stage = stage;
-        this.lastDialog = lastDialog;
     }
 }
 
@@ -36,7 +35,7 @@ public static class SaveManager
     {
         try
         {
-            SaveData dat = new(SequanceManager.Chapter, SequanceManager.Stage, SequanceManager.LastDialog);
+            SaveData dat = new(3, 1);
             string json = JsonUtility.ToJson(dat, true);
             string enc = Encrypt(json);
 
@@ -56,25 +55,14 @@ public static class SaveManager
     {
         try
         {
-            if (!File.Exists(Path))
-            {
-                SequanceManager.Chapter = 0;
-                SequanceManager.Stage = 1;
-                return false;
-            }
-
             using StreamReader sr = new(Path);
             string cipher = sr.ReadToEnd();
             string plain = Decrypt(cipher);
             SaveData dat = JsonUtility.FromJson<SaveData>(plain);
 
-            SequanceManager.Chapter = dat.chapter;
-            SequanceManager.Stage = dat.stage;
-            SequanceManager.LastDialog = dat.lastDialog;
-
-            Debug.Log(
-                $"Chapter: {SequanceManager.Chapter} Stage: {SequanceManager.Stage} LastDialog: {SequanceManager.LastDialog}");
-
+            Debug.Log("Load Complete.");
+            Debug.Log("Chapter: " + dat.chapter);
+            Debug.Log("Stage: " + dat.stage);
             return true;
         }
         catch (Exception e)
