@@ -464,12 +464,20 @@ public class Player : MonoBehaviour
 
         foreach (var bomb in bombPositions.Values)
         {
-            if (bomb != null) Destroy(bomb);
+            if (bomb != null)
+            {
+                Bomb bombScript = bomb.GetComponent<Bomb>();
+                if (bombScript != null)
+                {
+                    bombScript.Explode(); 
+                }
+            }
+            else Destroy(bomb);
+
         }
 
         bombPositions.Clear();
 
-        // �������� ���� Value ����
         OnBombExplode?.Invoke(Value);
     }
 
@@ -477,7 +485,15 @@ public class Player : MonoBehaviour
     {
         foreach (var bomb in bombPositions.Values)
         {
-            if (bomb != null) Destroy(bomb);
+            if (bomb != null)
+            {
+                Bomb bombScript = bomb.GetComponent<Bomb>();
+                if (bombScript != null)
+                {
+                    bombScript.Explode(); 
+                }
+            }
+            else Destroy(bomb);
         }
 
         bombPositions.Clear();

@@ -9,7 +9,18 @@ public class MatrixUI : MonoBehaviour
 
     public int Stage
     {
-        set => text_Stage.text = "Stage " + value;
+        set
+        {
+            if(GameManager.Instance.CurrentBossStage)
+            {
+                text_Stage.gameObject.SetActive(false);
+            }
+            else
+            {
+                text_Stage.gameObject.SetActive(true);
+                text_Stage.text = "Stage " + value;
+            }
+        }
     }
 
     public int Moves

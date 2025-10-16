@@ -8,7 +8,7 @@ public class BossUI : MonoBehaviour
 {
     [SerializeField] private TMP_Text text_PlayerHealth;
     [SerializeField] private TMP_Text text_BossHealth;
-    [SerializeField] private TMP_Text text_BossTartgetValue;
+    //[SerializeField] private TMP_Text text_BossTartgetValue;
     [SerializeField] private GameObject bossUI;
 
     [SerializeField] private GameObject gameOverPanel;
@@ -64,7 +64,7 @@ public class BossUI : MonoBehaviour
 
         BossManager.Instance.PlayerHealthChange += UpdatePlayerHealth;
         BossManager.Instance.BossHealthChange += UpdateBossHealth;
-        BossManager.Instance.BossTargetValueChange += UpdateBossTargetValue;
+        //BossManager.Instance.BossTargetValueChange += UpdateBossTargetValue;
         BossManager.Instance.OnPlayerLose += ShowGameOver;
     }
 
@@ -74,7 +74,7 @@ public class BossUI : MonoBehaviour
 
         BossManager.Instance.PlayerHealthChange -= UpdatePlayerHealth;
         BossManager.Instance.BossHealthChange -= UpdateBossHealth;
-        BossManager.Instance.BossTargetValueChange -= UpdateBossTargetValue;
+        //BossManager.Instance.BossTargetValueChange -= UpdateBossTargetValue;
         BossManager.Instance.OnPlayerLose -= ShowGameOver;
     }
 
@@ -97,21 +97,21 @@ public class BossUI : MonoBehaviour
 
     private void UpdatePlayerHealth(int health)
     {
-        text_PlayerHealth.text = $"�÷��̾� HP: {health}";
-        Debug.Log($"UI ������Ʈ: �÷��̾� HP = {health}");
+        text_PlayerHealth.text = $"Player HP: {health}";
     }
 
     private void UpdateBossHealth(int health)
     {
-        text_BossHealth.text = $"���� HP: {health}";
-        Debug.Log($"UI ������Ʈ: ���� HP = {health}");
+        text_BossHealth.text = $" Boss HP: {health}";
     }
 
-    private void UpdateBossTargetValue(int value)
-    {
-        text_BossTartgetValue.text = $"��ǥ��: {value}";
-        Debug.Log($"UI ������Ʈ: ��ǥ�� = {value}");
-    }
+    //private void UpdateBossTargetValue(int value)
+    //{
+    //    if (value > 0)
+    //        text_BossTartgetValue.text = $"+{value}";
+    //    else
+    //        text_BossTartgetValue.text = $"{value}";
+    //}
 
     private void ShowGameOver()
     {
