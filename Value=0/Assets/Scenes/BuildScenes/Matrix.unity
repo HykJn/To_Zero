@@ -356,7 +356,7 @@ MonoBehaviour:
   m_text: -22
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 47698816c4d3c5e4aba1e1e26b373743, type: 2}
-  m_sharedMaterial: {fileID: -7328133833462881551, guid: 47698816c4d3c5e4aba1e1e26b373743, type: 2}
+  m_sharedMaterial: {fileID: 75809633401529019, guid: 47698816c4d3c5e4aba1e1e26b373743, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -511,7 +511,7 @@ MonoBehaviour:
   m_text: "\uC7AC\uC2DC\uC791"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: ad132d19d2d836641a213a0a020a55db, type: 2}
-  m_sharedMaterial: {fileID: -570286697824121108, guid: ad132d19d2d836641a213a0a020a55db, type: 2}
+  m_sharedMaterial: {fileID: 2036893046984920026, guid: ad132d19d2d836641a213a0a020a55db, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -726,7 +726,7 @@ MonoBehaviour:
   m_text: "\uC124\uC815"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: ad132d19d2d836641a213a0a020a55db, type: 2}
-  m_sharedMaterial: {fileID: -570286697824121108, guid: ad132d19d2d836641a213a0a020a55db, type: 2}
+  m_sharedMaterial: {fileID: 2036893046984920026, guid: ad132d19d2d836641a213a0a020a55db, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -1662,7 +1662,7 @@ MonoBehaviour:
   m_text: "\uBC29\uD574 \uBE14\uB7ED \uC774\uB3D9"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: ad132d19d2d836641a213a0a020a55db, type: 2}
-  m_sharedMaterial: {fileID: -570286697824121108, guid: ad132d19d2d836641a213a0a020a55db, type: 2}
+  m_sharedMaterial: {fileID: 2036893046984920026, guid: ad132d19d2d836641a213a0a020a55db, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -2264,7 +2264,7 @@ MonoBehaviour:
   m_text: 10
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 47698816c4d3c5e4aba1e1e26b373743, type: 2}
-  m_sharedMaterial: {fileID: -7328133833462881551, guid: 47698816c4d3c5e4aba1e1e26b373743, type: 2}
+  m_sharedMaterial: {fileID: 75809633401529019, guid: 47698816c4d3c5e4aba1e1e26b373743, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -2714,7 +2714,7 @@ MonoBehaviour:
   m_text: "\uC774\uB3D9"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: ad132d19d2d836641a213a0a020a55db, type: 2}
-  m_sharedMaterial: {fileID: -570286697824121108, guid: ad132d19d2d836641a213a0a020a55db, type: 2}
+  m_sharedMaterial: {fileID: 2036893046984920026, guid: ad132d19d2d836641a213a0a020a55db, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -4263,10 +4263,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 634f6fa3621663148907b08990231448, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  prefab_Tile: {fileID: 1030933736242688238, guid: b90fd50485c8b9e4c8f6a413f89fb40c, type: 3}
-  prefab_Wall: {fileID: 1030933736242688238, guid: 7aab86b6c8e74d5468d7f2f4d0930bfd, type: 3}
-  prefab_Box: {fileID: 2594196179184477090, guid: 45115e0054613564e963dae1dbf353a2, type: 3}
-  prefab_Drone: {fileID: 7276949923402202544, guid: 9d90ea235f5ce5440a8840296106c3ac, type: 3}
+  prefab_OperationTile: {fileID: 0}
+  prefab_SwapTile: {fileID: 0}
+  prefab_Firewall: {fileID: 0}
+  prefab_Observer: {fileID: 0}
+  prefab_BossLaser: {fileID: 0}
 --- !u!4 &1290141055
 Transform:
   m_ObjectHideFlags: 0
@@ -5582,7 +5583,7 @@ MonoBehaviour:
   m_text: Stage 1
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 47698816c4d3c5e4aba1e1e26b373743, type: 2}
-  m_sharedMaterial: {fileID: -7328133833462881551, guid: 47698816c4d3c5e4aba1e1e26b373743, type: 2}
+  m_sharedMaterial: {fileID: 75809633401529019, guid: 47698816c4d3c5e4aba1e1e26b373743, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -5859,12 +5860,12 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 9
-  m_Sprite: {fileID: 1658436698, guid: 5a5a9fdc786a289499c21e2b54a90dc9, type: 3}
+  m_Sprite: {fileID: -467307283419413426, guid: d07eb8fca46f38f4ba538ba1e5814460, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 0.616, y: 1.2544}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -5929,9 +5930,9 @@ BoxCollider2D:
   m_Offset: {x: 0, y: 0}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.35}
-    oldSize: {x: 1, y: 1}
-    newSize: {x: 1, y: 1}
+    pivot: {x: 0.5, y: 0.25}
+    oldSize: {x: 0.616, y: 1.2544}
+    newSize: {x: 0.616, y: 1.2544}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
@@ -5950,33 +5951,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b3db7dbe36bf50f49805cc92b38a29d1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  easeOutCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: -0
-      outSlope: -0
-      tangentMode: 0
-      weightedMode: 2
-      inWeight: 0
-      outWeight: 0.5
-    - serializedVersion: 3
-      time: 1
-      value: 1
-      inSlope: -0
-      outSlope: -0
-      tangentMode: 0
-      weightedMode: 1
-      inWeight: 0.50416666
-      outWeight: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  spriteRenderer: {fileID: 1975691524}
   animator: {fileID: 1975691525}
-  col: {fileID: 1975691526}
+  _isMovable: 1
+  bombObj: {fileID: 0}
 --- !u!50 &1975691528
 Rigidbody2D:
   serializedVersion: 5

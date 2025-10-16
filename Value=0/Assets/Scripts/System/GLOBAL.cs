@@ -6,6 +6,7 @@ public static class GLOBAL
     public const int MAX_SWAP_TILE_COUNT = 32;
     public const int MAX_FIREWALL_COUNT = 16;
     public const int MAX_OBSERVER_COUNT = 16;
+    public const int MAX_BOSSLASER_COUNT = 32;
 
     #endregion
 
@@ -26,17 +27,20 @@ public static class GLOBAL
         Portal
     }
 
+    //�������߰�
     public enum ObjectID
     {
         None = -1,
         OperationTile, SwapTile,
-        Firewall, Observer,
+        Firewall, Observer, BossLaser
     }
 
+    //�����߰�
     public enum SceneID
     {
         None = -1,
         Title, Office, Matrix,
+        Boss
     }
 
     public enum EventID

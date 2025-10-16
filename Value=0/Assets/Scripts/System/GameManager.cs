@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using System.Collections;
 
 public class GameManager : MonoBehaviour
 {
@@ -10,6 +11,9 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance { get; private set; }
 
     public Stage Stage => stages[_stageNumber];
+
+    //보스 스테이지
+    public bool CurrentBossStage => (_stageNumber+1) == bossStageNumber;
 
     public int StageNumber
     {
@@ -37,6 +41,10 @@ public class GameManager : MonoBehaviour
 
     private int _stageNumber;
 
+    //보스 스테이지
+    [Header("Boss Stage")]
+    [SerializeField] private int bossStageNumber = 1;
+
     #endregion
 
     #region =====Unity Events=====
@@ -58,7 +66,39 @@ public class GameManager : MonoBehaviour
 
     public void Restart()
     {
+        //보스 스테이지 전용 추가
+        if (CurrentBossStage)
+        {
+            if (Player != null)
+            {
+                Stage.ClearStage();
+                Stage.LoadBossStage();
+            }
+        }
         OnRestart?.Invoke();
+    }
+
+    //보스 스테이지 값 받음
+    private void OnEnable()
+    {
+        foreach (Stage stage in stages)
+        {
+            stage.OnBossStageLoaded += HandleBossStage;
+        }
+    }
+    private void OnDisable()
+    {
+        foreach (Stage stage in stages)
+        {
+            stage.OnBossStageLoaded -= HandleBossStage;
+        }
+    }
+    private void HandleBossStage(int startnumber, int moves, Vector3 startPos)
+    {
+        Player.Value = startnumber;
+        Player.Moves = moves;
+        Player.transform.position = startPos;
+
     }
 
     #endregion

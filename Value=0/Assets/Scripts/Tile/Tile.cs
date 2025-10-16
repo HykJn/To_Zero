@@ -28,6 +28,13 @@ public abstract class Tile : MonoBehaviour
     #region =====Methods=====
 
     public abstract void Init(string value);
+
+    //보스 스테이지
+    public virtual void Init()
+    {
+        OnRestart();
+    }
+
     protected abstract void OnRestart();
 
     #endregion

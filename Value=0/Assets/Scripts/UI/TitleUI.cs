@@ -25,6 +25,12 @@ public class TitleUI : MonoBehaviour
         return;
     }
 
+    //º¸½ºÀü
+    public void OnClick_Boss()
+    {
+        UIManager.Instance.LoadScene(SceneID.Boss);
+    }
+
     public void OnClick_CreativeMode()
     {
         SoundManager.Instance.Play(UI_SFX_ID.ButtonClick);
