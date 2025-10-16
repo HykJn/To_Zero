@@ -1,4 +1,5 @@
 // BossUI.cs
+
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
@@ -18,14 +19,16 @@ public class BossUI : MonoBehaviour
 
     private void Start()
     {
-        if(button_Retry != null)
+        if (button_Retry != null)
         {
             button_Retry.onClick.AddListener(ReStartStage);
         }
+
         if (text_Retry != null)
         {
             text_Retry.text = "Retry?";
         }
+
         gameOverPanel.SetActive(false);
 
         if (GameManager.Instance != null)
@@ -36,7 +39,6 @@ public class BossUI : MonoBehaviour
 
     private void OnEnable()
     {
-
         if (BossManager.Instance != null)
         {
             SubscribeEvents();
@@ -55,15 +57,15 @@ public class BossUI : MonoBehaviour
         {
             return;
         }
+
         bossUI.SetActive(true);
-        // Áßº¹ ±¸µ¶ ¹æÁö¸¦ À§ÇØ ¸ÕÀú ±¸µ¶ ÇØÁ¦
+        // ï¿½ßºï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         UnsubscribeEvents();
 
         BossManager.Instance.PlayerHealthChange += UpdatePlayerHealth;
         BossManager.Instance.BossHealthChange += UpdateBossHealth;
         BossManager.Instance.BossTargetValueChange += UpdateBossTargetValue;
         BossManager.Instance.OnPlayerLose += ShowGameOver;
-
     }
 
     private void UnsubscribeEvents()
@@ -74,7 +76,6 @@ public class BossUI : MonoBehaviour
         BossManager.Instance.BossHealthChange -= UpdateBossHealth;
         BossManager.Instance.BossTargetValueChange -= UpdateBossTargetValue;
         BossManager.Instance.OnPlayerLose -= ShowGameOver;
-
     }
 
     private void OnStageChanged()
@@ -87,7 +88,7 @@ public class BossUI : MonoBehaviour
         }
         else
         {
-            if(BossManager.Instance != null)
+            if (BossManager.Instance != null)
             {
                 SubscribeEvents();
             }
@@ -96,33 +97,32 @@ public class BossUI : MonoBehaviour
 
     private void UpdatePlayerHealth(int health)
     {
-        text_PlayerHealth.text = $"ÇÃ·¹ÀÌ¾î HP: {health}";
-        Debug.Log($"UI ¾÷µ¥ÀÌÆ®: ÇÃ·¹ÀÌ¾î HP = {health}");
+        text_PlayerHealth.text = $"ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ HP: {health}";
+        Debug.Log($"UI ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®: ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ HP = {health}");
     }
 
     private void UpdateBossHealth(int health)
     {
-        text_BossHealth.text = $"º¸½º HP: {health}";
-        Debug.Log($"UI ¾÷µ¥ÀÌÆ®: º¸½º HP = {health}");
+        text_BossHealth.text = $"ï¿½ï¿½ï¿½ï¿½ HP: {health}";
+        Debug.Log($"UI ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®: ï¿½ï¿½ï¿½ï¿½ HP = {health}");
     }
 
     private void UpdateBossTargetValue(int value)
     {
-        text_BossTartgetValue.text = $"¸ñÇ¥°ª: {value}";
-        Debug.Log($"UI ¾÷µ¥ÀÌÆ®: ¸ñÇ¥°ª = {value}");
+        text_BossTartgetValue.text = $"ï¿½ï¿½Ç¥ï¿½ï¿½: {value}";
+        Debug.Log($"UI ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®: ï¿½ï¿½Ç¥ï¿½ï¿½ = {value}");
     }
 
     private void ShowGameOver()
     {
-       gameOverPanel.SetActive(true);
-       text_GameOver.text = "GAME OVER"; 
-       GameManager.Instance.Player._isMovable = false;
-       
+        gameOverPanel.SetActive(true);
+        text_GameOver.text = "GAME OVER";
+        GameManager.Instance.Player.IsMovable = false;
     }
 
     private void ReStartStage()
     {
-        if(gameOverPanel != null) gameOverPanel.SetActive(false);
+        if (gameOverPanel != null) gameOverPanel.SetActive(false);
         GameManager.Instance.Player.ClearBombs();
         GameManager.Instance?.Restart();
     }

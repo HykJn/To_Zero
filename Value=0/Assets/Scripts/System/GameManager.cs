@@ -12,7 +12,7 @@ public class GameManager : MonoBehaviour
 
     public Stage Stage => stages[_stageNumber];
 
-    //º¸½º ½ºÅ×ÀÌÁö
+    //ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     public bool CurrentBossStage => (_stageNumber+1) == bossStageNumber;
 
     public int StageNumber
@@ -41,9 +41,9 @@ public class GameManager : MonoBehaviour
 
     private int _stageNumber;
 
-    //º¸½º ½ºÅ×ÀÌÁö
+    //ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     [Header("Boss Stage")]
-    [SerializeField] private int bossStageNumber = 1;
+    [SerializeField] private int bossStageNumber = 17;
 
     #endregion
 
@@ -57,7 +57,7 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         Player = GameObject.FindWithTag("Player").GetComponent<Player>();
-        StageNumber = 15;
+        StageNumber = 1;
     }
 
     #endregion
@@ -66,7 +66,7 @@ public class GameManager : MonoBehaviour
 
     public void Restart()
     {
-        //º¸½º ½ºÅ×ÀÌÁö Àü¿ë Ãß°¡
+        //ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ß°ï¿½
         if (CurrentBossStage)
         {
             if (Player != null)
@@ -78,7 +78,7 @@ public class GameManager : MonoBehaviour
         OnRestart?.Invoke();
     }
 
-    //º¸½º ½ºÅ×ÀÌÁö °ª ¹ÞÀ½
+    //ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     private void OnEnable()
     {
         foreach (Stage stage in stages)

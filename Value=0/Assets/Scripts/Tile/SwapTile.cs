@@ -25,13 +25,13 @@ public class SwapTile : OperationTile
     protected override void OnEnable()
     {
         base.OnEnable();
-        GameManager.Instance.Player.OnPlayerMove += Swap;
+        if (GameManager.Instance.Player) GameManager.Instance.Player.OnPlayerMove += Swap;
     }
 
     protected override void OnDisable()
     {
         base.OnDisable();
-        GameManager.Instance.Player.OnPlayerMove -= Swap;
+        if (GameManager.Instance.Player) GameManager.Instance.Player.OnPlayerMove -= Swap;
     }
 
     #endregion

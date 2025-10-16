@@ -300,6 +300,9 @@ MonoBehaviour:
   - enemyType: 3
     startPoint: {x: -2.5, y: 1.5}
     endPoint: {x: 3.5, y: 1.5}
+  bossStageMaps: []
+  normalStageOffset: 0
+  bossStageOffset: -2
 --- !u!4 &36564179
 Transform:
   m_ObjectHideFlags: 0
@@ -367,6 +370,9 @@ MonoBehaviour:
   - enemyType: 3
     startPoint: {x: 2.5, y: -1.5}
     endPoint: {x: -3.5, y: -1.5}
+  bossStageMaps: []
+  normalStageOffset: 0
+  bossStageOffset: -2
 --- !u!4 &176649869
 Transform:
   m_ObjectHideFlags: 0
@@ -429,6 +435,9 @@ MonoBehaviour:
   - enemyType: 3
     startPoint: {x: 0, y: -3.5}
     endPoint: {x: 0, y: 3.5}
+  bossStageMaps: []
+  normalStageOffset: 0
+  bossStageOffset: -2
 --- !u!4 &204786869
 Transform:
   m_ObjectHideFlags: 0
@@ -1822,7 +1831,6 @@ MonoBehaviour:
   - {fileID: 240031412}
   - {fileID: 1066905456}
   - {fileID: 1238561904}
-  bossStageNumber: 1
   - {fileID: 981391220}
   - {fileID: 1977253960}
   - {fileID: 2128866652}
@@ -1833,6 +1841,7 @@ MonoBehaviour:
   - {fileID: 36564178}
   - {fileID: 579125515}
   - {fileID: 176649868}
+  bossStageNumber: 17
 --- !u!4 &501648558
 Transform:
   m_ObjectHideFlags: 0
@@ -2055,6 +2064,9 @@ MonoBehaviour:
   - enemyType: 3
     startPoint: {x: -4, y: -2}
     endPoint: {x: 4, y: -2}
+  bossStageMaps: []
+  normalStageOffset: 0
+  bossStageOffset: -2
 --- !u!4 &579125516
 Transform:
   m_ObjectHideFlags: 0
@@ -2755,6 +2767,9 @@ MonoBehaviour:
 
     0 0 -1 N -2 S'
   enemyInfo: []
+  bossStageMaps: []
+  normalStageOffset: 0
+  bossStageOffset: -2
 --- !u!4 &968809151
 Transform:
   m_ObjectHideFlags: 0
@@ -2812,6 +2827,9 @@ MonoBehaviour:
 
     S N 0 0 0 P'
   enemyInfo: []
+  bossStageMaps: []
+  normalStageOffset: 0
+  bossStageOffset: -2
 --- !u!4 &981391221
 Transform:
   m_ObjectHideFlags: 0
@@ -3076,13 +3094,16 @@ MonoBehaviour:
 
     -1 -1 F+2 N N
 
-    N+3 *-2,-1 -3
+    F+3 *-2,-1 -3
     F+1 N
 
     +1 +1 FN +3 -2
 
     N S N 0 0'
   enemyInfo: []
+  bossStageMaps: []
+  normalStageOffset: 0
+  bossStageOffset: -2
 --- !u!4 &1035391122
 Transform:
   m_ObjectHideFlags: 0
@@ -3710,7 +3731,7 @@ MonoBehaviour:
     +1 N 0 FN N
 
     S
-    +2 0 FN P'
+    +2 0 N P'
   enemyInfo: []
   bossStageMaps: []
   normalStageOffset: 0
@@ -3774,6 +3795,9 @@ MonoBehaviour:
 
     P N FN -2 0'
   enemyInfo: []
+  bossStageMaps: []
+  normalStageOffset: 0
+  bossStageOffset: -2
 --- !u!4 &1410921025
 Transform:
   m_ObjectHideFlags: 0
@@ -6025,6 +6049,9 @@ MonoBehaviour:
 
     N -2 FN N 0 0'
   enemyInfo: []
+  bossStageMaps: []
+  normalStageOffset: 0
+  bossStageOffset: -2
 --- !u!4 &1977253961
 Transform:
   m_ObjectHideFlags: 0
@@ -6218,6 +6245,9 @@ MonoBehaviour:
 
     -1 N F+2 0 0 0'
   enemyInfo: []
+  bossStageMaps: []
+  normalStageOffset: 0
+  bossStageOffset: -2
 --- !u!4 &2128866653
 Transform:
   m_ObjectHideFlags: 0
