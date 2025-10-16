@@ -32,11 +32,13 @@ public class SettingManager : MonoBehaviour
     private void Start()
     {
         LoadVolume();
+        SaveManager.Load();
     }
 
     private void OnApplicationQuit()
     {
         SaveAllSettings();
+        SaveManager.Save();
     }
 
     #endregion
@@ -67,22 +69,14 @@ public class SettingManager : MonoBehaviour
         PlayerPrefs.Save();
     }
 
-    private void LoadResolution()
-    {
-        
-    }
-
-    private void LoadWindowMode()
-    {
-        
-    }
-
     private void LoadVolume()
     {
         SoundManager.Instance.MasterVolume = PlayerPrefs.GetFloat("MasterVolume", 1.0f);
         SoundManager.Instance.BGMVolume = PlayerPrefs.GetFloat("BGMVolume", 1.0f);
         SoundManager.Instance.SFXVolume = PlayerPrefs.GetFloat("SFXVolume", 1.0f);
         SoundManager.Instance.UIVolume = PlayerPrefs.GetFloat("UIVolume", 1.0f);
+
+        UIManager.Instance.OptionPanel.UpdateVolume();
     }
 
     #endregion

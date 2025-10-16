@@ -2,6 +2,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using static GLOBAL;
 
@@ -15,8 +17,9 @@ public class UIManager : MonoBehaviour
     public OfficeUI OfficeUI { get; set; }
     public MatrixUI MatrixUI { get; set; }
 
-    public OptionUI OptionPanel => optionPanel;
-    public PauseUI PausePanel => pausePanel;
+    public OptionPanel OptionPanel => optionPanel;
+    public PausePanel PausePanel => pausePanel;
+    public DialogPanel DialogPanel => dialogPanel;
     public bool AnyPanelOpen => _openPanels.Count > 0;
 
     #endregion
@@ -24,8 +27,10 @@ public class UIManager : MonoBehaviour
     #region =====Fields=====
 
     [Header("Global UI")]
-    [SerializeField] private OptionUI optionPanel;
-    [SerializeField] private PauseUI pausePanel;
+    [SerializeField] private OptionPanel optionPanel;
+    [SerializeField] private PausePanel pausePanel;
+    [SerializeField] private DialogPanel dialogPanel;
+
     [SerializeField] private GameObject loadingPanel;
     [SerializeField] private Image loadingBar;
 
@@ -49,7 +54,7 @@ public class UIManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            if (_openPanels.Count > 0) ClosePanel();
+            if (_openPanels.Count > 0 && !_openPanels.Peek().Equals(dialogPanel)) ClosePanel();
             else if (SequanceManager.SceneID != SceneID.Title) PausePanel.Open();
         }
     }
@@ -77,7 +82,7 @@ public class UIManager : MonoBehaviour
 
     private IEnumerator Crtn_LoadScene(SceneID sceneID, Action beforeLoad = null, Action afterLoad = null)
     {
-        AsyncOperation process = UnityEngine.SceneManagement.SceneManager.LoadSceneAsync((int)sceneID);
+        AsyncOperation process = SceneManager.LoadSceneAsync((int)sceneID);
         process!.allowSceneActivation = false;
 
         beforeLoad?.Invoke();
@@ -90,12 +95,12 @@ public class UIManager : MonoBehaviour
         }
 
         loadingBar.fillAmount = 1f;
-        yield return new WaitForSeconds(0.25f);
+        process.allowSceneActivation = true;
+        while (!process.isDone) yield return new WaitForEndOfFrame();
 
         afterLoad?.Invoke();
-        loadingPanel.SetActive(false);
 
-        process.allowSceneActivation = true;
+        loadingPanel.SetActive(false);
 
         SequanceManager.SceneID = sceneID;
     }

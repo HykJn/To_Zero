@@ -7,6 +7,8 @@ using static GLOBAL;
 public class Player : MonoBehaviour
 {
     public event Action OnPlayerMove;
+
+    //���� ��ź
     public event Action<int> OnBombExplode;
 
     #region =====Properties=====
@@ -46,6 +48,8 @@ public class Player : MonoBehaviour
     [SerializeField] private AnimationCurve easeOut;
 
     private Firewall _firewall;
+    private bool _cube;
+
 
     private int _moves, _value;
 
@@ -63,6 +67,7 @@ public class Player : MonoBehaviour
         {
             GameManager.Instance.OnRestart += OnRestart;
         }
+
         //����
         if (GameManager.Instance.CurrentBossStage)
         {
@@ -83,7 +88,6 @@ public class Player : MonoBehaviour
             UnregisterBossEvents();
         }
     }
-
 
     #endregion
 
@@ -117,9 +121,35 @@ public class Player : MonoBehaviour
                 // ���� �������� 
                 ExplodeAllBombs();
             }
+            else if (_cube)
+            {
+                _cube = false;
+                if (Value != 0)
+                {
+                    Die();
+                    SoundManager.Instance.PlayOneShot(SFX_ID.PlayerRespawn);
+                }
+                else
+                {
+                    if (SequanceManager.Stage == 6)
+                    {
+                        UIManager.Instance.DialogPanel.SetDialog(13);
+                        UIManager.Instance.DialogPanel.StartDialog();
+                    }
+                    else if (SequanceManager.Stage == 12)
+                    {
+                        UIManager.Instance.DialogPanel.SetDialog(22);
+                        UIManager.Instance.DialogPanel.StartDialog();
+                    }
+                    else if (SequanceManager.Stage == 16)
+                    {
+                        UIManager.Instance.DialogPanel.SetDialog(32);
+                        UIManager.Instance.DialogPanel.StartDialog();
+                    }
+                }
+            }
             else
             {
-         
                 if (!_firewall) return;
                 if (!_firewall.IsHeld) HoldFirewall();
                 else ReleaseFirewall();
@@ -128,7 +158,8 @@ public class Player : MonoBehaviour
 
         //Restart //����
         if (!GameManager.Instance.CurrentBossStage)
-            if (Input.GetKeyDown(KeyCode.R) && IsMovable) GameManager.Instance.Restart();
+            if (Input.GetKeyDown(KeyCode.R) && IsMovable)
+                GameManager.Instance.Restart();
     }
 
     public void Animation_SetMovable(int value)
@@ -147,16 +178,14 @@ public class Player : MonoBehaviour
             {
                 //Die();
                 ExplodeAllBombs();
-                return;
-
             }
             else
             {
                 Die();
                 SoundManager.Instance.PlayOneShot(SFX_ID.PlayerRespawn);
-                return;
             }
-           
+
+            return;
         }
 
         IsMovable = false;
@@ -166,10 +195,21 @@ public class Player : MonoBehaviour
     private bool CheckIsMovable(Vector2 pos)
     {
         Stage stage = GameManager.Instance.Stage;
+        if (_firewall) _firewall.IsSelected = false;
+        _cube = false;
+        if (stage.TryGetTile<Tile>(pos, out Tile t))
+        {
+            OperationTile tile = t as OperationTile;
+            if (tile!.Operator == Operation.Cube)
+            {
+                _cube = true;
+                return false;
+            }
+        }
+
         if (!stage.TryGetFirewall(pos, out Firewall firewall))
             return stage.TryGetTile<Tile>(pos, out _);
 
-        if (_firewall) _firewall.IsSelected = false;
         _firewall = firewall;
         _firewall.IsSelected = true;
 
@@ -208,6 +248,10 @@ public class Player : MonoBehaviour
         {
             _firewall = firewall;
             _firewall.IsSelected = true;
+        }
+        else if (GameManager.Instance.Stage.TryGetTile<Tile>((Vector2)this.transform.position + next, out Tile temp))
+        {
+            _cube = (temp as OperationTile).Operator == Operation.Cube;
         }
 
         OperationTile tile = GameManager.Instance.Stage.GetTile<OperationTile>(pos);
@@ -280,10 +324,10 @@ public class Player : MonoBehaviour
                     else GameManager.Instance.StageNumber++;
 
                     yield break;
-            } 
+            }
         }
 
-       
+
         Moves--;
         OnPlayerMove?.Invoke();
 
@@ -296,7 +340,7 @@ public class Player : MonoBehaviour
                 yield break;
             }
         }
-  
+
         IsMovable = true;
     }
 
@@ -331,6 +375,7 @@ public class Player : MonoBehaviour
     private void OnRestart()
     {
         _firewall = null;
+        _cube = false;
         IsMovable = true;
 
         //����
@@ -362,6 +407,7 @@ public class Player : MonoBehaviour
                     // ���� �������� Ŭ���� ó��
                     GameManager.Instance.StageNumber++;
                 }
+
                 break;
             case Operation.Add:
                 if (!bombPositions.ContainsKey(pos))
@@ -369,6 +415,7 @@ public class Player : MonoBehaviour
                     CheckAndSpawnBomb(bombObj, pos);
                     Value += tile.Value;
                 }
+
                 break;
             case Operation.Subtract:
                 if (!bombPositions.ContainsKey(pos))
@@ -376,6 +423,7 @@ public class Player : MonoBehaviour
                     CheckAndSpawnBomb(bombObj, pos);
                     Value -= tile.Value;
                 }
+
                 break;
             case Operation.Multiply:
                 if (!bombPositions.ContainsKey(pos))
@@ -383,6 +431,7 @@ public class Player : MonoBehaviour
                     CheckAndSpawnBomb(bombObj, pos);
                     Value *= tile.Value;
                 }
+
                 break;
             case Operation.Divide:
                 if (!bombPositions.ContainsKey(pos))
@@ -390,12 +439,13 @@ public class Player : MonoBehaviour
                     CheckAndSpawnBomb(bombObj, pos);
                     Value /= tile.Value;
                 }
+
                 break;
             case Operation.Equal:
             case Operation.NotEqual:
             case Operation.Greater:
             case Operation.Less:
-                
+
                 break;
         }
     }
@@ -425,6 +475,7 @@ public class Player : MonoBehaviour
             else Destroy(bomb);
 
         }
+
         bombPositions.Clear();
 
         OnBombExplode?.Invoke(Value);
@@ -444,6 +495,7 @@ public class Player : MonoBehaviour
             }
             else Destroy(bomb);
         }
+
         bombPositions.Clear();
     }
 

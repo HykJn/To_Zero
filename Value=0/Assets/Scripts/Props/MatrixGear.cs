@@ -1,6 +1,7 @@
 using System;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using static GLOBAL;
 
 public class MatrixGear : MonoBehaviour, IInteractable
@@ -11,6 +12,7 @@ public class MatrixGear : MonoBehaviour, IInteractable
 
     #region =====Fields=====
 
+    [SerializeField] private Animator animator;
     [SerializeField] private TMP_Text text_Space;
 
     #endregion
@@ -23,12 +25,16 @@ public class MatrixGear : MonoBehaviour, IInteractable
 
     public void Notify(bool flag)
     {
+        if (SequanceManager.LastDialog is 13 or 14 or 22 or 23 or 32 or 33 or 45) return;
         text_Space.enabled = flag;
+        animator.SetTrigger(Animator.StringToHash(flag ? "Open" : "Close"));
     }
 
     public void Interact()
     {
-        UIManager.Instance.LoadScene(SceneID.Matrix);
+        if (SequanceManager.LastDialog is 14 or 23 or 33) return;
+        UIManager.Instance.LoadScene(SceneID.Matrix,
+            afterLoad: () => GameManager.Instance.StageNumber = SequanceManager.Stage);
     }
 
     #endregion
