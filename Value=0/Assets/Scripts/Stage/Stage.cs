@@ -274,8 +274,6 @@ public class Stage : MonoBehaviour
             BossManager.Instance.InitBossBattle(currentStage.bossTargetValue);
         }
 
-        Debug.Log($"���� �������� �ε� �ε���: {currentBossMapIndex}");
-
     }
 
     public void LoadNextBossStage()

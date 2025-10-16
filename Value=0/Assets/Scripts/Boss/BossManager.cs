@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using static GLOBAL;
 
@@ -12,7 +13,7 @@ public class BossManager : MonoBehaviour
 
     public event Action<int> PlayerHealthChange;
     public event Action<int> BossHealthChange;
-    public event Action<int> BossTargetValueChange;
+    //public event Action<int> BossTargetValueChange;
     public event Action OnPlayerWin;
     public event Action OnPlayerLose;
     public event Action<int> OnPhaseChange;
@@ -48,7 +49,7 @@ public class BossManager : MonoBehaviour
             _bossHealth = value;
             BossHealthChange?.Invoke(_bossHealth);
 
-            if (_bossHealth <= 2 && CurrentPhase == 1)
+            if (_bossHealth <= 8 && CurrentPhase == 1)
             {
                 ChangeToPhase2();
             }
@@ -66,7 +67,7 @@ public class BossManager : MonoBehaviour
     #region ==========Fields==========
 
     [SerializeField] private int initPlayerHealth = 3;
-    [SerializeField] private int initBossHealth = 5;
+    [SerializeField] private int initBossHealth = 12;
 
     [Header("1페이즈 패턴")]
     [SerializeField] private int phase1MoveInterval = 3;
@@ -77,6 +78,14 @@ public class BossManager : MonoBehaviour
     private int _playerMoveCount = 0;
     private List<BossLaser> _currentLasers;
     private bool _isPhaseChanging = false;
+
+    [SerializeField] private GameObject bossObject;
+    [SerializeField] private BossHitEffect bossHitEffect;
+    [SerializeField] private List<GameObject> healthObj = new List<GameObject>();
+    private int healthObjCount = 4;
+
+    [SerializeField] private TMP_Text text_BossTartgetValue;
+
 
     #endregion
 
@@ -102,6 +111,9 @@ public class BossManager : MonoBehaviour
 
     public void InitBossBattle(int bossTargetValue)
     {
+        bossObject.SetActive(true);
+        UpdateTargetText(bossTargetValue);
+
         GameManager.Instance.Player?.ClearBombs();
         if (!_isBombSubscribed && GameManager.Instance?.Player != null)
         {
@@ -118,7 +130,7 @@ public class BossManager : MonoBehaviour
 
         PlayerHealthChange?.Invoke(_playerHealth);
         BossHealthChange?.Invoke(_bossHealth);
-        BossTargetValueChange?.Invoke(BossTargetValue);
+        //BossTargetValueChange?.Invoke(BossTargetValue);
 
         GameManager.Instance.Player?.RegisterBossEvents();
 
@@ -128,8 +140,17 @@ public class BossManager : MonoBehaviour
     public void UpdateBossTargetValue(int bossTargetValue)
     {
         BossTargetValue = bossTargetValue;
-        BossTargetValueChange?.Invoke(BossTargetValue);
+        //BossTargetValueChange?.Invoke(BossTargetValue);
+        UpdateTargetText(bossTargetValue);
         Debug.Log($"보스 목표값 업데이트: {BossTargetValue}");
+    }
+
+    private void UpdateTargetText(int value)
+    {
+        if (value > 0)
+            text_BossTartgetValue.text = $"+{value}";
+        else
+            text_BossTartgetValue.text = $"{value}";
     }
 
     public void CheckBombResult(int playerFinalValue)
@@ -137,6 +158,20 @@ public class BossManager : MonoBehaviour
         if (playerFinalValue == BossTargetValue)
         {
             BossHealth--;
+
+            
+            healthObj[healthObjCount-1].SetActive(false);
+            healthObjCount--;
+            if (healthObjCount == 0 && !(BossHealth == 0))
+            {
+                healthObjCount = 4;
+                foreach (var healthObj in healthObj)
+                {
+                    healthObj.SetActive(true);
+                }
+            }
+
+            bossHitEffect.PlayerHitEffect();
             Debug.Log($"승리! 보스 체력: {BossHealth}");
         }
         else
@@ -184,6 +219,7 @@ public class BossManager : MonoBehaviour
         }
         ClearLaser();
         GameManager.Instance.Player?.UnregisterBossEvents();
+        bossObject.SetActive(false);
     }
 
     private void ChangeToPhase2()

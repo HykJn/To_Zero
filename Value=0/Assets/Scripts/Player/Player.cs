@@ -7,7 +7,6 @@ using static GLOBAL;
 public class Player : MonoBehaviour
 {
     public event Action OnPlayerMove;
-    //���� ��ź
     public event Action<int> OnBombExplode;
 
     #region =====Properties=====
@@ -157,7 +156,7 @@ public class Player : MonoBehaviour
                 SoundManager.Instance.PlayOneShot(SFX_ID.PlayerRespawn);
                 return;
             }
-            return;
+           
         }
 
         IsMovable = false;
@@ -415,11 +414,19 @@ public class Player : MonoBehaviour
 
         foreach (var bomb in bombPositions.Values)
         {
-            if (bomb != null) Destroy(bomb);
+            if (bomb != null)
+            {
+                Bomb bombScript = bomb.GetComponent<Bomb>();
+                if (bombScript != null)
+                {
+                    bombScript.Explode(); 
+                }
+            }
+            else Destroy(bomb);
+
         }
         bombPositions.Clear();
 
-        // �������� ���� Value ����
         OnBombExplode?.Invoke(Value);
     }
 
@@ -427,7 +434,15 @@ public class Player : MonoBehaviour
     {
         foreach (var bomb in bombPositions.Values)
         {
-            if (bomb != null) Destroy(bomb);
+            if (bomb != null)
+            {
+                Bomb bombScript = bomb.GetComponent<Bomb>();
+                if (bombScript != null)
+                {
+                    bombScript.Explode(); 
+                }
+            }
+            else Destroy(bomb);
         }
         bombPositions.Clear();
     }
