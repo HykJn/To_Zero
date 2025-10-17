@@ -1,7 +1,5 @@
 using System;
 using UnityEngine;
-using System.Collections;
-using Unity.VisualScripting;
 
 public class GameManager : MonoBehaviour
 {
@@ -12,9 +10,6 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance { get; private set; }
 
     public Stage Stage => stages[_stageNumber];
-
-    //���� ��������
-    public bool CurrentBossStage => StageNumber == bossStageNumber;
 
     public int StageNumber
     {
@@ -45,10 +40,6 @@ public class GameManager : MonoBehaviour
 
     private int _stageNumber;
 
-    //���� ��������
-    [Header("Boss Stage")]
-    [SerializeField] private int bossStageNumber = 17;
-
     #endregion
 
     #region =====Unity Events=====
@@ -58,52 +49,13 @@ public class GameManager : MonoBehaviour
         Instance = this;
     }
 
-    private void Start()
-    {
-        // Player = GameObject.FindWithTag("Player").GetComponent<Player>();
-    }
-
     #endregion
 
     #region =====Methods=====
 
     public void Restart()
     {
-        //���� �������� ���� �߰�
-        if (CurrentBossStage)
-        {
-            if (Player != null)
-            {
-                Stage.ClearStage();
-                Stage.LoadBossStage();
-            }
-        }
-
         OnRestart?.Invoke();
-    }
-
-    //���� �������� �� ����
-    private void OnEnable()
-    {
-        foreach (Stage stage in stages)
-        {
-            stage.OnBossStageLoaded += HandleBossStage;
-        }
-    }
-
-    private void OnDisable()
-    {
-        foreach (Stage stage in stages)
-        {
-            stage.OnBossStageLoaded -= HandleBossStage;
-        }
-    }
-
-    private void HandleBossStage(int startnumber, int moves, Vector3 startPos)
-    {
-        Player.Value = startnumber;
-        Player.Moves = moves;
-        Player.transform.position = startPos;
     }
 
     public void LoadDialog(int stage)
