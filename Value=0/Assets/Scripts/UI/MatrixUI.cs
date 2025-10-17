@@ -33,14 +33,18 @@ public class MatrixUI : MonoBehaviour
         set => text_Value.text = value.ToString();
     }
 
-    public BossUI BossUI => bossUI;
+    // public BossUI BossUI => bossUI;
+    public TutorialPanel TutorialPanel => tutorialPanel;
+    public EndingPanel EndingPanel => endingPanel;
 
     #endregion
 
     #region =====Fields=====
 
     [Header("References")]
-    [SerializeField] private BossUI bossUI;
+    [SerializeField] private TutorialPanel tutorialPanel;
+    [SerializeField] private EndingPanel endingPanel;
+    // [SerializeField] private BossUI bossUI;
 
     [SerializeField] private TMP_Text text_Stage;
     [SerializeField] private TMP_Text text_Moves;

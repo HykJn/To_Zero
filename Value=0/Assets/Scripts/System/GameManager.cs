@@ -29,7 +29,6 @@ public class GameManager : MonoBehaviour
             OnStageLoaded?.Invoke();
             UIManager.Instance.MatrixUI.Stage = _stageNumber + 1;
             SequanceManager.Stage = value;
-            // LoadDialog(value);
         }
     }
 

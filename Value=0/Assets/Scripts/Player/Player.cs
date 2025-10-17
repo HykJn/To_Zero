@@ -143,8 +143,9 @@ public class Player : MonoBehaviour
                     }
                     else if (SequanceManager.Stage == 16)
                     {
-                        UIManager.Instance.DialogPanel.SetDialog(32);
-                        UIManager.Instance.DialogPanel.StartDialog();
+                        UIManager.Instance.MatrixUI.EndingPanel.Open();
+                        // UIManager.Instance.DialogPanel.SetDialog(32);
+                        // UIManager.Instance.DialogPanel.StartDialog();
                     }
                 }
             }
@@ -371,6 +372,12 @@ public class Player : MonoBehaviour
         ReleaseFirewall();
         _firewall = null;
         OnPlayerMove?.Invoke();
+
+        if (GameManager.Instance.Stage.GetTile<OperationTile>(this.transform.position).WarningCount > 0)
+        {
+            Die();
+            SoundManager.Instance.PlayOneShot(SFX_ID.ObserverDetect);
+        }
     }
 
     private void OnRestart()

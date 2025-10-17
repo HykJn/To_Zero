@@ -246,7 +246,7 @@ public class Stage : MonoBehaviour
     //���� �������� �޼��� �߰�
     public void LoadBossStage()
     {
-        UIManager.Instance.MatrixUI.BossUI.gameObject.SetActive(true);
+        // UIManager.Instance.MatrixUI.BossUI.gameObject.SetActive(true);
         _phase1Map = new List<int>();
         for (int i = 0; i < bossStageMaps.Length; i++)
         {

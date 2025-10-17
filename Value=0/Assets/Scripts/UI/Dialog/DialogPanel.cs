@@ -98,7 +98,23 @@ public class DialogPanel : MonoBehaviour, IPanel
         if (_currentDialogIdx < _currentDialog.Dialogs.Length) return;
         SequanceManager.LastDialog = _currentDialog.DialogID;
         print("Save Dialog " + SequanceManager.LastDialog);
-        if (SequanceManager.LastDialog == 13)
+        if (SequanceManager.LastDialog == 10)
+        {
+            UIManager.Instance.MatrixUI.TutorialPanel.SetTutorial(0);
+        }
+        else if (SequanceManager.LastDialog == 11)
+        {
+            UIManager.Instance.MatrixUI.TutorialPanel.SetTutorial(1);
+        }
+        else if (SequanceManager.LastDialog == 21)
+        {
+            UIManager.Instance.MatrixUI.TutorialPanel.SetTutorial(2);
+        }
+        else if (SequanceManager.LastDialog == 31)
+        {
+            UIManager.Instance.MatrixUI.TutorialPanel.SetTutorial(3);
+        }
+        else if (SequanceManager.LastDialog == 13)
         {
             SequanceManager.Chapter = 2;
             UIManager.Instance.LoadScene(SceneID.Office);
