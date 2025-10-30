@@ -26,7 +26,6 @@ public class TitleUI : MonoBehaviour
 
         void AfterLoad()
         {
-            SoundManager.Instance.Play(BGM_ID.Matrix);
             if (SequanceManager.Chapter == 0 && SequanceManager.Stage == 1)
             {
                 UIManager.Instance.DialogPanel.SetDialog(0);

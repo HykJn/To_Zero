@@ -106,13 +106,17 @@ public class DialogPanel : MonoBehaviour, IPanel
         {
             UIManager.Instance.MatrixUI.TutorialPanel.SetTutorial(1);
         }
-        else if (SequanceManager.LastDialog == 21)
+        else if (SequanceManager.LastDialog == 12)
         {
             UIManager.Instance.MatrixUI.TutorialPanel.SetTutorial(2);
         }
-        else if (SequanceManager.LastDialog == 31)
+        else if (SequanceManager.LastDialog == 21)
         {
             UIManager.Instance.MatrixUI.TutorialPanel.SetTutorial(3);
+        }
+        else if (SequanceManager.LastDialog == 31)
+        {
+            UIManager.Instance.MatrixUI.TutorialPanel.SetTutorial(4);
         }
         else if (SequanceManager.LastDialog == 13)
         {
@@ -161,6 +165,7 @@ public class DialogPanel : MonoBehaviour, IPanel
         switch (dialog.Character)
         {
             case Character.Zero:
+                image_Zero.enabled = true;
                 image_Zero.color = Color.white;
                 image_Opponent.color = _disabled;
                 text_Name.text = "제로";
@@ -180,7 +185,7 @@ public class DialogPanel : MonoBehaviour, IPanel
                 text_Name.text = "파노스";
                 break;
             case Character.Anchor:
-                image_Zero.color = _disabled;
+                image_Zero.enabled = false;
                 image_Opponent.enabled = false;
                 text_Name.text = "뉴스 앵커";
                 break;

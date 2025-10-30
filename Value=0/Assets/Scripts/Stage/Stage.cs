@@ -35,11 +35,7 @@ public class Stage : MonoBehaviour
 
     private void OnEnable()
     {
-        if (_tileMap == null || _tileMap.Count == 0)
-        {
-            LoadStage();
-        }
-
+        LoadStage();
         if (GameManager.Instance != null)
         {
             GameManager.Instance.OnRestart += OnRestart;
@@ -48,6 +44,7 @@ public class Stage : MonoBehaviour
 
     private void OnDisable()
     {
+        UnloadStage();
         if (GameManager.Instance != null)
         {
             GameManager.Instance.OnRestart -= OnRestart;
