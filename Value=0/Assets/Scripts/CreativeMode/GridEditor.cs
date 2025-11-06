@@ -1,10 +1,9 @@
 using UnityEngine;
 using System.Collections.Generic;
-using UnityEditor;
 
 public class GridEditor : MonoBehaviour
 {
-    #region ==== Fields ====
+    #region ===== Fields =====
 
     [Header("Prefab")]
     [SerializeField] private GameObject editorCellPrefab;
@@ -17,17 +16,20 @@ public class GridEditor : MonoBehaviour
 
     #endregion
 
-    #region ==== Methods ====
+    #region ===== Methods =====
 
-    public void InitGrid(int width, int height)
+    public void InitializeGrid(int width, int height)
     {
+        // 기존 그리드 제거
         ClearGrid();
 
         cells = new Dictionary<Vector2, EditorCell>();
 
+        // Stage.cs와 동일한 위치 계산 방식
         float x = -(width / 2) + (width % 2 == 0 ? 0.5f : 0);
         float y = (height / 2) - (height % 2 == 0 ? 0.5f : 0);
 
+        // 셀 생성
         for (int i = 0; i < height; i++)
         {
             for (int j = 0; j < width; j++)
@@ -36,6 +38,8 @@ public class GridEditor : MonoBehaviour
                 CreateCell(pos);
             }
         }
+
+        Debug.Log($"Grid initialized: {width}x{height}, Total cells: {cells.Count}");
     }
 
     private void CreateCell(Vector2 position)
@@ -43,7 +47,12 @@ public class GridEditor : MonoBehaviour
         GameObject cellObj = Instantiate(editorCellPrefab, position, Quaternion.identity, gridParent);
         EditorCell cell = cellObj.GetComponent<EditorCell>();
 
-        if (cell == null) return;
+        if (cell == null)
+        {
+            Debug.LogError("EditorCellPrefab에 EditorCell 컴포넌트가 없습니다!");
+            return;
+        }
+
         cell.Init(position, this);
         cells[position] = cell;
     }
@@ -62,9 +71,10 @@ public class GridEditor : MonoBehaviour
             cells.Clear();
         }
 
+        // GridParent의 모든 자식 제거 (안전장치)
         if (gridParent != null)
         {
-            foreach(Transform child in gridParent)
+            foreach (Transform child in gridParent)
             {
                 Destroy(child.gameObject);
             }
@@ -73,12 +83,20 @@ public class GridEditor : MonoBehaviour
 
     public void UpdateCell(Vector2 position, string tileData)
     {
+        Debug.Log($"GridEditor.UpdateCell: position={position}, tileData='{tileData}'");
+
         if (cells.TryGetValue(position, out EditorCell cell))
         {
+            Debug.Log($"  → Cell found, calling cell.SetTileData...");
             cell.SetTileData(tileData);
+        }
+        else
+        {
+            Debug.LogWarning($"Cell at position {position} not found! Available cells: {cells.Count}");
         }
     }
 
+    // EditorCell에서 호출
     public void OnCellClicked(EditorCell cell)
     {
         levelEditor.OnCellClicked(cell.Position);
