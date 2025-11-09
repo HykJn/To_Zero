@@ -13,10 +13,13 @@ MonoBehaviour:
   m_Name: '#1_2'
   m_EditorClassIdentifier: 
   dialogID: 12
-  dialogName: "T \uAE08\uC735 - 3"
   dialogs:
   - character: 0
+    face: 0
+    onLeftSide: 1
     text: "\uC800\uAC74?"
   - character: 1
+    face: 0
+    onLeftSide: 0
     text: "\uC800\uAC8C \uB370\uC774\uD130 \uD050\uBE0C\uC57C. \uC800\uAE30\uC5D0
       \uC6B0\uB9AC\uAC00 \uC6D0\uD558\uB294 \uC815\uBCF4\uAC00 \uC788\uC744 \uAC70\uC57C."
