@@ -1,0 +1,41 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2c996337a1d74a5092f3270ea55cb200, type: 3}
+  m_Name: '#1_1'
+  m_EditorClassIdentifier: 
+  dialogID: 11
+  dialogs:
+  - character: 1
+    face: 0
+    onLeftSide: 0
+    text: "\uC800\uAC74\u2026\uBC29\uD654\uBCBD\uC774\uB124. \uAF64 \uB450\uAECD\uAC8C
+      \uC124\uCE58\uB418\uC5B4 \uC788\uB294\uB370."
+  - character: 0
+    face: 0
+    onLeftSide: 1
+    text: "\uC774\uB7EC\uBA74 \uC774\uB3D9\uD560 \uC218 \uC5C6\uB294\uB370 \uBC29\uBC95
+      \uC5C6\uC5B4?"
+  - character: 1
+    face: 1
+    onLeftSide: 0
+    text: "\uBB3C\uB860 \uC774\uB807\uAC8C \uB420 \uC904 \uC54C\uACE0 \uBBF8\uB9AC
+      \uAE30\uC5B4\uB97C \uC5C5\uADF8\uB808\uC774\uB4DC \uD574\uB480\uC9C0!"
+  - character: 1
+    face: 0
+    onLeftSide: 0
+    text: "\uC774\uBC88\uC5D0 \uCD94\uAC00\uD55C \uD574\uD0B9\uD234\uC740 \uB300\uBD80\uBD84\uC758
+      \uBCF4\uC548 \uC694\uC18C\uC5D0 \uAC04\uC12D\uD560 \uC218 \uC788\uC744 \uAC70\uC57C."
+  - character: 1
+    face: 0
+    onLeftSide: 0
+    text: "\uBC29\uD654\uBCBD\uC744 \uD574\uD0B9\uD558\uBA74 \uC6D0\uD558\uB294 \uC704\uCE58\uB85C
+      \uC62E\uAE38 \uC218 \uC788\uC5B4."

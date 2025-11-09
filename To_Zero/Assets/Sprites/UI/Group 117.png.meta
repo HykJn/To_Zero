@@ -1,0 +1,350 @@
+fileFormatVersion: 2
+guid: 7351aac8278b1ea4295064521551d3dc
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 647339858019303244
+    second: Group 117_0
+  - first:
+      213: 3582875170912242738
+    second: Group 117_1
+  - first:
+      213: 7257474314846304847
+    second: Group 117_2
+  - first:
+      213: 3545501823183411103
+    second: Group 117_3
+  - first:
+      213: 4325560706278209757
+    second: Group 117_4
+  - first:
+      213: -109420001872236139
+    second: Group 117_5
+  - first:
+      213: 6012854302888077671
+    second: Group 117_6
+  - first:
+      213: 7435608085207930252
+    second: Group 117_7
+  - first:
+      213: -775548403803033454
+    second: Group 117_8
+  - first:
+      213: 47524432648251912
+    second: Group 117_9
+  - first:
+      213: 323858104454603097
+    second: Group 117_10
+  - first:
+      213: 1046923539268009370
+    second: Group 117_11
+  - first:
+      213: -2602535658758349753
+    second: Group 117_12
+  - first:
+      213: 8740361167255402858
+    second: Group 117_13
+  - first:
+      213: -6966070799676939796
+    second: Group 117_14
+  - first:
+      213: -4401864717347517064
+    second: Group 117_15
+  - first:
+      213: -6338392582943970239
+    second: Group 117_16
+  - first:
+      213: 1883431597983946407
+    second: Group 117_17
+  - first:
+      213: 8996053003302764451
+    second: Group 117_18
+  - first:
+      213: 4301103332973807024
+    second: Group 117_19
+  - first:
+      213: -7637439875933689175
+    second: Group 117_20
+  - first:
+      213: -1939160115113662178
+    second: Group 117_21
+  - first:
+      213: 4538841052996290940
+    second: Group 117_22
+  - first:
+      213: 4171064083853806713
+    second: Group 117_23
+  - first:
+      213: -7603195110057596474
+    second: Group 117_24
+  - first:
+      213: 2017877326148279361
+    second: Group 117_25
+  - first:
+      213: -4426769868319462214
+    second: Group 117_26
+  - first:
+      213: -7776301576892880231
+    second: Group 117_27
+  - first:
+      213: -5562309547391971278
+    second: Group 117_28
+  - first:
+      213: -2251381478813490437
+    second: Group 117_29
+  - first:
+      213: -8416303514209593338
+    second: Group 117_30
+  - first:
+      213: -1090911299443262844
+    second: Group 117_31
+  - first:
+      213: 7514008874221545104
+    second: Group 117_32
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Group 117_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 164
+        width: 103
+        height: 69
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c4f313ecb20dbf800800000000000000
+      internalID: 647339858019303244
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 117_5
+      rect:
+        serializedVersion: 2
+        x: 66
+        y: 109
+        width: 37
+        height: 37
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 591351986134b7ef0800000000000000
+      internalID: -109420001872236139
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 117_12
+      rect:
+        serializedVersion: 2
+        x: 66
+        y: 54
+        width: 37
+        height: 37
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 74cdb607b9fe1ebd0800000000000000
+      internalID: -2602535658758349753
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 117_19
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 103
+        height: 36
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0b5072071b690bb30800000000000000
+      internalID: 4301103332973807024
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      Group 117_0: 647339858019303244
+      Group 117_1: 3582875170912242738
+      Group 117_10: 323858104454603097
+      Group 117_11: 1046923539268009370
+      Group 117_12: -2602535658758349753
+      Group 117_13: 8740361167255402858
+      Group 117_14: -6966070799676939796
+      Group 117_15: -4401864717347517064
+      Group 117_16: -6338392582943970239
+      Group 117_17: 1883431597983946407
+      Group 117_18: 8996053003302764451
+      Group 117_19: 4301103332973807024
+      Group 117_2: 7257474314846304847
+      Group 117_20: -7637439875933689175
+      Group 117_21: -1939160115113662178
+      Group 117_22: 4538841052996290940
+      Group 117_23: 4171064083853806713
+      Group 117_24: -7603195110057596474
+      Group 117_25: 2017877326148279361
+      Group 117_26: -4426769868319462214
+      Group 117_27: -7776301576892880231
+      Group 117_28: -5562309547391971278
+      Group 117_29: -2251381478813490437
+      Group 117_3: 3545501823183411103
+      Group 117_30: -8416303514209593338
+      Group 117_31: -1090911299443262844
+      Group 117_32: 7514008874221545104
+      Group 117_4: 4325560706278209757
+      Group 117_5: -109420001872236139
+      Group 117_6: 6012854302888077671
+      Group 117_7: 7435608085207930252
+      Group 117_8: -775548403803033454
+      Group 117_9: 47524432648251912
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
