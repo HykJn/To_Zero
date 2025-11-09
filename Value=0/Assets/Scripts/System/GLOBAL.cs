@@ -20,6 +20,12 @@ public static class GLOBAL
         Anchor,
     }
 
+    public enum CharacterFace
+    {
+        None = -1,
+        Normal, Pleasure, Aback, Annoyed, Sigh,
+    }
+
     public enum Operation
     {
         None = -1,
